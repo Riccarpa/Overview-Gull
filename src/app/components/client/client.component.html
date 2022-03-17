@@ -1,14 +1,48 @@
 <button class="btn btn-primary px-3 m-3" (click)="showForm = !showForm">Aggiungi Cliente</button>
 
 <div *ngIf="showForm">
-    <h3>Nuovo cliente</h3>
-    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
-        <input type="text" name="name" formControlName="name" placeholder="Nome">
-        <input type="text" name="vat_number" formControlName="vat_number" placeholder="Partita IVA">
-        <input type="text" name="business_name" formControlName="business_name" placeholder="Nome commericale">
-        <input type="text" name="representatives" formControlName="representatives" placeholder="Rappresentanti">
-        <button type="submit">Aggiungi</button>
-    </form>
+    <div class="breadcrumb">
+        <h1>Aggiungi cliente</h1>
+    </div>
+
+    <div class="separator-breadcrumb border-top"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title mb-3">Form Inputs</div>
+                    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="name">Nome</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="Inserisci nome" formControlName="name">
+                            </div>
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="vat_number">Partita IVA</label>
+                                <input type="text" class="form-control" id="vat_number" name="vat_number"
+                                    placeholder="Inserisci partita IVA" formControlName="vat_number">
+                            </div>
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="business_name">Nome Commerciale</label>
+                                <input type="text" class="form-control" id="business_name" name="business_name"
+                                    placeholder="Inserisci nome commerciale" formControlName="business_name">
+                            </div>
+                            <div class="col-md-6 form-group mb-3">
+                                <label for="representatives">Rappresentanti</label>
+                                <input type="text" class="form-control" id="representatives" name="representatives"
+                                    placeholder="Inserisci rappresentanti" formControlName="representatives">
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn-primary btn-rounded">Aggiungi</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">

@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Client } from 'src/app/models/client.model';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-update-client',
   templateUrl: './update-client.component.html',
@@ -10,13 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UpdateClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private route: ActivatedRoute) { }
+  constructor(private clientService: ClientService, private activeRoute: ActivatedRoute, private toastr: ToastrService, private route: Router) { }
 
   ngOnInit(): void {
-    if(!this.clientService.currentClient) {
-      this.clientService.currentClient = this.route.snapshot.paramMap.get('id');
+    if (!this.clientService.currentClient) {
+      this.clientService.currentClient = this.activeRoute.snapshot.paramMap.get('id');
     }
-    
+
     this.clientService.getClient().subscribe((res) => {
       this.client = res.data;
 
@@ -30,6 +32,7 @@ export class UpdateClientComponent implements OnInit {
   }
 
   client: Client;
+  loading: boolean;
 
   clientForm = new FormGroup({
     name: new FormControl(''),
@@ -45,6 +48,12 @@ export class UpdateClientComponent implements OnInit {
       .subscribe(() => {
         console.log('ok');
       })
+
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+      this.toastr.success('Profile updated.', 'Success!', { progressBar: true });
+    }, 3000);
   }
 
 }
