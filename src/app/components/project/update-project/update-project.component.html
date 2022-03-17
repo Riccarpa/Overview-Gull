@@ -24,7 +24,7 @@
     </select>
 
 
-    <select placeholder="Begin typing a name to filter..." multiple formControlName="user_ids" name="user_ids" id="">
+    <select  multiple formControlName="user_ids" name="user_ids" id="">
 
       <option value="" selected disabled>collaboratori</option>
       <option *ngFor="let u of users" [value]="u.id">{{u.name}}</option>

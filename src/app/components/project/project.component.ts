@@ -25,11 +25,13 @@ export class ProjectComponent implements OnInit {
   projects: Project[] = []
   client: Client[] = []
   users: User[] = []
-
+  active = false
   
   chartPie1: any;
-  chartLineOption3: any;
-  products$: any;
+  chartPie2: any;
+  chartPie3: any;
+  chartPieDef:any;
+  
   
 
 
@@ -51,10 +53,11 @@ export class ProjectComponent implements OnInit {
 
       this.projects = res.data
       this.service.project = res.data
+      
     })
   }
-
-
+  
+  
   getClient() {
     this.clientService.getClients().subscribe((res) => {
 
@@ -71,13 +74,13 @@ export class ProjectComponent implements OnInit {
     })
   }
 
-
+  
   addProject() {
 
     let newProj = this.projectForm.value
     this.service.addProject(newProj).subscribe()
   }
-
+  
   updateProject(id: number) {
 
     this.service.currentProject = id
@@ -85,17 +88,71 @@ export class ProjectComponent implements OnInit {
   }
 
   delProject(id: number) {
-
+    
     this.service.deleteProject(id).subscribe()
     this.getProjects()
   }
 
+ 
+
+  
+  
+  
   ngOnInit() {
-    this.getClient()
-    this.getUser()
+    this.service.getProjects().subscribe((res) => {
+      
+      this.projects = res.data
+      this.service.project = res.data
+      console.log(this.projects,'ao');
+    },(error) => {
+      this.route.navigate(['/'])
+    })
 
+    this.clientService.getClients().subscribe((res) => {
 
+      this.client = res.data
+      this.service.client = res.data
+    },(error)=>{
+      this.route.navigate(['/'])
+    })
+
+    this.userService.getUsers().subscribe((res) => {
+
+      this.users = res.data
+      this.service.users = res.data
+    },(error)=>{
+      this.route.navigate(['/'])
+    })
+    
+    
     this.chartPie1 = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
+        series: [{
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 50,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 50,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
+        }]
+      }
+    };
+    this.chartPie2 = {
       ...echartStyles.defaultOptions, ...{
         legend: {
           show: true,
@@ -122,33 +179,67 @@ export class ProjectComponent implements OnInit {
         }]
       }
     };
-
-    this.chartLineOption3 = {
-      ...echartStyles.lineNoAxis, ...{
+    this.chartPie3 = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
         series: [{
-          data: [40, 80, 20, 90, 30, 80, 40],
-          lineStyle: {
-            color: 'rgba(102, 51, 153, .86)',
-            width: 3,
-            shadowColor: 'rgba(0, 0, 0, .2)',
-            shadowOffsetX: -1,
-            shadowOffsetY: 8,
-            shadowBlur: 10
-          },
-          label: { show: true, color: '#212121' },
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            borderColor: 'rgba(69, 86, 172, 0.86)'
-          }
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 100,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 0,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
         }]
       }
     };
-    this.chartLineOption3.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    this.products$ = this.productService.getProducts();
+    this.chartPieDef = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
+        series: [{
+          type: 'pie',
+          ...echartStyles.pieRing,
 
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 0,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 100,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
+        }]
+      }
+    };
+   
+    
   }
 
+    
+
+  
 }
 
 
