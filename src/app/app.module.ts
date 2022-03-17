@@ -18,6 +18,7 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
     UpdateUserComponent,
     UpdateClientComponent,
     UpdateProjectComponent,
+  
   ],
   imports: [
     BrowserModule,
@@ -37,6 +39,7 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -7,16 +7,20 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
 import { UserComponent } from './components/user/user.component';
 import { UpdateClientComponent } from './components/client/update-client/update-client.component';
 import { UpdateUserComponent } from './components/user/update-user/update-user.component';
+import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/admin-layout-sidebar-large/admin-layout-sidebar-large.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'home',component:AdminLayoutSidebarLargeComponent,children:[
+    { path: 'client', component: ClientComponent },
+    { path: 'user', component: UserComponent },
+    { path: 'user/:id', component: UpdateUserComponent },
+    { path: 'project', component: ProjectComponent },
+    { path: 'updateProject/:id', component: UpdateProjectComponent },
+    { path: 'client/:id', component: UpdateClientComponent }
+  ] },
+  
   { path: 'login', component: LoginComponent },
-  { path: 'client', component: ClientComponent },
-  { path: 'user', component: UserComponent },
-  { path: 'user/:id', component: UpdateUserComponent },
-  { path: 'project', component: ProjectComponent },
-  { path: 'updateProject/:id', component: UpdateProjectComponent },
-  { path: 'client/:id', component: UpdateClientComponent },
 ];
 
 @NgModule({

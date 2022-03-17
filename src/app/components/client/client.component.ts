@@ -44,7 +44,7 @@ export class ClientComponent implements OnInit {
 
   editClient(id: any) {
     this.clientService.currentClient = id;
-    this.router.navigate(['client', id]);
+    this.router.navigate(['home/client', id]);
   }
 
   deleteClient(id: any) {

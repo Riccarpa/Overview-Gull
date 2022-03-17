@@ -75,7 +75,7 @@ export class ProjectComponent implements OnInit {
   updateProject(id: number) {
 
     this.service.currentProject = id
-    this.route.navigate(['updateProject', id])
+    this.route.navigate(['home/updateProject', id])
   }
 
   delProject(id: number) {
