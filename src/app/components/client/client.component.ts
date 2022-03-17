@@ -12,7 +12,7 @@ export class ClientComponent implements OnInit {
   constructor(private clientService: ClientService, private router: Router) { }
 
   ngOnInit(): void {
-
+    this.getClients();
   }
 
   clientsList: any;
