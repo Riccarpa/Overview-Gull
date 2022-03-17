@@ -34,12 +34,9 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
     SharedModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService, { passThruUnknownUrl: true }),
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    
-    
   ],
   providers: [],
   bootstrap: [AppComponent]
