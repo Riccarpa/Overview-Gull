@@ -1,0 +1,11 @@
+li {
+  margin: 1rem;
+  cursor: pointer;
+  width: fit-content;
+  &:hover {
+    background-color: lightgray;
+  }
+}
+div {
+  margin: 1rem;
+}

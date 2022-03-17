@@ -1,0 +1,51 @@
+<p>componente project</p>
+
+
+<div>
+  <h2>add project</h2>
+  <form [formGroup]="projectForm" (ngSubmit)="addProject()">
+    <input type="text" name="name" formControlName="name" placeholder="name">
+    <input type="number" name="status" formControlName="status" placeholder="status">
+    <input type="date" name="start_date" formControlName="start_date" placeholder="start_date">
+    <input type="date" name="end_date" formControlName="end_date" placeholder="end_date">
+    
+    <select name="progress" formControlName="progress" id="">
+      <option value="" selected disabled hidden>progress</option>
+      <option [value]="50">50</option>
+      <option [value]="80">80</option>
+      <option [value]="100">100</option>
+    </select>
+
+    <input type="number" name="revenue" formControlName="revenue" placeholder="revenue">
+    <select formControlName="client_id" name="client_id" id="">
+      <option value="" selected disabled hidden>clienti</option>
+      <option *ngFor="let c of client" [value]="c.id">{{c.name}}</option>
+    </select>
+      
+
+   <select placeholder="Begin typing a name to filter..." multiple  formControlName="user_ids"
+     name="user_ids" id="">
+
+     <option value="" selected disabled >collaboratori</option>
+     <option *ngFor="let u of users" [value]="u.id">{{u.name}}</option>
+   </select>
+    <button type="submit">aggiungi</button>
+  </form>
+</div>
+
+<button (click)="getProjects()">get project</button>
+<div class="projectCard" *ngFor="let p of projects">
+
+    <ul>
+        <li>
+            <span>nome progetto:{{p.name}} --> </span>
+            <span>stato: {{p.status}} --> </span>
+            <span>progress: {{p.progress}}</span>
+            <button (click)="updateProject(p.id)">update proj</button>
+            <button (click)="delProject(p.id)">delete </button>
+        </li>
+    </ul>
+</div>
+
+
+

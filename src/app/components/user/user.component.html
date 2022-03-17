@@ -1,0 +1,58 @@
+<h1>Users list</h1>
+
+<ul>
+  <li routerLink="{{ user.id }}" *ngFor="let user of users">
+    {{ user.name }}
+  </li>
+</ul>
+
+<button *ngIf="!isCreate" (click)="isCreate = !isCreate">New user</button>
+
+<div *ngIf="isCreate">
+  <h3>New User</h3>
+  <form [formGroup]="profileForm">
+    <div>
+      <span>Name</span>
+      <input id="name" type="text" formControlName="name" />
+    </div>
+    <div>
+      <span>Surname</span>
+      <input id="surname" type="text" formControlName="surname" />
+    </div>
+    <div>
+      <span>Email</span>
+      <input id="email" type="email" formControlName="email" />
+    </div>
+    <div>
+      <span>Password</span>
+      <input
+        id="password"
+        type="password"
+        autocomplete="on"
+        formControlName="password"
+      />
+    </div>
+    <div>
+      <span>Cost</span>
+      <input id="cost" type="number" formControlName="cost" />
+    </div>
+    <div>
+      <span>Recruitment date</span>
+      <input
+        id="recruitment_date"
+        type="date"
+        formControlName="recruitment_date"
+      />
+    </div>
+    <div>
+      <span>Week working hours</span>
+      <input
+        id="week_working_hours"
+        type="number"
+        formControlName="week_working_hours"
+      />
+    </div>
+    <button (click)="back()">Annulla</button>
+    <button (click)="onSubmit()">Create</button>
+  </form>
+</div>
