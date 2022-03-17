@@ -15,6 +15,10 @@ import { UpdateUserComponent } from './components/user/update-user/update-user.c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateClientComponent } from './components/client/update-client/update-client.component';
 import { UpdateProjectComponent } from './components/project/update-project/update-project.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { SharedComponentsModule } from './shared/components/shared-components.module';
 
 
 
@@ -39,7 +43,10 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    
+    SharedComponentsModule,
+    NgxEchartsModule,
+    NgxDatatableModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

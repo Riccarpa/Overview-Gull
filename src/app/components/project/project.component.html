@@ -48,4 +48,44 @@
 </div>
 
 
+<div class="col-lg-6 col-md-12">
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="card-title">Last Month Summary</div>
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Portable Speaker</td>
+                <td class="font-weight-bold text-success">+ $1200</td>
+              </tr>
+              <tr>
+                <td>Portable Headphone</td>
+                <td class="font-weight-bold">In Stock</td>
+              </tr>
+              <tr>
+                <td>Speaker</td>
+                <td class="text-danger font-weight-bold">Out of stock</td>
+              </tr>
+              <tr>
+                <td>Watch</td>
+                <td class="text-warning font-weight-bold">Low stock</td>
+              </tr>
 
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <div echarts [options]="chartPie1" [autoResize]="true" style="height: 200px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
