@@ -2,54 +2,107 @@
   <h2 class="">Projects</h2>
 
   <div>
-    <button (click)="active = !active">Aggiungi Progetto</button>
-
-    <form class="d-flex flex-column" *ngIf="active" [formGroup]="projectForm" (ngSubmit)="addProject()">
-      <input type="text" name="name" formControlName="name" placeholder="name">
-      <input type="number" name="status" formControlName="status" placeholder="status">
-      <input type="date" name="start_date" formControlName="start_date" placeholder="start_date">
-      <input type="date" name="end_date" formControlName="end_date" placeholder="end_date">
-
-      <select name="progress" formControlName="progress" id="">
-        <option value="" selected disabled hidden>progress</option>
-        <option [value]="50">50</option>
-        <option [value]="80">80</option>
-        <option [value]="100">100</option>
-      </select>
-
-      <input type="number" name="revenue" formControlName="revenue" placeholder="revenue">
-      <select formControlName="client_id" name="client_id" id="">
-        <option value="" selected disabled hidden>clienti</option>
-        <option *ngFor="let c of client" [value]="c.id">{{c.name}}</option>
-      </select>
+    <button (click)="confirm(modalConfirm)">Aggiungi Progetto</button>
 
 
-      <select placeholder="Begin typing a name to filter..." multiple formControlName="user_ids" name="user_ids" id="">
+    <ng-template class="m-0" #modalConfirm let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Crea Un Proggetto</h4>
+        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+          (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
 
-        <option value="" selected disabled>collaboratori</option>
-        <option *ngFor="let u of users" [value]="u.id">{{u.name}}</option>
-      </select>
-      <button type="submit">aggiungi</button>
-    </form>
+        <div class="col-md-12">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="card-title mb-3">Crea</div>
+              <form [formGroup]="projectForm" >
+                <div class="row">
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="name">project</label>
+                    <input type="text" class="form-control" formControlName="name">
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="picker1">client</label>
+                    <select class="form-control" formControlName="client_id" name="client_id">
+                      <option value="" selected disabled hidden>clienti</option>
+                      <option *ngFor="let c of client" [value]="c.id">{{c.name}}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="revenue">revenue</label>
+                    <input class="form-control" type="number" name="revenue" formControlName="revenue">
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="status">status</label>
+                    <input class="form-control" type="number" name="status" formControlName="status">
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="picker1">progress</label>
+                    <select class="form-control" formControlName="progress" name="progress">
+                      <option value="" selected disabled hidden>progress</option>
+                      <option [value]="50">50</option>
+                      <option [value]="80">80</option>
+                      <option [value]="100">100</option>
+                    </select>
+                  </div>
+
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="picker1">start date</label>
+                    <input type="date" class="form-control" formControlName="start_date">
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="picker1">end date</label>
+                    <input type="date" class="form-control" formControlName="end_date">
+                  </div>
+
+                  
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-rounded"
+          (click)="modal.dismiss('cancel')">Cancel</button>
+        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded"
+          (click)="modal.close('Ok');addProject()">Ok</button>
+      </div>
+    </ng-template>
+
+
   </div>
 </div>
 
-<div class="projectCard" *ngFor="let p of projects">
+<div  class="projectCard" *ngFor="let p of projects">
 
   <ul>
     <li>
       <span>nome progetto:{{p.name}} --> </span>
       <span>stato: {{p.status}} --> </span>
       <span>progress: {{p.progress}}</span>
-      <button (click)="updateProject(p.id)">update proj</button>
       <button (click)="delProject(p.id)">delete </button>
     </li>
   </ul>
 </div>
 
-<section class="d-flex align-items-stretch flex-wrap">
+<section  class="d-flex align-items-stretch flex-wrap">
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 ">
-    <div class="card mb-4">
+    <div (click)="updateProject(proj.id)" class="card mb-4">
       <div class="card-body">
         <div class="card-title">{{proj.name}}</div>
         <div class="row">
@@ -68,13 +121,13 @@
                   <td>Status</td>
                   <td class="text-danger font-weight-bold">{{proj.status}}</td>
                 </tr>
-              
+
                 <tr>
                   <td>collaboratori</td>
-                  <td  class="text-warning font-weight-bold">
-                    <ul >
+                  <td class="text-warning font-weight-bold">
+                    <ul>
                       <li *ngFor="let u of proj.user_ids">
-                         {{u}}
+                        {{u}}
                       </li>
                     </ul>
                   </td>
@@ -94,8 +147,8 @@
             <div *ngSwitchCase="100" echarts [options]="chartPie3" [autoResize]="true" style="height: 200px;">
             </div>
 
-             <div *ngSwitchDefault echarts [options]="chartPieDef" [autoResize]="true" style="height: 200px;">
-             </div>
+            <div *ngSwitchDefault echarts [options]="chartPieDef" [autoResize]="true" style="height: 200px;">
+            </div>
           </div>
         </div>
       </div>
