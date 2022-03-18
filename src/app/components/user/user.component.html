@@ -1,4 +1,135 @@
-<h1>Users list</h1>
+<div class="breadcrumb">
+  <h1 class="col-12 mb-3">Users</h1>
+  <div class="col-10">
+    <ul>
+      <li>Data table</li>
+      <li>Filter</li>
+    </ul>
+  </div>
+  <div class="col-2">
+    <button
+      _ngcontent-hgj-c168=""
+      type="button"
+      class="btn btn-success m-1"
+      (click)="open(modalBasic)"
+    >
+      New user
+    </button>
+  </div>
+</div>
+<ng-template #modalBasic let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create new user</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <div class="card-body">
+        <form [formGroup]="profileForm" (ngSubmit)="submit()">
+          <div class="row">
+            <div class="col-md-6 form-group mb-3">
+              <label for="name">First name</label>
+              <input
+                formControlName="name"
+                type="text"
+                class="form-control form-control-rounded"
+                id="name"
+                placeholder="Enter your first name"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="surname">Last name</label>
+              <input
+                formControlName="surname"
+                type="text"
+                class="form-control form-control-rounded"
+                id="surname"
+                placeholder="Enter your last name"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="email">Email address</label>
+              <input
+                formControlName="email"
+                type="email"
+                class="form-control form-control-rounded"
+                id="email"
+                aria-describedby="emailHelp"
+                placeholder="Enter email"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="password">Password</label>
+              <input
+                formControlName="password"
+                type="text"
+                class="form-control form-control-rounded"
+                id="password"
+                placeholder="Enter the password"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="cost">Cost</label>
+              <input
+                formControlName="cost"
+                type="number"
+                class="form-control form-control-rounded"
+                id="cost"
+                placeholder="Enter user cost"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="week_working_hours">Week working hours</label>
+              <input
+                formControlName="week_working_hours"
+                type="number"
+                class="form-control form-control-rounded"
+                id="week_working_hours"
+                placeholder="Enter user week_working_hours"
+              />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="recruitment_date">Recruitment date</label>
+
+              <input
+                formControlName="recruitment_date"
+                id="recruitment_date"
+                class="form-control form-control-rounded"
+                placeholder="yyyy-mm-dd"
+                name="recruitment_date"
+                type="date"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-rounded"
+      (click)="onSubmit() && modal.close('ok')"
+    >
+      Create
+    </button>
+  </div>
+</ng-template>
+
+<div class="separator-breadcrumb border-top"></div>
 
 <ul>
   <li routerLink="{{ user.id }}" *ngFor="let user of users">
@@ -6,61 +137,9 @@
   </li>
 </ul>
 
-<button *ngIf="!isCreate" (click)="isCreate = !isCreate">New user</button>
-
-<div *ngIf="isCreate">
-  <h3>New User</h3>
-  <form [formGroup]="profileForm">
-    <div>
-      <span>Name</span>
-      <input id="name" type="text" formControlName="name" />
-    </div>
-    <div>
-      <span>Surname</span>
-      <input id="surname" type="text" formControlName="surname" />
-    </div>
-    <div>
-      <span>Email</span>
-      <input id="email" type="email" formControlName="email" />
-    </div>
-    <div>
-      <span>Password</span>
-      <input
-        id="password"
-        type="password"
-        autocomplete="on"
-        formControlName="password"
-      />
-    </div>
-    <div>
-      <span>Cost</span>
-      <input id="cost" type="number" formControlName="cost" />
-    </div>
-    <div>
-      <span>Recruitment date</span>
-      <input
-        id="recruitment_date"
-        type="date"
-        formControlName="recruitment_date"
-      />
-    </div>
-    <div>
-      <span>Week working hours</span>
-      <input
-        id="week_working_hours"
-        type="number"
-        formControlName="week_working_hours"
-      />
-    </div>
-    <button (click)="back()">Annulla</button>
-    <button (click)="onSubmit()">Create</button>
-  </form>
-</div>
-
-
 <div class="col-md-12">
-    <div class="card o-hidden mb-4">
-      <ngx-datatable
+  <div class="card o-hidden mb-4">
+    <ngx-datatable
       style="height: calc(100vh - 270px); box-shadow: none"
       class="material fullscreen"
       [columnMode]="'force'"
@@ -70,30 +149,33 @@
       [scrollbarV]="true"
       [scrollbarH]="true"
       [limit]="10"
-      [rows]="products$ ">
-        <ngx-datatable-column name="photo" [maxWidth]="100">
-          <ng-template ngx-datatable-header-template>
-            Thumbnail
-          </ng-template>
-            <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-                <img height="32px" width="32px" style="border-radius: 4px" [src]="value" alt="">
-            </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="name" [width]="300">
-          <ng-template ngx-datatable-header-template>
-            Title
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="surname">
-          <ng-template ngx-datatable-header-template>
-            Category
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="subtitle">
-          <ng-template ngx-datatable-header-template>
-            Description
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </div>
+      [rows]="products$"
+    >
+      <ngx-datatable-column name="photo" [maxWidth]="100">
+        <ng-template ngx-datatable-header-template> Thumbnail </ng-template>
+        <ng-template
+          ngx-datatable-cell-template
+          let-value="value"
+          let-row="row"
+        >
+          <img
+            height="32px"
+            width="32px"
+            style="border-radius: 4px"
+            [src]="value"
+            alt=""
+          />
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="name" [width]="300">
+        <ng-template ngx-datatable-header-template> Title </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="surname">
+        <ng-template ngx-datatable-header-template> Category </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="subtitle">
+        <ng-template ngx-datatable-header-template> Description </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
+</div>
