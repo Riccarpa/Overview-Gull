@@ -18,10 +18,7 @@ export class UserComponent implements OnInit {
   constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,private toastr: ToastrService) { }
  
   users:User[]
-  isCreate=false
-  products$: any;
-  products;
-  filteredProducts;
+  filteredUsers;
   searchControl: FormControl = new FormControl();
   confirmResut;
   profileForm = new FormGroup({
@@ -37,10 +34,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
 
-
    this.retrieveUsers();
-   
-  
 
    this.searchControl.valueChanges
     .pipe(debounceTime(200))
@@ -52,8 +46,8 @@ export class UserComponent implements OnInit {
   retrieveUsers(){
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
-      this.products = res.data
-      this.filteredProducts = res.data
+      // this.products = res.data
+      this.filteredUsers = res.data
       console.log(res)
     },(error)=>{
       alert('you are not logged-in')
@@ -102,15 +96,15 @@ export class UserComponent implements OnInit {
     if (val) {
       val = val.toLowerCase();
     } else {
-      return this.filteredProducts = [...this.products];
+      return this.filteredUsers = [...this.users];
     }
 
-    const columns = Object.keys(this.products[0]);
+    const columns = Object.keys(this.users[0]);
     if (!columns.length) {
       return;
     }
 
-    const rows = this.products.filter(function(d) {
+    const rows = this.users.filter(function(d) {
       for (let i = 0; i <= columns.length; i++) {
         const column = columns[i];
         // console.log(d[column]);
@@ -119,13 +113,11 @@ export class UserComponent implements OnInit {
         }
       }
     });
-    this.filteredProducts = rows;
+    this.filteredUsers = rows;
   }
 
 
 
-  back(){
-    this.isCreate = false
-  }
+  
 
 }

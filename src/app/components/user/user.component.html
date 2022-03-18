@@ -158,7 +158,7 @@
         [footerHeight]="50"
         [rowHeight]="60"
         [scrollbarV]="true"
-        [rows]="filteredProducts"
+        [rows]="filteredUsers"
       >
         <ngx-datatable-column name="picture" [maxWidth]="120">
           <ng-template ngx-datatable-header-template> Picture </ng-template>
@@ -176,6 +176,7 @@
             />
           </ng-template>
         </ngx-datatable-column>
+
         <ngx-datatable-column name="name">
           <ng-template ngx-datatable-header-template>Name</ng-template>
         </ngx-datatable-column>
@@ -184,6 +185,12 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="email">
           <ng-template ngx-datatable-header-template> Email </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template>Actions </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">{{
+            row.id
+          }}</ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
