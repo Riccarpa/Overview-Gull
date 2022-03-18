@@ -7,7 +7,7 @@ import { User } from 'src/app/models/user.model';
 import { ProductService } from 'src/app/shared/services/product.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-{}
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -20,6 +20,9 @@ export class UserComponent implements OnInit {
   users:User[]
   isCreate=false
   products$: any;
+  products;
+  filteredProducts;
+  searchControl: FormControl = new FormControl();
   confirmResut;
   profileForm = new FormGroup({
     name: new FormControl('',Validators.required),
@@ -33,13 +36,24 @@ export class UserComponent implements OnInit {
 
 
   ngOnInit(): void {
-   this.retrieveUsers()
+
+
+   this.retrieveUsers();
+   
+  
+
+   this.searchControl.valueChanges
+    .pipe(debounceTime(200))
+    .subscribe(value => {
+      this.filerData(value);
+    });
   }
  
   retrieveUsers(){
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
-      this.products$ = this.users
+      this.products = res.data
+      this.filteredProducts = res.data
       console.log(res)
     },(error)=>{
       alert('you are not logged-in')
@@ -84,6 +98,29 @@ export class UserComponent implements OnInit {
     this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
   }
   
+  filerData(val) {
+    if (val) {
+      val = val.toLowerCase();
+    } else {
+      return this.filteredProducts = [...this.products];
+    }
+
+    const columns = Object.keys(this.products[0]);
+    if (!columns.length) {
+      return;
+    }
+
+    const rows = this.products.filter(function(d) {
+      for (let i = 0; i <= columns.length; i++) {
+        const column = columns[i];
+        // console.log(d[column]);
+        if (d[column] && d[column].toString().toLowerCase().indexOf(val) > -1) {
+          return true;
+        }
+      }
+    });
+    this.filteredProducts = rows;
+  }
 
 
 
