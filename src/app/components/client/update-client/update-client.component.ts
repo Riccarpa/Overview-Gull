@@ -32,7 +32,7 @@ export class UpdateClientComponent implements OnInit {
   }
 
   client: Client;
-  loading: boolean;
+
 
   clientForm = new FormGroup({
     name: new FormControl(''),
@@ -47,13 +47,9 @@ export class UpdateClientComponent implements OnInit {
     this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives)
       .subscribe(() => {
         console.log('ok');
+        this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
+        this.route.navigate(['home/client']);
       })
-
-    this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-      this.toastr.success('Profile updated.', 'Success!', { progressBar: true });
-    }, 3000);
   }
 
 }

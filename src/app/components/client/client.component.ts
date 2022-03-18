@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ClientService } from 'src/app/services/client/client.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -9,7 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private router: Router) { }
+  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getClients();
@@ -38,7 +40,15 @@ export class ClientComponent implements OnInit {
     const newClient = this.clientForm.value;
     this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives)
       .subscribe(() => {
-        console.log('ok');
+        this.clientForm.setValue({
+          name: '',
+          vat_number: '',
+          business_name: '',
+          representatives: '',
+        });
+        this.showForm = false;
+        this.getClients();
+        this.successAddClient();
       });
   }
 
@@ -47,11 +57,31 @@ export class ClientComponent implements OnInit {
     this.router.navigate(['home/client', id]);
   }
 
-  deleteClient(id: any) {
-    this.clientService.deleteClient(id).subscribe(() => {
-      console.log('ok, eliminato');
-      this.getClients();
-    });
+  deleteClient(id: any, name: any, content: any) {
+    this.currentDeleteClient = name;
+    this.confirm(id, content);
+  }
+
+  currentDeleteClient: any;
+
+  confirm(id: any, content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+      .result.then(() => {
+        this.clientService.deleteClient(id).subscribe(() => {
+          this.successDeleteClient();
+          this.getClients();
+        });
+      }, () => {
+        console.log('annullato');
+      });
+  }
+
+  successDeleteClient() {
+    this.toastr.success('Operazione riuscita!', 'Rimosso cliente', { timeOut: 3000 });
+  }
+
+  successAddClient() {
+    this.toastr.success('Operazione riuscita!', 'Aggiunto cliente', { timeOut: 3000 });
   }
 
 }

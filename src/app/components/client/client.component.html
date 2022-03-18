@@ -69,8 +69,27 @@
                     </div>
                 </div>
                 <button class="btn btn-primary px-5 mx-2" (click)="editClient(client.id)">Modifica</button>
-                <button class="btn btn-primary px-5 mx-2" (click)="deleteClient(client.id)">Elimina</button>
+                <button class="btn btn-primary px-5 mx-2"
+                    (click)="deleteClient(client.id, client.name, modalConfirm)">Elimina</button>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #modalConfirm let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Cancella Cliente</h4>
+        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p><strong>Sei sicuro di eliminare <span class="text-primary">"{{currentDeleteClient}}"</span>?</strong></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-rounded"
+            (click)="modal.dismiss('cancel')">Annulla</button>
+        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
+    </div>
+</ng-template>
