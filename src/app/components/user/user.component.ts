@@ -33,14 +33,7 @@ export class UserComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.uService.getUsers().subscribe(res=>{
-      this.users = res.data
-      this.products$ = this.users
-      console.log(res)
-    },(error)=>{
-      this.errorBar('You are not logged-in')
-      this.route.navigate(['/'])
-    })
+   this.retrieveUsers()
   }
  
   retrieveUsers(){
@@ -53,14 +46,16 @@ export class UserComponent implements OnInit {
       this.route.navigate(['/'])
     })
   }
+  
   onSubmit(){
    
     if(this.profileForm.status == 'INVALID'){
      this.warningBar()
+     
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
-        this.modalService.dismissAll()
-        this.successBar(res.data.name) 
+        this.modalService.dismissAll(res.data.name)
+        
       },(error)=>{
         this.errorBar(error.error.message)
       })
@@ -72,13 +67,15 @@ export class UserComponent implements OnInit {
     .result.then((result) => {
       console.log(result);
     }, (reason) => {
-      console.log('Err!', reason);
+      if(reason){
+        this.successBar(reason)
+        this.retrieveUsers()
+      }
     });
   }
 
   successBar(user:any) {
     this.toastr.success(`utente ${user} creato con successo`, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
-    this.retrieveUsers()
   }
   warningBar() {
     this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
@@ -87,6 +84,7 @@ export class UserComponent implements OnInit {
     this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
   }
   
+
 
 
   back(){
