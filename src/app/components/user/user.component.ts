@@ -46,8 +46,8 @@ export class UserComponent implements OnInit {
   retrieveUsers(){
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
-      // this.products = res.data
       this.filteredUsers = res.data
+
       console.log(res)
     },(error)=>{
       alert('you are not logged-in')

@@ -39,7 +39,7 @@
               <input
                 formControlName="name"
                 type="text"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="name"
                 placeholder="Enter your first name"
               />
@@ -50,7 +50,7 @@
               <input
                 formControlName="surname"
                 type="text"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="surname"
                 placeholder="Enter your last name"
               />
@@ -61,7 +61,7 @@
               <input
                 formControlName="email"
                 type="email"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="email"
                 aria-describedby="emailHelp"
                 placeholder="Enter email"
@@ -73,7 +73,7 @@
               <input
                 formControlName="password"
                 type="text"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="password"
                 placeholder="Enter the password"
               />
@@ -84,7 +84,7 @@
               <input
                 formControlName="cost"
                 type="number"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="cost"
                 placeholder="Enter user cost"
               />
@@ -95,7 +95,7 @@
               <input
                 formControlName="week_working_hours"
                 type="number"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 id="week_working_hours"
                 placeholder="Enter user week_working_hours"
               />
@@ -107,7 +107,7 @@
               <input
                 formControlName="recruitment_date"
                 id="recruitment_date"
-                class="form-control form-control-rounded"
+                class="form-control form-control"
                 placeholder="yyyy-mm-dd"
                 name="recruitment_date"
                 type="date"
@@ -119,11 +119,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary btn-rounded"
-      (click)="onSubmit()"
-    >
+    <button type="button" class="btn btn-primary" (click)="onSubmit()">
       Create
     </button>
   </div>
@@ -138,7 +134,7 @@
         id="text"
         placeholder="Search Users"
         [formControl]="searchControl"
-        class="form-control form-control-rounded"
+        class="form-control form-control"
         type="email"
       />
     </div>
@@ -155,18 +151,14 @@
         [scrollbarV]="true"
         [rows]="filteredUsers"
       >
-        <ngx-datatable-column name="picture" [maxWidth]="120">
+        <ngx-datatable-column [maxWidth]="120">
           <ng-template ngx-datatable-header-template> Picture </ng-template>
-          <ng-template
-            ngx-datatable-cell-template
-            let-value="value"
-            let-row="row"
-          >
+          <ng-template ngx-datatable-cell-template let-row="row">
             <img
               height="32px"
               width="32px"
               style="border-radius: 4px"
-              [src]="value"
+              src="http://80.211.57.191/{{ row.picture }}"
               alt=""
             />
           </ng-template>
