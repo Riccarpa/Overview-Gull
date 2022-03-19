@@ -131,12 +131,7 @@
 
 <div class="separator-breadcrumb border-top"></div>
 
-<!-- <ul>
-  <li routerLink="{{ user.id }}" *ngFor="let user of users">
-    {{ user.name }}
-  </li>
-</ul> -->
-<div class="row">
+<div class="row mb-5">
   <div class="col-md-4">
     <div class="form-group">
       <input
@@ -188,9 +183,15 @@
         </ngx-datatable-column>
         <ngx-datatable-column>
           <ng-template ngx-datatable-header-template>Actions </ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row">{{
-            row.id
-          }}</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <button
+              type="button"
+              routerLink="{{ row.id }}"
+              class="btn btn-sm btn-outline-primary m-1"
+            >
+              Edit
+            </button></ng-template
+          >
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
