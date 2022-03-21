@@ -27,7 +27,7 @@ export class ClientService {
     return this.http.get(url, { headers: headers });
   }
 
-  addClient(name: string, vat_number: string, business_name: string, representatives: string): Observable<any> {
+  addClient(name: string, vat_number: string, business_name: string, representatives: string, logo: any): Observable<any> {
     const url = 'http://80.211.57.191/api/clients';
 
     let body = {
@@ -35,6 +35,7 @@ export class ClientService {
       "vat_number": vat_number,
       "business_name": business_name,
       "representatives": representatives,
+      "logo": logo,
     };
 
     const headers = new HttpHeaders({
@@ -55,7 +56,7 @@ export class ClientService {
     return this.http.get(url, { headers: headers });
   }
 
-  updateClient(name: string, vat_number: string, business_name: string, representatives: string): Observable<any> {
+  updateClient(name: string, vat_number: string, business_name: string, representatives: string, logo: any): Observable<any> {
     const url = `http://80.211.57.191/api/clients/${this.currentClient}`;
 
     let body = {
@@ -63,6 +64,7 @@ export class ClientService {
       "vat_number": vat_number,
       "business_name": business_name,
       "representatives": representatives,
+      "logo": logo,
     };
 
     const headers = new HttpHeaders({

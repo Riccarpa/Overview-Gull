@@ -22,14 +22,14 @@ export class ClientComponent implements OnInit {
 
   titleModal: any;
 
+  show = false;
+
   getClients() {
     this.clientService.getClients().subscribe((res) => {
       this.clientService.clientsList = res.data;
       this.clientsList = this.clientService.clientsList;
     })
   }
-
-  showForm = false;
 
   clientForm = new FormGroup({
     name: new FormControl(''),
@@ -42,7 +42,7 @@ export class ClientComponent implements OnInit {
   addClient() {
     console.log(this.clientForm.value);
     const newClient = this.clientForm.value;
-    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives)
+    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo)
       .subscribe(() => {
         this.clientForm.setValue({
           name: '',
@@ -51,7 +51,6 @@ export class ClientComponent implements OnInit {
           representatives: '',
           logo: '',
         });
-        this.showForm = false;
         this.getClients();
         this.successAddClient();
       });
@@ -119,13 +118,14 @@ export class ClientComponent implements OnInit {
         vat_number: this.client.vat_number,
         business_name: this.client.business_name,
         representatives: this.client.representatives,
+        logo: this.client.logo,
       });
     })
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         const client = this.clientForm.value;
-        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives)
+        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo)
           .subscribe(() => {
             console.log('ok');
             this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
@@ -135,13 +135,4 @@ export class ClientComponent implements OnInit {
         console.log('annullato');
       });
   }
-
-  selectedFile: any;
-
-  onFileChanged(event: any) {
-    console.log(event);
-    this.selectedFile = event.target.files[0];
-    console.log(this.selectedFile);
-  }
-
 }
