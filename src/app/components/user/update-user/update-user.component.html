@@ -107,7 +107,7 @@
                 <img
                   *ngIf="data?.image"
                   class="rounded-circle"
-                  src="http://80.211.57.191/{{ data?.image }}"
+                  [src]="data?.image"
                   [width]="cropperSettings.croppedWidth"
                   [height]="cropperSettings.croppedHeight"
                 />
@@ -200,13 +200,13 @@
       [width]="cropperSettings.croppedWidth"
       [height]="cropperSettings.croppedHeight"
     /> -->
-    <img
+    <!-- <img
       *ngIf="data?.image"
       class="rounded-circle mt-3"
       src="http://80.211.57.191/{{ data?.image }}"
       [width]="cropperSettings.croppedWidth"
       [height]="cropperSettings.croppedHeight"
-    />
+    /> -->
   </div>
   <div class="modal-footer">
     <button

@@ -92,7 +92,7 @@ export class UpdateUserComponent implements OnInit {
         recruitment_date: new FormControl(this.user. recruitment_date),
         week_working_hours: new FormControl(this.user.week_working_hours),
       })
-      this.data.image = this.user.picture
+      // this.data.image = this.user.picture
     })
   }
   deleteUser(){
@@ -106,11 +106,6 @@ export class UpdateUserComponent implements OnInit {
       this.toastr.error(error.error.message,'Error!',{progressBar: true});
     });
   }
-  updateImg(){
-    console.log(this.data?.image)
-  }
-
-
   confirm(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
     .result.then((result) => {
@@ -124,8 +119,12 @@ export class UpdateUserComponent implements OnInit {
     .result.then((result) => {
       console.log(result);
     }, (reason) => {
-      
+    
     });
+  }
+  updateImg(){
+    console.log(this.data.image)
+
   }
   
   back(){
