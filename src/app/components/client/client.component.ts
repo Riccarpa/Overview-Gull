@@ -130,6 +130,7 @@ export class ClientComponent implements OnInit {
             console.log('ok');
             this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
             this.getClients();
+            this.show = false;
           })
       }, () => {
         console.log('annullato');

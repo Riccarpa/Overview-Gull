@@ -87,7 +87,8 @@
 
                 <div class="col-md-12 form-group mb-3" *ngIf="titleModal == 'Modifica Cliente'">
                     <div class="avatar my-3">
-                        <img src="http://80.211.57.191/{{client?.logo}}" alt="">
+                        <img *ngIf="client?.logo" class="rounded-circle box-shadow-2"
+                            src="http://80.211.57.191/{{client?.logo}}" alt="">
                     </div>
                     <button type="button" class="btn btn-success btn-rounded" (click)="show = !show">Modifica
                         logo</button>
