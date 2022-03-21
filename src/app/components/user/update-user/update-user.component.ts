@@ -92,7 +92,7 @@ export class UpdateUserComponent implements OnInit {
         recruitment_date: new FormControl(this.user. recruitment_date),
         week_working_hours: new FormControl(this.user.week_working_hours),
       })
-      // this.data.image = this.user.picture
+      this.data.image = `http://80.211.57.191/${this.user.picture}`
     })
   }
   deleteUser(){
