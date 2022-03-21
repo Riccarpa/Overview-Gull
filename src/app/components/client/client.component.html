@@ -1,49 +1,4 @@
-<button class="btn btn-primary px-3 m-3" (click)="showForm = !showForm">Aggiungi Cliente</button>
-
-<div *ngIf="showForm">
-    <div class="breadcrumb">
-        <h1>Aggiungi cliente</h1>
-    </div>
-
-    <div class="separator-breadcrumb border-top"></div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title mb-3">Form Inputs</div>
-                    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
-                        <div class="row">
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="name">Nome</label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    placeholder="Inserisci nome" formControlName="name">
-                            </div>
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="vat_number">Partita IVA</label>
-                                <input type="text" class="form-control" id="vat_number" name="vat_number"
-                                    placeholder="Inserisci partita IVA" formControlName="vat_number">
-                            </div>
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="business_name">Nome Commerciale</label>
-                                <input type="text" class="form-control" id="business_name" name="business_name"
-                                    placeholder="Inserisci nome commerciale" formControlName="business_name">
-                            </div>
-                            <div class="col-md-6 form-group mb-3">
-                                <label for="representatives">Rappresentanti</label>
-                                <input type="text" class="form-control" id="representatives" name="representatives"
-                                    placeholder="Inserisci rappresentanti" formControlName="representatives">
-                            </div>
-                            <div class="col-md-12">
-                                <button type="submit" class="btn-primary btn-rounded">Aggiungi</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<button class="btn btn-success px-3 m-3" (click)="openModalAddClient(modalBasic)">Aggiungi Cliente</button>
 
 <div class="row">
     <div class="col-md-6" *ngFor="let client of clientsList">
@@ -68,7 +23,7 @@
                         <h5 class="mt-0 text-muted">Progetti attuali</h5>
                     </div>
                 </div>
-                <button class="btn btn-primary px-5 mx-2" (click)="editClient(client.id)">Modifica</button>
+                <button class="btn btn-primary px-5 mx-2" (click)="editClient(client.id, modalBasic)">Modifica</button>
                 <button class="btn btn-primary px-5 mx-2"
                     (click)="deleteClient(client.id, client.name, modalConfirm)">Elimina</button>
             </div>
@@ -91,5 +46,49 @@
         <button type="button" class="btn btn-outline-secondary btn-rounded"
             (click)="modal.dismiss('cancel')">Annulla</button>
         <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
+    </div>
+</ng-template>
+
+<ng-template #modalBasic let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="clientForm">
+            <div class="row">
+                <div class="col-md-6 form-group mb-3">
+                    <label for="name">Nome</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
+                        formControlName="name">
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label for="vat_number">Partita IVA</label>
+                    <input type="text" class="form-control" id="vat_number" name="vat_number"
+                        placeholder="Inserisci partita IVA" formControlName="vat_number">
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label for="business_name">Nome Commerciale</label>
+                    <input type="text" class="form-control" id="business_name" name="business_name"
+                        placeholder="Inserisci nome commerciale" formControlName="business_name">
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label for="representatives">Rappresentanti</label>
+                    <input type="text" class="form-control" id="representatives" name="representatives"
+                        placeholder="Inserisci rappresentanti" formControlName="representatives">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="logo">Logo</label>
+                    <input type="file" class="form-control" id="logo" name="logo" placeholder="Inserisci rappresentanti"
+                        formControlName="logo">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="modal.close('Save click')">Salva</button>
     </div>
 </ng-template>
