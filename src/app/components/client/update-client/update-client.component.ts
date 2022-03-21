@@ -19,7 +19,7 @@ export class UpdateClientComponent implements OnInit {
       this.clientService.currentClient = this.activeRoute.snapshot.paramMap.get('id');
     }
 
-    this.clientService.getClient().subscribe((res) => {
+    this.clientService.getClient(this.clientService.currentClient).subscribe((res) => {
       this.client = res.data;
 
       this.clientForm.setValue({

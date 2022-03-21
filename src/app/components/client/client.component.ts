@@ -36,6 +36,7 @@ export class ClientComponent implements OnInit {
     vat_number: new FormControl(''),
     business_name: new FormControl(''),
     representatives: new FormControl(''),
+    logo: new FormControl(''),
   });
 
   addClient() {
@@ -48,6 +49,7 @@ export class ClientComponent implements OnInit {
           vat_number: '',
           business_name: '',
           representatives: '',
+          logo: '',
         });
         this.showForm = false;
         this.getClients();
@@ -57,7 +59,7 @@ export class ClientComponent implements OnInit {
 
   editClient(id: any, content: any) {
     this.clientService.currentClient = id;
-    this.openModalEditClient(content);
+    this.openModalEditClient(id, content);
   }
 
   deleteClient(id: any, name: any, content: any) {
@@ -94,6 +96,7 @@ export class ClientComponent implements OnInit {
       vat_number: '',
       business_name: '',
       representatives: '',
+      logo: '',
     });
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -106,9 +109,9 @@ export class ClientComponent implements OnInit {
 
   client: Client;
 
-  openModalEditClient(content: any) {
+  openModalEditClient(id: any, content: any) {
     this.titleModal = "Modifica Cliente";
-    this.clientService.getClient().subscribe((res) => {
+    this.clientService.getClient(id).subscribe((res) => {
       this.client = res.data;
 
       this.clientForm.setValue({
@@ -131,6 +134,14 @@ export class ClientComponent implements OnInit {
       }, () => {
         console.log('annullato');
       });
+  }
+
+  selectedFile: any;
+
+  onFileChanged(event: any) {
+    console.log(event);
+    this.selectedFile = event.target.files[0];
+    console.log(this.selectedFile);
   }
 
 }
