@@ -53,7 +53,7 @@ export class ClientComponent implements OnInit {
   addClient() {
     console.log(this.clientForm.value);
     const newClient = this.clientForm.value;
-    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives)
+    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo_data)
       .subscribe(() => {
         this.clientForm.setValue({
           name: '',
