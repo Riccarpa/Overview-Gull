@@ -16,12 +16,12 @@ export class ClientComponent implements OnInit {
 
   constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) {
     this.cropperSettings = new CropperSettings();
-    this.cropperSettings.width = 100;
-    this.cropperSettings.height = 100;
-    this.cropperSettings.croppedWidth = 100;
-    this.cropperSettings.croppedHeight = 100;
-    this.cropperSettings.canvasWidth = 400;
-    this.cropperSettings.canvasHeight = 300;
+    // this.cropperSettings.width = 100;
+    // this.cropperSettings.height = 100;
+    // this.cropperSettings.croppedWidth = 100;
+    // this.cropperSettings.croppedHeight = 100;
+    // this.cropperSettings.canvasWidth = 400;
+    // this.cropperSettings.canvasHeight = 300;
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
 
@@ -36,8 +36,6 @@ export class ClientComponent implements OnInit {
 
   titleModal: any;
 
-  show = false;
-
   getClients() {
     this.clientService.getClients().subscribe((res) => {
       this.clientService.clientsList = res.data;
@@ -50,20 +48,18 @@ export class ClientComponent implements OnInit {
     vat_number: new FormControl(''),
     business_name: new FormControl(''),
     representatives: new FormControl(''),
-    logo: new FormControl(''),
   });
 
   addClient() {
     console.log(this.clientForm.value);
     const newClient = this.clientForm.value;
-    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo)
+    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives)
       .subscribe(() => {
         this.clientForm.setValue({
           name: '',
           vat_number: '',
           business_name: '',
           representatives: '',
-          logo: '',
         });
         this.getClients();
         this.successAddClient();
@@ -109,7 +105,6 @@ export class ClientComponent implements OnInit {
       vat_number: '',
       business_name: '',
       representatives: '',
-      logo: '',
     });
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -132,28 +127,23 @@ export class ClientComponent implements OnInit {
         vat_number: this.client.vat_number,
         business_name: this.client.business_name,
         representatives: this.client.representatives,
-        logo: this.client.logo,
       });
     })
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         const client = this.clientForm.value;
-        let formData = new FormData();
-        formData.append('file', this.currentLogo);
-        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, formData)
+        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives)
           .subscribe(() => {
             console.log('ok');
             this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
             this.getClients();
-            this.show = false;
           })
       }, () => {
         console.log('annullato');
       });
   }
 
-  currentLogo: any;
 
   open(modal: any) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
