@@ -45,6 +45,7 @@ export class ProjectService {
   }
 
 
+  // delete project
   deleteProject(id:number){
 
     let url = `http://80.211.57.191/api/projects/${id}`
@@ -56,7 +57,7 @@ export class ProjectService {
 
   }
 
-
+  // get projects all
   getProjects(): Observable<any> {
     let url = 'http://80.211.57.191/api/projects' ;
     const headers = {
@@ -66,6 +67,7 @@ export class ProjectService {
     return this.http.get(url,{headers})
   }
 
+  // post agiunta project
   addProject(form: any): Observable<any>{
     let url = 'http://80.211.57.191/api/projects';
     const headers = {
@@ -86,6 +88,20 @@ export class ProjectService {
     return this.http.post(url,body,{headers})
 
   }
+
+
+  // testPost(file:any) {
+
+  //   let url = 'http://80.211.57.191/overview-ws/api'
+  //   let body = {
+  //      file
+  //   }
+  //   const headers = {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${this.token}`
+  //   }
+  //   return this.http.patch(url, body, { headers })
+  // }
 
     
 }

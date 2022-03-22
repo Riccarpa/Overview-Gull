@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,20 +20,29 @@ import { ProductService } from 'src/app/shared/services/product.service';
 })
 export class ProjectComponent implements OnInit {
 
-  constructor(private modalService: NgbModal,private productService: ProductService,private route: Router, private service: ProjectService, private fb: FormBuilder, private clientService: ClientService, private userService: UserService) { }
+  constructor(
+    private modalService: NgbModal,
+    private productService: ProductService,
+    private route: Router,
+    private service: ProjectService,
+    private fb: FormBuilder,
+    private clientService: ClientService,
+    private userService: UserService) { }
 
 
   projects: Project[] = []
   client: Client[] = []
   users: User[] = []
+
   active = false
-  
+
   chartPie1: any;
   chartPie2: any;
   chartPie3: any;
-  chartPieDef:any;
-  confirmResut:any;
-  
+  chartPieDef: any;
+  confirmResut: any;
+
+
 
 
   projectForm = this.fb.group(
@@ -45,59 +54,33 @@ export class ProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl('')
+      user_ids: new FormControl(''),
     }
   )
+  logo: any
 
-  // getProjects(): void {
-  //   this.service.getProjects().subscribe((res) => {
+  // sendImage() {
 
-  //     this.projects = res.data
-  //     this.service.project = res.data
-      
-  //   })
-  // }
-  
-  
-  // getClient() {
-  //   this.clientService.getClients().subscribe((res) => {
 
-  //     this.client = res.data
-  //     this.service.client = res.data
+  //   this.service.testPost(this.logo).subscribe((res) => {
+
+  //     console.log(res);
+
   //   })
   // }
 
-  // getUser() {
-  //   this.userService.getUsers().subscribe((res) => {
-
-  //     this.users = res.data
-  //     this.service.users = res.data
-  //   })
-  // }
-
-
- 
-  
   addProject() {
 
     let newProj = this.projectForm.value
     this.service.addProject(newProj).subscribe()
-    
   }
-  
+
   updateProject(id: number) {
 
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
   }
 
-  delProject(id: number) {
-    
-    this.service.deleteProject(id).subscribe()
-    
-  }
-
- 
   confirm(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then((result) => {
@@ -107,16 +90,13 @@ export class ProjectComponent implements OnInit {
       });
   }
 
-  
-  
-  
   ngOnInit() {
     this.service.getProjects().subscribe((res) => {
-      
+
       this.projects = res.data
       this.service.project = res.data
-      
-    },(error) => {
+
+    }, (error) => {
       this.route.navigate(['/'])
     })
 
@@ -124,7 +104,7 @@ export class ProjectComponent implements OnInit {
 
       this.client = res.data
       this.service.client = res.data
-    },(error)=>{
+    }, (error) => {
       this.route.navigate(['/'])
     })
 
@@ -132,11 +112,11 @@ export class ProjectComponent implements OnInit {
 
       this.users = res.data
       this.service.users = res.data
-    },(error)=>{
+    }, (error) => {
       this.route.navigate(['/'])
     })
-    
-    
+
+
     this.chartPie1 = {
       ...echartStyles.defaultOptions, ...{
         legend: {
@@ -245,13 +225,13 @@ export class ProjectComponent implements OnInit {
         }]
       }
     };
-   
-    
+
+
   }
 
-    
 
-  
+
+
 }
 
 

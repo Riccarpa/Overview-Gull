@@ -32,12 +32,13 @@ export class UpdateProjectComponent implements OnInit {
 
   ) { }
 
-  project: Project
-  idProject: number
-  client: Client[] = []
-  users: User[] = []
-  associateClient:Client
-  associateUser:number
+  project: Project //progetto singolo
+  idProject: number //id progetto singolo
+  clients:Client[] // lista clienti
+  users: User[] = [] // lista utenti 
+  associateClient:Client // cliente associato al project
+  associateUser:number //numero di user associati al project
+  imgClient:any
 
 
   projectForm = this.fb.group(
@@ -53,11 +54,18 @@ export class UpdateProjectComponent implements OnInit {
     }
   )
 
+  delProject(id: number) {
+
+    this.service.deleteProject(id).subscribe()
+    this.route.navigate(['home/project'])
+  }
+
   updateProject() {
 
     let updatedProj = this.projectForm.value
     this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
-      console.log(res);
+      
+      this.route.navigate(['home/project'])
 
     })
 
@@ -77,6 +85,8 @@ export class UpdateProjectComponent implements OnInit {
     }, 2000);
 
   }
+
+
 
 
   ngOnInit(): void {
@@ -103,7 +113,11 @@ export class UpdateProjectComponent implements OnInit {
       })
 
       this.associateUser = this.project.user_ids.length
-      
+      let idClient = res.data.client_id
+      this.clientService.getClient(idClient).subscribe((res) => {
+        this.associateClient = res.data
+      })
+
       
     })
     
@@ -112,29 +126,19 @@ export class UpdateProjectComponent implements OnInit {
       this.users = res.data
 
     })
-    
-    
-    this.clientService.getClients().subscribe((res) => {
-      this.client = res.data
-      let projId = this.project.client_id
-      
-      if (res) {
-        this.client.forEach(c => {
-          // match cliente corrente 
-          if (c.id && c.id === projId) {
 
-            this.associateClient = c
+    this.clientService.getClients().subscribe((res)=>{
 
-          }
-        });
-      }
+      this.clients = res.data
     })
 
+    
 
     this.buildFormBasic();
     this.radioGroup = this.fb.group({
       radio: []
     });
+    
     
     
     
