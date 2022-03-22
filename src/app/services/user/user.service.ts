@@ -63,6 +63,10 @@ export class UserService {
       "recruitment_date":form.recruitment_date,
       "week_working_hours":form.week_working_hours,
      };
+     if (form.picture_data) {
+       body['picture_data'] = form.picture_data;
+     }
+
      return this.http.patch(`${this.url}/${id}`, body,{headers: headers});
   }
   deleteUser(id:any){

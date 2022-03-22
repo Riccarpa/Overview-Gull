@@ -123,8 +123,10 @@ export class UpdateUserComponent implements OnInit {
     });
   }
   updateImg(){
-    console.log(this.data.image)
-
+    this.modalService.dismissAll();
+    console.log(this.data.image);
+    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+    this.profileForm.value.picture_data = base64WithoutIndex;
   }
   
   back(){
