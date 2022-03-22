@@ -44,7 +44,7 @@ export class UpdateClientComponent implements OnInit {
   onSubmit() {
     console.log(this.clientForm.value);
     const client = this.clientForm.value;
-    this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives)
+    this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, '')
       .subscribe(() => {
         console.log('ok');
         this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });

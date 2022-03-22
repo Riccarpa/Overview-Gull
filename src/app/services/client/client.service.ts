@@ -55,7 +55,7 @@ export class ClientService {
     return this.http.get(url, { headers: headers });
   }
 
-  updateClient(name: string, vat_number: string, business_name: string, representatives: string): Observable<any> {
+  updateClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
     const url = `http://80.211.57.191/api/clients/${this.currentClient}`;
 
     let body = {
@@ -64,6 +64,9 @@ export class ClientService {
       "business_name": business_name,
       "representatives": representatives,
     };
+    if (logo) {
+      body['logo_data'] = logo;
+    }
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

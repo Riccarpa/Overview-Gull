@@ -136,7 +136,7 @@ export class ClientComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         const client = this.clientForm.value;
-        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives)
+        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
           .subscribe(() => {
             console.log('ok');
             this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
@@ -150,10 +150,12 @@ export class ClientComponent implements OnInit {
 
   open(modal: any) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then((result) => {
-        console.log(result);
-      }, (reason) => {
-        console.log('Err!', reason);
+      .result.then(() => {
+        console.log(this.data.image);
+        let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+        this.clientForm.value.logo_data = base64WithoutIndex;
+      }, () => {
+        console.log('Err!');
       });
   }
 
