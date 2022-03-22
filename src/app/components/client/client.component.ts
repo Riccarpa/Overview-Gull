@@ -128,6 +128,7 @@ export class ClientComponent implements OnInit {
         business_name: this.client.business_name,
         representatives: this.client.representatives,
       });
+      this.data.image = `http://80.211.57.191/${this.client.logo}`;
     })
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
