@@ -61,6 +61,7 @@ export class ClientComponent implements OnInit {
           business_name: '',
           representatives: '',
         });
+        this.data.image = '';
         this.getClients();
         this.successAddClient();
       });
@@ -106,6 +107,7 @@ export class ClientComponent implements OnInit {
       business_name: '',
       representatives: '',
     });
+    this.data.image = '';
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {

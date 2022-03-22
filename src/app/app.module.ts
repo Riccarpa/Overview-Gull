@@ -19,7 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
-
+import { ImageCropperComponent, ImageCropperModule } from 'ngx-img-cropper';
 
 
 
@@ -33,7 +33,6 @@ import { SharedComponentsModule } from './shared/components/shared-components.mo
     UpdateUserComponent,
     UpdateClientComponent,
     UpdateProjectComponent,
-  
   ],
   imports: [
     BrowserModule,
@@ -47,6 +46,7 @@ import { SharedComponentsModule } from './shared/components/shared-components.mo
     NgxEchartsModule,
     NgxDatatableModule,
     NgbModule,
+    ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]
