@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
+import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
+
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -12,7 +14,19 @@ import { Client } from 'src/app/models/client.model';
 })
 export class ClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) { }
+  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) {
+    this.cropperSettings = new CropperSettings();
+    this.cropperSettings.width = 100;
+    this.cropperSettings.height = 100;
+    this.cropperSettings.croppedWidth = 100;
+    this.cropperSettings.croppedHeight = 100;
+    this.cropperSettings.canvasWidth = 400;
+    this.cropperSettings.canvasHeight = 300;
+    this.cropperSettings.cropperDrawSettings.lineDash = true;
+    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
+
+    this.data = {};
+  }
 
   ngOnInit(): void {
     this.getClients();
@@ -125,7 +139,9 @@ export class ClientComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         const client = this.clientForm.value;
-        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo)
+        let formData = new FormData();
+        formData.append('file', this.currentLogo);
+        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, formData)
           .subscribe(() => {
             console.log('ok');
             this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
@@ -136,4 +152,18 @@ export class ClientComponent implements OnInit {
         console.log('annullato');
       });
   }
+
+  currentLogo: any;
+
+  open(modal: any) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then((result) => {
+        console.log(result);
+      }, (reason) => {
+        console.log('Err!', reason);
+      });
+  }
+
+  data: any;
+  cropperSettings: CropperSettings;
 }
