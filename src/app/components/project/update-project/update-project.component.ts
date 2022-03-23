@@ -35,18 +35,14 @@ export class UpdateProjectComponent implements OnInit {
   ) { 
 
     this.cropperSettings = new CropperSettings();
-    // this.cropperSettings.width = 100;
-    // this.cropperSettings.height = 100;
-    // this.cropperSettings.croppedWidth = 100;
-    // this.cropperSettings.croppedHeight = 100;
-    // this.cropperSettings.canvasWidth = 400;
-    // this.cropperSettings.canvasHeight = 300;
+  
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-
+    
     this.data = {};
   }
-
+  
+ 
   project: Project //progetto singolo
   idProject: number //id progetto singolo
   clients:Client[] // lista clienti
@@ -121,6 +117,8 @@ export class UpdateProjectComponent implements OnInit {
         console.log('Err!', reason);
       });
   }
+
+
 
 
 
