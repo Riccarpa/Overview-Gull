@@ -85,6 +85,7 @@ export class ClientComponent implements OnInit {
         this.clientService.deleteClient(id).subscribe(() => {
           this.successDeleteClient();
           this.getClients();
+          this.modalService.dismissAll();
         });
       }, () => {
         console.log('annullato');
