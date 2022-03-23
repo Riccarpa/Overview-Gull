@@ -17,16 +17,16 @@ export class UpdateClientComponent implements OnInit {
       this.clientService.currentClient = this.route.snapshot.paramMap.get('id');
     }
     
-    this.clientService.getClient().subscribe((res) => {
-      this.client = res.data;
+    // this.clientService.getClient().subscribe((res) => {
+    //   this.client = res.data;
 
-      this.clientForm.setValue({
-        name: this.client.name,
-        vat_number: this.client.vat_number,
-        business_name: this.client.business_name,
-        representatives: this.client.representatives,
-      });
-    })
+    //   this.clientForm.setValue({
+    //     name: this.client.name,
+    //     vat_number: this.client.vat_number,
+    //     business_name: this.client.business_name,
+    //     representatives: this.client.representatives,
+    //   });
+    // })
   }
 
   client: Client;

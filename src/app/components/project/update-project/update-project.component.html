@@ -1,18 +1,18 @@
-<div *ngIf="project && client && users">
+<div *ngIf="project && clients && users">
   <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center ">
       <div class="avatar box-shadow-2 m-0 mr-2">
-        <img src="./assets/images/faces/16.jpg" alt="">
+        <img *ngIf="project.logo" src="http://80.211.57.191/{{project.logo}}" alt="">
       </div>
       <h2>{{project.name}}</h2>
     </div>
 
     <div *ngIf="associateClient" class="card-body text-center d-flex flex-row align-items-center ">
-      <div class="avatar box-shadow-2 m-0 mr-2">
-        <img src="./assets/images/faces/15.jpg" alt="">
+      <div  class="avatar box-shadow-2 m-0 mr-2">
+        <img *ngIf="associateClient.logo" src="http://80.211.57.191/{{associateClient.logo}}" alt="">
+        <img else src="assets/images/stock.jpg" alt="">
       </div>
       <h2>{{associateClient.name}} </h2>
-      <h2>{{projectForm.client_id}} </h2>
     </div>
   </div>
 </div>
@@ -73,11 +73,14 @@
 
 <!-- sezione form -->
 
-<div class="col-md-12">
+
+
+
+<div class="col-md-12 p-0">
   <div class="card mb-4">
     <div class="card-body">
       <div class="card-title mb-3 ">Modifica Progetto</div>
-      <form [formGroup]="projectForm" (ngSubmit)="updateProject();submit()">
+      <form [formGroup]="projectForm" (ngSubmit)="updateProject()">
         <div class="row">
 
           <div class="col-md-6 form-group mb-3">
@@ -89,7 +92,7 @@
             <label for="picker1">client</label>
             <select class="form-control" formControlName="client_id" name="client_id">
               <option value="" selected disabled hidden>clienti</option>
-              <option *ngFor="let c of client" [value]="c.id">{{c.name}}</option>
+              <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
             </select>
           </div>
 
@@ -119,11 +122,73 @@
             <input type="date" class="form-control" formControlName="end_date">
           </div>
 
-          <div class="col-md-12">
-            <btn-loading btnClass="btn-primary btn-rounded" [loading]="loading">modifica</btn-loading>
+        
+          <div class="d-flex mb-3 col-lg-12 p-0 align-items-center" >
+
+            <div class="col-md-6 form-group mb-3">
+              <label for="picker1">users</label>
+              <select class="form-control" formControlName="users_ids">
+                <option value="" selected disabled >collaboratori</option>
+                <option *ngFor="let u of users" [value]="u.id">{{u.name}}</option>
+              </select>
+            </div>
+
+            
+           
+          </div>
+          
+          
+          
+          <div class="col-md-6">
+            <btn-loading btnClass="btn-primary btn-rounded" [loading]="loading">update project</btn-loading>
+          </div>
+          <div class="col-md-6">
+            <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-primary btn-rounded">delete
+            </btn-loading>
+          </div>
+
+        </div>
+
+        
+      </form>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title"></div>
+              <div>
+                <button class="btn btn-outline-primary btn-rounded mr-3" (click)="open(modalCropper)">modifica
+                  logo</button>
+                <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
+                  [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+              </div>
+            </div>
           </div>
         </div>
-      </form>
+      </div>
+
+      <ng-template #modalCropper let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img-cropper [image]="data" [settings]="cropperSettings">{{data}}</img-cropper><br>
+          <img *ngIf="data?.image" class="mt-3  mr-3" src="http://80.211.57.191/{{ data?.image }}"
+            [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+          <img *ngIf="data?.image" class="rounded-circle  mt-3" src="http://80.211.57.191/{{ data?.image }}"
+            [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-rounded btn-outline-dark"
+            (click)="updateImg();modal.close()">Save</button>
+        </div>
+      </ng-template>
+
+
     </div>
   </div>
 </div>

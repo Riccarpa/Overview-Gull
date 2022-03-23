@@ -45,8 +45,8 @@ export class ClientService {
     return this.http.post(url, body, { headers: headers });
   }
 
-  getClient(): Observable<any> {
-    const url = `http://80.211.57.191/api/clients/${this.currentClient}`;
+  getClient(id:number): Observable<any> {
+    const url = `http://80.211.57.191/api/clients/${id}`;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

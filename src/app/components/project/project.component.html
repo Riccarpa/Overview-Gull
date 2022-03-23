@@ -1,9 +1,13 @@
-<div class="d-flex justify-content-between w-100">
+<div class="d-flex justify-content-between w-100 mb-4">
   <h2 class="">Projects</h2>
 
   <div>
-    <button (click)="confirm(modalConfirm)">Aggiungi Progetto</button>
-
+    <button class="btn btn-success" (click)="confirm(modalConfirm)">Aggiungi Progetto</button>
+     <!-- <div class="col-md-6 form-group mb-3">
+       <label for="picker1">logo</label>
+       <input type="file" class="form-control" [(ngModel)]="logo">
+       <button (click)="sendImage()">send</button>
+     </div> -->
 
     <ng-template class="m-0" #modalConfirm let-modal>
       <div class="modal-header">
@@ -18,7 +22,7 @@
         <div class="col-md-12">
           <div class="card mb-4">
             <div class="card-body">
-              <div class="card-title mb-3">Crea</div>
+              <div class="card-title mb-3"></div>
               <form [formGroup]="projectForm" >
                 <div class="row">
 
@@ -67,6 +71,8 @@
                   </div>
 
                   
+
+                  
                 </div>
               </form>
             </div>
@@ -86,18 +92,6 @@
 
 
   </div>
-</div>
-
-<div  class="projectCard" *ngFor="let p of projects">
-
-  <ul>
-    <li>
-      <span>nome progetto:{{p.name}} --> </span>
-      <span>stato: {{p.status}} --> </span>
-      <span>progress: {{p.progress}}</span>
-      <button (click)="delProject(p.id)">delete </button>
-    </li>
-  </ul>
 </div>
 
 <section  class="d-flex align-items-stretch flex-wrap">
@@ -126,8 +120,10 @@
                   <td>collaboratori</td>
                   <td class="text-warning font-weight-bold">
                     <ul>
-                      <li *ngFor="let u of proj.user_ids">
-                        {{u}}
+                      <li *ngFor="let idUser of proj.user_ids">
+                        <p *ngFor="let u of users">{{idUser === u.id ? u.name: '' }}
+                          {{idUser === u.id ? u.surname: '' }}
+                        </p>
                       </li>
                     </ul>
                   </td>

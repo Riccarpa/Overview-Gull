@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { el } from 'date-fns/locale';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
@@ -28,17 +29,33 @@ export class UpdateProjectComponent implements OnInit {
     private fb: FormBuilder,
     private clientService: ClientService,
     private userService: UserService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal
 
-  ) { }
+  ) { 
 
-  project: Project
-  idProject: number
-  client: Client[] = []
-  users: User[] = []
-  associateClient:Client
-  associateUser:number
+    this.cropperSettings = new CropperSettings();
+    // this.cropperSettings.width = 100;
+    // this.cropperSettings.height = 100;
+    // this.cropperSettings.croppedWidth = 100;
+    // this.cropperSettings.croppedHeight = 100;
+    // this.cropperSettings.canvasWidth = 400;
+    // this.cropperSettings.canvasHeight = 300;
+    this.cropperSettings.cropperDrawSettings.lineDash = true;
+    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
 
+    this.data = {};
+  }
+
+  project: Project //progetto singolo
+  idProject: number //id progetto singolo
+  clients:Client[] // lista clienti
+  users: User[] = [] // lista utenti 
+  associateClient:Client // cliente associato al project
+  associateUser:number //numero di user associati al project
+  imgClient:any
+  data: any;
+  cropperSettings: CropperSettings;
 
   projectForm = this.fb.group(
     {
@@ -49,18 +66,36 @@ export class UpdateProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl('')
+      user_ids: new FormControl([]),
+
     }
+
   )
+
+  delProject(id: number) {
+
+    this.service.deleteProject(id).subscribe()
+    this.route.navigate(['home/project'])
+  }
 
   updateProject() {
 
     let updatedProj = this.projectForm.value
     this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
-      console.log(res);
+      
+      console.log(res, 'log della res update');
+      
+      this.route.navigate(['home/project'])
 
     })
 
+  }
+
+  updateImg() {
+    this.modalService.dismissAll();
+    console.log(this.data.image , 'log data image');
+    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+    this.projectForm.value.logo_data = base64WithoutIndex;
   }
 
   buildFormBasic() {
@@ -77,6 +112,17 @@ export class UpdateProjectComponent implements OnInit {
     }, 2000);
 
   }
+
+  open(modal) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then((result) => {
+        console.log(result);
+      }, (reason) => {
+        console.log('Err!', reason);
+      });
+  }
+
+
 
 
   ngOnInit(): void {
@@ -102,8 +148,14 @@ export class UpdateProjectComponent implements OnInit {
         
       })
 
-      this.associateUser = this.project.user_ids.length
       
+      this.associateUser = this.project.user_ids.length
+      let idClient = res.data.client_id
+      this.clientService.getClient(idClient).subscribe((res) => {
+        this.associateClient = res.data
+        
+      })
+
       
     })
     
@@ -112,29 +164,19 @@ export class UpdateProjectComponent implements OnInit {
       this.users = res.data
 
     })
-    
-    
-    this.clientService.getClients().subscribe((res) => {
-      this.client = res.data
-      let projId = this.project.client_id
-      
-      if (res) {
-        this.client.forEach(c => {
-          // match cliente corrente 
-          if (c.id && c.id === projId) {
 
-            this.associateClient = c
+    this.clientService.getClients().subscribe((res)=>{
 
-          }
-        });
-      }
+      this.clients = res.data
     })
 
+    
 
     this.buildFormBasic();
     this.radioGroup = this.fb.group({
       radio: []
     });
+    
     
     
     
