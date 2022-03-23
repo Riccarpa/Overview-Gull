@@ -8,6 +8,7 @@ import { ProductService } from 'src/app/shared/services/product.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime } from 'rxjs/operators';
+import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -15,12 +16,24 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class UserComponent implements OnInit {
 
-  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,private toastr: ToastrService) { }
+  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
+    // this.cropperSettings.width = 100;
+    // this.cropperSettings.height = 100;
+    // this.cropperSettings.croppedWidth = 100;
+    // this.cropperSettings.croppedHeight = 100;
+    // this.cropperSettings.canvasWidth = 400;
+    // this.cropperSettings.canvasHeight = 300;
+    this.cropperSettings.cropperDrawSettings.lineDash = true;
+    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
+
+    this.data = {};}
  
   users:User[]
   filteredUsers;
   searchControl: FormControl = new FormControl();
   confirmResut;
+  data: any;
+  cropperSettings: CropperSettings;
   profileForm = new FormGroup({
     name: new FormControl('',Validators.required),
     surname: new FormControl('',Validators.required),
@@ -41,13 +54,19 @@ export class UserComponent implements OnInit {
     .subscribe(value => {
       this.filerData(value);
     });
+
+    
   }
  
   retrieveUsers(){
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
       this.filteredUsers = res.data
-
+      // for(let i=0;i<this.users.length;i++){
+      //   if(!this.users[i].picture){
+      //     this.users[i].picture = `/images/users/${this.users[i].id}`
+      //   }
+      // }
       console.log(res)
     },(error)=>{
       alert('you are not logged-in')
@@ -63,11 +82,14 @@ export class UserComponent implements OnInit {
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
         this.modalService.dismissAll(res.data.name)
-        
       },(error)=>{
         this.errorBar(error.error.message)
       })
     }
+  }
+  updateImg(){
+    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+    this.profileForm.value.picture_data = base64WithoutIndex;
   }
 
   open(content) {

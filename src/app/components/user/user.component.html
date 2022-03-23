@@ -32,7 +32,7 @@
   <div class="modal-body">
     <div class="col-md-12">
       <div class="card-body">
-        <form [formGroup]="profileForm" (ngSubmit)="submit()">
+        <form [formGroup]="profileForm">
           <div class="row">
             <div class="col-md-6 form-group mb-3">
               <label for="name">First name</label>
@@ -113,6 +113,26 @@
                 type="date"
               />
             </div>
+
+            <div class="col-md-6">
+              <label for="recruitment_date">Avatar</label>
+
+              <div>
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="open(modalCropper)"
+                >
+                  Open file
+                </button>
+                <img
+                  *ngIf="data?.image"
+                  class="rounded-circle"
+                  [src]="data?.image"
+                  [width]="cropperSettings.croppedWidth"
+                  [height]="cropperSettings.croppedHeight"
+                />
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -121,6 +141,33 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="onSubmit()">
       Create
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalCropper let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <img-cropper [image]="data" [settings]="cropperSettings"></img-cropper
+    ><br />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-rounded btn-outline-dark"
+      (click)="updateImg(); modal.dismiss()"
+    >
+      Save
     </button>
   </div>
 </ng-template>
