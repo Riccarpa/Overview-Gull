@@ -16,12 +16,6 @@ export class ClientComponent implements OnInit {
 
   constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) {
     this.cropperSettings = new CropperSettings();
-    // this.cropperSettings.width = 100;
-    // this.cropperSettings.height = 100;
-    // this.cropperSettings.croppedWidth = 100;
-    // this.cropperSettings.croppedHeight = 100;
-    // this.cropperSettings.canvasWidth = 400;
-    // this.cropperSettings.canvasHeight = 300;
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
 
@@ -36,6 +30,7 @@ export class ClientComponent implements OnInit {
 
   titleModal: any;
 
+  //genera lista di tutti i clienti 
   getClients() {
     this.clientService.getClients().subscribe((res) => {
       this.clientService.clientsList = res.data;
@@ -50,6 +45,7 @@ export class ClientComponent implements OnInit {
     representatives: new FormControl(''),
   });
 
+  // aggiunge un nuovo cliente
   addClient() {
     console.log(this.clientForm.value);
     const newClient = this.clientForm.value;
@@ -67,11 +63,13 @@ export class ClientComponent implements OnInit {
       });
   }
 
+  // modifica il cliente selezionato
   editClient(id: any, content: any) {
     this.clientService.currentClient = id;
     this.openModalEditClient(id, content);
   }
 
+  // cancella il cliente selezionato
   deleteClient(id: any, name: any, content: any) {
     this.currentDeleteClient = name;
     this.confirm(id, content);
@@ -79,6 +77,7 @@ export class ClientComponent implements OnInit {
 
   currentDeleteClient: any;
 
+  // richiama la modale per eliminare il cliente
   confirm(id: any, content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
@@ -92,6 +91,7 @@ export class ClientComponent implements OnInit {
       });
   }
 
+  // alert
   successDeleteClient() {
     this.toastr.success('Operazione riuscita!', 'Rimosso cliente', { timeOut: 3000 });
   }
@@ -100,6 +100,7 @@ export class ClientComponent implements OnInit {
     this.toastr.success('Operazione riuscita!', 'Aggiunto cliente', { timeOut: 3000 });
   }
 
+  // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
     this.titleModal = "Aggiungi Cliente";
     this.clientForm.setValue({
@@ -120,6 +121,7 @@ export class ClientComponent implements OnInit {
 
   client: Client;
 
+  // richiama la modale per modificare il cliente
   openModalEditClient(id: any, content: any) {
     this.titleModal = "Modifica Cliente";
     this.clientService.getClient(id).subscribe((res) => {
@@ -148,7 +150,7 @@ export class ClientComponent implements OnInit {
       });
   }
 
-
+  //  richiama la modale per aggiungere/modificare il logo del cliente
   openModalCropper(modal: any) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
