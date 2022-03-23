@@ -91,9 +91,9 @@
 </div>
 
 <section  class="d-flex align-items-stretch flex-wrap">
-  <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 ">
-    <div (click)="updateProject(proj.id)" class="card mb-4">
-      <div class="card-body">
+  <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
+    <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
+      <div class="card-body h-100">
 
         <div class=" d-flex justify-content-start align-items-center mb-2">
           <img *ngIf="proj.logo" src="http://80.211.57.191/{{proj.logo}}" class="col-sm-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
@@ -111,8 +111,8 @@
                 </tr>
                 <tr>
                   <td>Client</td>
-                  <td  class="font-weight-bold">
-                    <p *ngFor="let c of client">{{c.id === proj.client_id ? c.name:''}}</p>
+                  <td class="font-weight-bold">
+                    <p *ngFor="let c of client" class="m-0">{{c.id === proj.client_id ? c.name:''}}</p>
                   </td>
                 </tr>
                 <tr>
@@ -122,12 +122,12 @@
 
                 <tr>
                   <td>collaboratori</td>
-                  <td class="text-warning font-weight-bold">
-                    <ul>
+                  <td class="text-warning font-weight-bold ">
+                    <ul class="overflow p-0">
                       <li *ngFor="let idUser of proj.user_ids">
-                        <p *ngFor="let u of users">{{idUser === u.id ? u.name: '' }}
-                          {{idUser === u.id ? u.surname: '' }}
-                        </p>
+                        <span *ngFor="let u of users">{{idUser === u.id ? u.name: null}}
+                          {{idUser === u.id ? u.surname: null }}
+                        </span>
                       </li>
                     </ul>
                   </td>

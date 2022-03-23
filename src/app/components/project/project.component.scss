@@ -4,3 +4,15 @@ ul{
     padding: 0;
 }
 
+.overflow{
+    overflow-y: scroll;
+    max-height: 60px;
+    min-height: 60px;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    color: black;
+    
+}
+

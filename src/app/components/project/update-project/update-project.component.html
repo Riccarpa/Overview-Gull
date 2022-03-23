@@ -37,9 +37,9 @@
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-center">
         <i class="i-Business-Man"></i>
-        <div class="content">
-          <p class="text-muted mt-2 mb-0">cliente</p>
-          <p class="text-primary text-24 line-height-1 mb-2">{{associateClient.name}}</p>
+        <div class="content text-center ">
+          <p class=" text-center mt-2 mb-0">cliente</p>
+          <p class="text-primary  text-left text-18 line-height-1 mb-2">{{associateClient.name}}</p>
         </div>
       </div>
     </div>
@@ -133,24 +133,20 @@
               </select>
             </div>
 
-            
-
-            
-           
           </div>
           
           
           
-          <div class="col-md-6">
-            <btn-loading btnClass="btn-primary btn-rounded" [loading]="loading">update project</btn-loading>
-          </div>
-          <div class="col-md-6">
-            <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-primary btn-rounded">delete
-            </btn-loading>
-          </div>
-
+          
         </div>
-
+        
+        <div class="col-md-6">
+          <btn-loading btnClass="btn-primary btn-rounded" [loading]="loading">update project</btn-loading>
+        </div>
+        <div class="col-md-6">
+          <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-primary btn-rounded">delete
+          </btn-loading>
+        </div>
         
       </form>
       <div class="row col-sm-3">
