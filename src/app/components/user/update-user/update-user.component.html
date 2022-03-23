@@ -1,9 +1,10 @@
+<!-- title -->
 <div class="breadcrumb">
   <h1>Update user</h1>
 </div>
-
 <div class="separator-breadcrumb border-top"></div>
 
+<!-- Update form -->
 <div class="row">
   <div class="col-md-12">
     <div class="card mb-4">
@@ -105,9 +106,9 @@
                   Update logo
                 </button>
                 <img
-                  *ngIf="data?.image"
+                  *ngIf="user.picture"
                   class="rounded-circle"
-                  [src]="data?.image"
+                  src="{{ user.picture }}"
                   [width]="cropperSettings.croppedWidth"
                   [height]="cropperSettings.croppedHeight"
                 />
@@ -141,6 +142,8 @@
     </div>
   </div>
 </div>
+
+<!-- deleting user modal -->
 <ng-template #modalConfirm let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-title">Profile deletion</h4>
@@ -186,6 +189,8 @@
     </button>
   </div>
 </ng-template>
+
+<!-- image-cropper modal -->
 <ng-template #modalCropper let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>

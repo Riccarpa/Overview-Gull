@@ -1,12 +1,20 @@
-<div class="breadcrumb">
-  <h1 class="col-12 mb-3">Users</h1>
-  <div class="col-10">
-    <ul>
-      <li>Data table</li>
-      <li>Filter</li>
-    </ul>
+<!-- Title -->
+<div class="title row mb-4">
+  <h2 class="col-md-4">Users</h2>
+  <!-- serch on data-table -->
+  <div class="col-md-4 col-sm-12">
+    <div class="form-group">
+      <input
+        id="text"
+        placeholder="Search Users"
+        [formControl]="searchControl"
+        class="form-control form-control"
+        type="email"
+      />
+    </div>
   </div>
-  <div class="col-2">
+  <!-- new user button -->
+  <div class="col-md-4 d-flex justify-content-end">
     <button
       _ngcontent-hgj-c168=""
       type="button"
@@ -17,6 +25,7 @@
     </button>
   </div>
 </div>
+<!-- new user creation modal -->
 <ng-template #modalBasic let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Create new user</h4>
@@ -144,7 +153,6 @@
     </button>
   </div>
 </ng-template>
-
 <ng-template #modalCropper let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
@@ -172,20 +180,8 @@
   </div>
 </ng-template>
 
-<div class="separator-breadcrumb border-top"></div>
-
+<!-- Users data-table -->
 <div class="row mb-5">
-  <div class="col-md-4">
-    <div class="form-group">
-      <input
-        id="text"
-        placeholder="Search Users"
-        [formControl]="searchControl"
-        class="form-control form-control"
-        type="email"
-      />
-    </div>
-  </div>
   <div class="col-md-12">
     <div class="card o-hidden">
       <ngx-datatable
