@@ -62,11 +62,6 @@ export class UserComponent implements OnInit {
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
       this.filteredUsers = res.data
-      // for(let i=0;i<this.users.length;i++){
-      //   if(!this.users[i].picture){
-      //     this.users[i].picture = `/images/users/${this.users[i].id}`
-      //   }
-      // }
       console.log(res)
     },(error)=>{
       alert('you are not logged-in')

@@ -130,7 +130,6 @@ export class UpdateUserComponent implements OnInit {
     this.modalService.dismissAll();
     let base64JpgWithoutIndex;
     let base64PngWithoutIndex;
-
     if(this.data.image.includes('data:image/jpeg;base64,')){
       base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
       this.profileForm.value.picture_data = base64JpgWithoutIndex;
@@ -138,11 +137,6 @@ export class UpdateUserComponent implements OnInit {
       base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
       this.profileForm.value.picture_data = base64PngWithoutIndex;
     }
-    // if(base64JpgWithoutIndex){
-    // }
-    // if(base64PngWithoutIndex){
-    // }
-    
   }
   
   back(){
