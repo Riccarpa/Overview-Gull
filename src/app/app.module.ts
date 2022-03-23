@@ -13,7 +13,6 @@ import { ProjectComponent } from './components/project/project.component';
 import { UserComponent } from './components/user/user.component';
 import { UpdateUserComponent } from './components/user/update-user/update-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UpdateClientComponent } from './components/client/update-client/update-client.component';
 import { UpdateProjectComponent } from './components/project/update-project/update-project.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -32,7 +31,6 @@ import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
     ProjectComponent,
     UserComponent,
     UpdateUserComponent,
-    UpdateClientComponent,
     UpdateProjectComponent,
   ],
   imports: [

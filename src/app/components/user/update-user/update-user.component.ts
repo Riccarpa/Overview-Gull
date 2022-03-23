@@ -41,13 +41,6 @@ export class UpdateUserComponent implements OnInit {
   data: any;
   cropperSettings: CropperSettings;
 
-  formBasic: FormGroup;
-  loading: boolean;
-  radioGroup: FormGroup;
-  confirmResut;
-  data: any;
-  cropperSettings: CropperSettings;
-
   ngOnInit(): void {
     this.retrieveUser()
     this.buildFormBasic();
