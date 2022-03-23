@@ -4,8 +4,11 @@ import { UserService } from 'src/app/services/user/user.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
-import { echartStyles } from 'src/app/shared/echart-styles';
 import { ProductService } from 'src/app/shared/services/product.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { debounceTime } from 'rxjs/operators';
+import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -13,135 +16,24 @@ import { ProductService } from 'src/app/shared/services/product.service';
 })
 export class UserComponent implements OnInit {
 
+  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
+    // this.cropperSettings.width = 100;
+    // this.cropperSettings.height = 100;
+    // this.cropperSettings.croppedWidth = 100;
+    // this.cropperSettings.croppedHeight = 100;
+    // this.cropperSettings.canvasWidth = 400;
+    // this.cropperSettings.canvasHeight = 300;
+    this.cropperSettings.cropperDrawSettings.lineDash = true;
+    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
+
+    this.data = {};}
+ 
   users:User[]
-  isCreate=false
-
-  
-  chartPie1: any;
-  chartLineOption3: any;
-  products$: any;
-  
-  constructor(private productService: ProductService,private uService:UserService,private route:Router) { }
-
-  ngOnInit(): void {
-    this.uService.getUsers().subscribe(res=>{
-      this.users = res.data
-      this.products$ = this.users
-      console.log(res)
-    },(error)=>{
-      alert('you are not logged-in')
-      this.route.navigate(['/'])
-    })
-
-    this.chartPie1 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 80,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 20,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-
-    this.chartLineOption3 = {
-      ...echartStyles.lineNoAxis, ...{
-        series: [{
-          data: [40, 80, 20, 90, 30, 80, 40],
-          lineStyle: {
-            color: 'rgba(102, 51, 153, .86)',
-            width: 3,
-            shadowColor: 'rgba(0, 0, 0, .2)',
-            shadowOffsetX: -1,
-            shadowOffsetY: 8,
-            shadowBlur: 10
-          },
-          label: { show: true, color: '#212121' },
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            borderColor: 'rgba(69, 86, 172, 0.86)'
-          }
-        }]
-      }
-    };
-    this.chartLineOption3.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
-
-    this.chartPie1 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 80,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 20,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-
-    this.chartLineOption3 = {
-      ...echartStyles.lineNoAxis, ...{
-        series: [{
-          data: [40, 80, 20, 90, 30, 80, 40],
-          lineStyle: {
-            color: 'rgba(102, 51, 153, .86)',
-            width: 3,
-            shadowColor: 'rgba(0, 0, 0, .2)',
-            shadowOffsetX: -1,
-            shadowOffsetY: 8,
-            shadowBlur: 10
-          },
-          label: { show: true, color: '#212121' },
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            borderColor: 'rgba(69, 86, 172, 0.86)'
-          }
-        }]
-      }
-    };
-    this.chartLineOption3.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
-
-    
-    
-  }
-  
-  
+  filteredUsers;
+  searchControl: FormControl = new FormControl();
+  confirmResut;
+  data: any;
+  cropperSettings: CropperSettings;
   profileForm = new FormGroup({
     name: new FormControl('',Validators.required),
     surname: new FormControl('',Validators.required),
@@ -152,21 +44,97 @@ export class UserComponent implements OnInit {
     week_working_hours: new FormControl('',Validators.required),
   });
 
+
+  ngOnInit(): void {
+
+   this.retrieveUsers();
+
+   this.searchControl.valueChanges
+    .pipe(debounceTime(200))
+    .subscribe(value => {
+      this.filerData(value);
+    });
+
+    
+  }
+ 
+  retrieveUsers(){
+    this.uService.getUsers().subscribe(res=>{
+      this.users = res.data
+      this.filteredUsers = res.data
+      console.log(res)
+    },(error)=>{
+      alert('you are not logged-in')
+      this.route.navigate(['/'])
+    })
+  }
+  
   onSubmit(){
    
     if(this.profileForm.status == 'INVALID'){
-     alert('All fields are required') 
+     this.warningBar()
+     
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
-        alert( `utente ${res.data.name} creato con successo`)
-        window.location.reload()
+        this.modalService.dismissAll(res.data.name)
       },(error)=>{
-        alert(error.error.message)
+        this.errorBar(error.error.message)
       })
     }
   }
-  back(){
-    this.isCreate = false
+  updateImg(){
+    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+    this.profileForm.value.picture_data = base64WithoutIndex;
   }
+
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+    .result.then((result) => {
+      console.log(result);
+    }, (reason) => {
+      if(reason){
+        this.successBar(reason)
+        this.retrieveUsers()
+      }
+    });
+  }
+
+  successBar(user:any) {
+    this.toastr.success(`utente ${user} creato con successo`, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
+  warningBar() {
+    this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
+  errorBar(error:any) {
+    this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
+  
+  filerData(val) {
+    if (val) {
+      val = val.toLowerCase();
+    } else {
+      return this.filteredUsers = [...this.users];
+    }
+
+    const columns = Object.keys(this.users[0]);
+    if (!columns.length) {
+      return;
+    }
+
+    const rows = this.users.filter(function(d) {
+      for (let i = 0; i <= columns.length; i++) {
+        const column = columns[i];
+        // console.log(d[column]);
+        if (d[column] && d[column].toString().toLowerCase().indexOf(val) > -1) {
+          return true;
+        }
+      }
+    });
+    this.filteredUsers = rows;
+  }
+
+
+
+  
 
 }

@@ -19,7 +19,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
-import { ImageCropperComponent, ImageCropperModule } from 'ngx-img-cropper';
+import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
+
 
 
 
@@ -47,6 +48,7 @@ import { ImageCropperComponent, ImageCropperModule } from 'ngx-img-cropper';
     NgxDatatableModule,
     NgbModule,
     ImageCropperModule
+   
   ],
   providers: [],
   bootstrap: [AppComponent]
