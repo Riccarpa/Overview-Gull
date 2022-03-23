@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
@@ -19,18 +20,29 @@ import { ProductService } from 'src/app/shared/services/product.service';
 })
 export class ProjectComponent implements OnInit {
 
-  constructor(private productService: ProductService,private route: Router, private service: ProjectService, private fb: FormBuilder, private clientService: ClientService, private userService: UserService) { }
+  constructor(
+    private modalService: NgbModal,
+    private productService: ProductService,
+    private route: Router,
+    private service: ProjectService,
+    private fb: FormBuilder,
+    private clientService: ClientService,
+    private userService: UserService) { }
 
 
   projects: Project[] = []
   client: Client[] = []
   users: User[] = []
 
-  
+  active = false
+
   chartPie1: any;
-  chartLineOption3: any;
-  products$: any;
-  
+  chartPie2: any;
+  chartPie3: any;
+  chartPieDef: any;
+  confirmResut: any;
+
+
 
 
   projectForm = this.fb.group(
@@ -42,35 +54,20 @@ export class ProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl('')
+      user_ids: new FormControl(''),
     }
   )
+  logo: any
 
-  getProjects(): void {
-    this.service.getProjects().subscribe((res) => {
-
-      this.projects = res.data
-      this.service.project = res.data
-    })
-  }
+  // sendImage() {
 
 
-  getClient() {
-    this.clientService.getClients().subscribe((res) => {
+  //   this.service.testPost(this.logo).subscribe((res) => {
 
-      this.client = res.data
-      this.service.client = res.data
-    })
-  }
+  //     console.log(res);
 
-  getUser() {
-    this.userService.getUsers().subscribe((res) => {
-
-      this.users = res.data
-      this.service.users = res.data
-    })
-  }
-
+  //   })
+  // }
 
   addProject() {
 
@@ -84,18 +81,70 @@ export class ProjectComponent implements OnInit {
     this.route.navigate(['home/updateProject', id])
   }
 
-  delProject(id: number) {
-
-    this.service.deleteProject(id).subscribe()
-    this.getProjects()
+  confirm(content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+      .result.then((result) => {
+        this.confirmResut = `Closed with: ${result}`;
+      }, (reason) => {
+        this.confirmResut = `Dismissed with: ${reason}`;
+      });
   }
 
   ngOnInit() {
-    this.getClient()
-    this.getUser()
+    this.service.getProjects().subscribe((res) => {
+
+      this.projects = res.data
+      this.service.project = res.data
+
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
+
+    this.clientService.getClients().subscribe((res) => {
+
+      this.client = res.data
+      this.service.client = res.data
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
+
+    this.userService.getUsers().subscribe((res) => {
+
+      this.users = res.data
+      this.service.users = res.data
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
 
 
     this.chartPie1 = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
+        series: [{
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 50,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 50,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
+        }]
+      }
+    };
+    this.chartPie2 = {
       ...echartStyles.defaultOptions, ...{
         legend: {
           show: true,
@@ -122,32 +171,66 @@ export class ProjectComponent implements OnInit {
         }]
       }
     };
-
-    this.chartLineOption3 = {
-      ...echartStyles.lineNoAxis, ...{
+    this.chartPie3 = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
         series: [{
-          data: [40, 80, 20, 90, 30, 80, 40],
-          lineStyle: {
-            color: 'rgba(102, 51, 153, .86)',
-            width: 3,
-            shadowColor: 'rgba(0, 0, 0, .2)',
-            shadowOffsetX: -1,
-            shadowOffsetY: 8,
-            shadowBlur: 10
-          },
-          label: { show: true, color: '#212121' },
-          type: 'line',
-          smooth: true,
-          itemStyle: {
-            borderColor: 'rgba(69, 86, 172, 0.86)'
-          }
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 100,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 0,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
         }]
       }
     };
-    this.chartLineOption3.xAxis.data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    this.products$ = this.productService.getProducts();
+    this.chartPieDef = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
+        series: [{
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 0,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 100,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
+        }]
+      }
+    };
+
 
   }
+
+
+
 
 }
 

@@ -22,13 +22,13 @@ export class UpdateClientComponent implements OnInit {
     this.clientService.getClient(this.clientService.currentClient).subscribe((res) => {
       this.client = res.data;
 
-      this.clientForm.setValue({
-        name: this.client.name,
-        vat_number: this.client.vat_number,
-        business_name: this.client.business_name,
-        representatives: this.client.representatives,
-      });
-    })
+    //   this.clientForm.setValue({
+    //     name: this.client.name,
+    //     vat_number: this.client.vat_number,
+    //     business_name: this.client.business_name,
+    //     representatives: this.client.representatives,
+    //   });
+    // })
   }
 
   client: Client;
