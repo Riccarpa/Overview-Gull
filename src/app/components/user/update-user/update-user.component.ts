@@ -34,7 +34,6 @@ export class UpdateUserComponent implements OnInit {
   id = this.route.snapshot.paramMap.get('id');
   user:User
   profileForm:any
-
   formBasic: FormGroup;
   loading: boolean;
   radioGroup: FormGroup;
@@ -82,6 +81,10 @@ export class UpdateUserComponent implements OnInit {
   retrieveUser(){
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
+      if(!this.user.picture){
+
+        this.user.picture = `/images/users/${this.user.id}`
+      }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name),
         surname: new FormControl(this.user.surname),
@@ -123,9 +126,23 @@ export class UpdateUserComponent implements OnInit {
     });
   }
   updateImg(){
+    
     this.modalService.dismissAll();
-    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-    this.profileForm.value.picture_data = base64WithoutIndex;
+    let base64JpgWithoutIndex;
+    let base64PngWithoutIndex;
+
+    if(this.data.image.includes('data:image/jpeg;base64,')){
+      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+      this.profileForm.value.picture_data = base64JpgWithoutIndex;
+    }else{
+      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+      this.profileForm.value.picture_data = base64PngWithoutIndex;
+    }
+    // if(base64JpgWithoutIndex){
+    // }
+    // if(base64PngWithoutIndex){
+    // }
+    
   }
   
   back(){
