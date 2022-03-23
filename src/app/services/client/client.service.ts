@@ -17,6 +17,7 @@ export class ClientService {
   token: any;
   currentClient: any;
 
+  // lista di tutti i clienti
   getClients(): Observable<any> {
     const url = 'http://80.211.57.191/api/clients';
 
@@ -27,6 +28,7 @@ export class ClientService {
     return this.http.get(url, { headers: headers });
   }
 
+  // aggiungi nuovo cliente
   addClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
     const url = 'http://80.211.57.191/api/clients';
 
@@ -48,6 +50,7 @@ export class ClientService {
     return this.http.post(url, body, { headers: headers });
   }
 
+  // retrieve cliente
   getClient(id: any): Observable<any> {
     const url = `http://80.211.57.191/api/clients/${id}`;
 
@@ -58,6 +61,7 @@ export class ClientService {
     return this.http.get(url, { headers: headers });
   }
 
+  // modifica cliente
   updateClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
     const url = `http://80.211.57.191/api/clients/${this.currentClient}`;
 
@@ -79,6 +83,7 @@ export class ClientService {
     return this.http.patch(url, body, { headers: headers });
   }
 
+  // cancella cliente
   deleteClient(id: any): Observable<any> {
     const url = `http://80.211.57.191/api/clients/${id}`;
 
