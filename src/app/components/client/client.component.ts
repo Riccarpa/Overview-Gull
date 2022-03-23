@@ -35,6 +35,11 @@ export class ClientComponent implements OnInit {
     this.clientService.getClients().subscribe((res) => {
       this.clientService.clientsList = res.data;
       this.clientsList = this.clientService.clientsList;
+      for (let i = 0; i < this.clientsList.length; i++) {
+        if (this.clientsList[i].logo) {
+          this.clientsList[i].logo += `?time=${new Date()}`;
+        }
+      }
     })
   }
 
@@ -133,7 +138,11 @@ export class ClientComponent implements OnInit {
         business_name: this.client.business_name,
         representatives: this.client.representatives,
       });
-      this.data.image = `http://80.211.57.191/${this.client.logo}`;
+      if (this.client.logo) {
+        this.data.image = `http://80.211.57.191/${this.client.logo}?time=${new Date()}`;
+      } else {
+        this.data.image = '';
+      }
     })
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
