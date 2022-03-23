@@ -81,7 +81,8 @@
                 </div>
 
                 <div class="col-md-12 form-group mb-3">
-                    <button class="btn btn-outline-primary btn-rounded mr-3" (click)="open(modalCropper)">Logo</button>
+                    <button class="btn btn-outline-primary btn-rounded mr-3"
+                        (click)="openModalCropper(modalCropper)">Logo</button>
                     <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
                         [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
                 </div>

@@ -148,12 +148,22 @@ export class ClientComponent implements OnInit {
   }
 
 
-  open(modal: any) {
+  openModalCropper(modal: any) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         console.log(this.data.image);
-        let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-        this.clientForm.value.logo_data = base64WithoutIndex;
+        if (this.data.image.includes('data:image/jpeg;base64,')) {
+          let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+          this.clientForm.value.logo_data = base64WithoutIndex;
+        }
+        else if (this.data.image.includes('data:image/png;base64,')) {
+          let base64WithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+          this.clientForm.value.logo_data = base64WithoutIndex;
+        }
+        else {
+          this.toastr.error('Inserisci immagine con formato valido', 'Formato non valido!', { timeOut: 3000 });
+        }
+
       }, () => {
         console.log('Err!');
       });
