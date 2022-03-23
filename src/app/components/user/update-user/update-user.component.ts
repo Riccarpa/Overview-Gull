@@ -69,7 +69,7 @@ export class UpdateUserComponent implements OnInit {
       this.toastr.success('Profile deleted', 'Success!', {progressBar: true});
       setTimeout(() => {
         this.back()
-      }, 3000);
+      }, 1000);
     },(error)=>{
       this.toastr.error(error.error.message,'Error!',{progressBar: true});
     });
@@ -83,7 +83,7 @@ export class UpdateUserComponent implements OnInit {
       this.toastr.success('Profile updated.', 'Success!', {progressBar: true});
       setTimeout(() => {
         this.router.navigate(['home/user'])
-      }, 3000);
+      }, 1000);
     },(error)=>{
       this.toastr.error(error.error.message,'Error!',{progressBar: true});
       this.loading = false

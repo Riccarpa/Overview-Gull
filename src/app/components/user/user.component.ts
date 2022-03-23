@@ -58,7 +58,6 @@ export class UserComponent implements OnInit {
       console.log(res)
       for(let i=0;i<this.users.length;i++){
         if(this.users[i].picture){
-          
           this.users[i].picture = `/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
         }
       }
