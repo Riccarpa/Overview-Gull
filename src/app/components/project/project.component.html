@@ -3,11 +3,7 @@
 
   <div>
     <button class="btn btn-success" (click)="confirm(modalConfirm)">Aggiungi Progetto</button>
-     <!-- <div class="col-md-6 form-group mb-3">
-       <label for="picker1">logo</label>
-       <input type="file" class="form-control" [(ngModel)]="logo">
-       <button (click)="sendImage()">send</button>
-     </div> -->
+
 
     <ng-template class="m-0" #modalConfirm let-modal>
       <div class="modal-header">
@@ -98,8 +94,14 @@
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 ">
     <div (click)="updateProject(proj.id)" class="card mb-4">
       <div class="card-body">
-        <div class="card-title">{{proj.name}}</div>
-        <div class="row">
+
+        <div class=" d-flex justify-content-start align-items-center mb-2">
+          <img *ngIf="proj.logo" src="http://80.211.57.191/{{proj.logo}}" class="col-sm-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+            alt="">
+          <div class="card-title m-0">{{proj.name}}</div>
+        </div>
+
+        <div class="row" >
           <div class="col-md-6">
             <table class="table">
               <tbody>
@@ -109,7 +111,9 @@
                 </tr>
                 <tr>
                   <td>Client</td>
-                  <td class="font-weight-bold">{{proj.client_id}}</td>
+                  <td  class="font-weight-bold">
+                    <p *ngFor="let c of client">{{c.id === proj.client_id ? c.name:''}}</p>
+                  </td>
                 </tr>
                 <tr>
                   <td>Status</td>

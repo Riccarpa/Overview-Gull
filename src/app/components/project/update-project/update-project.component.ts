@@ -53,6 +53,8 @@ export class UpdateProjectComponent implements OnInit {
   data: any;
   cropperSettings: CropperSettings;
 
+
+
   projectForm = this.fb.group(
     {
       name: new FormControl(''),
