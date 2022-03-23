@@ -106,9 +106,9 @@
                   Update logo
                 </button>
                 <img
-                  *ngIf="data?.image"
+                  *ngIf="user.picture"
                   class="rounded-circle"
-                  [src]="data?.image"
+                  src="{{ user.picture }}"
                   [width]="cropperSettings.croppedWidth"
                   [height]="cropperSettings.croppedHeight"
                 />

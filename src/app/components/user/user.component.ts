@@ -56,10 +56,17 @@ export class UserComponent implements OnInit {
       this.users = res.data
       this.filteredUsers = res.data
       console.log(res)
+      for(let i=0;i<this.users.length;i++){
+        if(this.users[i].picture){
+          
+          this.users[i].picture = `/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
+        }
+      }
     },(error)=>{
       alert('you are not logged-in')
       this.route.navigate(['/'])
     })
+     
   }
   
   // SUBMIT New user Form
@@ -138,7 +145,10 @@ export class UserComponent implements OnInit {
     this.filteredUsers = rows;
   }
 
-
+  randomNumber(){
+    let num = Math.floor(Math.random()*100000)
+    return num.toString()
+  }
 
   
 
