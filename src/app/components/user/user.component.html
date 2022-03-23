@@ -1,11 +1,8 @@
+<!-- Title -->
 <div class="breadcrumb">
-  <h1 class="col-12 mb-3">Users</h1>
-  <div class="col-10">
-    <ul>
-      <li>Data table</li>
-      <li>Filter</li>
-    </ul>
-  </div>
+  <h1 class="col-10">Users</h1>
+
+  <!-- New user button -->
   <div class="col-2">
     <button
       _ngcontent-hgj-c168=""
@@ -17,6 +14,8 @@
     </button>
   </div>
 </div>
+
+<!-- new user creation modal -->
 <ng-template #modalBasic let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Create new user</h4>
@@ -144,7 +143,6 @@
     </button>
   </div>
 </ng-template>
-
 <ng-template #modalCropper let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
@@ -174,6 +172,7 @@
 
 <div class="separator-breadcrumb border-top"></div>
 
+<!-- Users data-table -->
 <div class="row mb-5">
   <div class="col-md-4">
     <div class="form-group">

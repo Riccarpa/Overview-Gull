@@ -16,17 +16,12 @@ import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 })
 export class UserComponent implements OnInit {
 
-  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
-    // this.cropperSettings.width = 100;
-    // this.cropperSettings.height = 100;
-    // this.cropperSettings.croppedWidth = 100;
-    // this.cropperSettings.croppedHeight = 100;
-    // this.cropperSettings.canvasWidth = 400;
-    // this.cropperSettings.canvasHeight = 300;
+  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
+    private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-
-    this.data = {};}
+    this.data = {};
+  }
  
   users:User[]
   filteredUsers;
@@ -48,14 +43,12 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
 
    this.retrieveUsers();
-
    this.searchControl.valueChanges
     .pipe(debounceTime(200))
     .subscribe(value => {
       this.filerData(value);
     });
 
-    
   }
  
   retrieveUsers(){
@@ -69,6 +62,7 @@ export class UserComponent implements OnInit {
     })
   }
   
+  // SUBMIT New user Form
   onSubmit(){
    
     if(this.profileForm.status == 'INVALID'){
@@ -82,11 +76,21 @@ export class UserComponent implements OnInit {
       })
     }
   }
+  
+  
   updateImg(){
-    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-    this.profileForm.value.picture_data = base64WithoutIndex;
+    let base64JpgWithoutIndex;
+    let base64PngWithoutIndex;
+    if(this.data.image.includes('data:image/jpeg;base64,')){
+      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+      this.profileForm.value.picture_data = base64JpgWithoutIndex;
+    }else{
+      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+      this.profileForm.value.picture_data = base64PngWithoutIndex;
+    }
   }
 
+  // modal and alerts
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
@@ -109,6 +113,7 @@ export class UserComponent implements OnInit {
     this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
   }
   
+  // filter user data table
   filerData(val) {
     if (val) {
       val = val.toLowerCase();
