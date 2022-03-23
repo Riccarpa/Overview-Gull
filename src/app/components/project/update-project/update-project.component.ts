@@ -88,10 +88,17 @@ export class UpdateProjectComponent implements OnInit {
   }
 
   updateImg() {
+
     this.modalService.dismissAll();
-    console.log(this.data.image , 'log data image');
-    let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-    this.projectForm.value.logo_data = base64WithoutIndex;
+    let base64JpgWithoutIndex;
+    let base64PngWithoutIndex;
+    if (this.data.image.includes('data:image/jpeg;base64,')) {
+      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+      this.projectForm.value.logo_data = base64JpgWithoutIndex;
+    } else {
+      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+      this.projectForm.value.logo_data = base64PngWithoutIndex;
+    }
   }
 
   buildFormBasic() {

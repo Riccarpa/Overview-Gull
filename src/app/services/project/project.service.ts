@@ -41,10 +41,21 @@ export class ProjectService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
     }
-    if (form.logo_data) {
-      form['logo_data'] = form.logo_data;
+
+    let body = {
+      'name': form.name,
+      'status': form.status,
+      'start_date': form.start_date,
+      'end_date': form.end_date,
+      'progress': form.progress,
+      'revenue': form.revenue,
+      'client_id': form.client_id,
+      'user_ids': form.user_ids
     }
-    return this.http.patch(url, form, { headers })
+    if (form.logo_data) {
+      body['logo_data'] = form.logo_data;
+    }
+    return this.http.patch(url, body, { headers })
   }
 
 
@@ -93,18 +104,7 @@ export class ProjectService {
   }
 
 
-  // testPost(file:any) {
-
-  //   let url = 'http://80.211.57.191/overview-ws/api'
-  //   let body = {
-  //      file
-  //   }
-  //   const headers = {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': `Bearer ${this.token}`
-  //   }
-  //   return this.http.patch(url, body, { headers })
-  // }
+  
 
     
 }
