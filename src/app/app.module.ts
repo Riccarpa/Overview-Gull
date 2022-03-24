@@ -19,6 +19,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
 import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
+import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
+import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 
 
 
@@ -32,6 +34,8 @@ import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
     UserComponent,
     UpdateUserComponent,
     UpdateProjectComponent,
+    FilterClientPipe,
+    FilterUsersPipe,
   ],
   imports: [
     BrowserModule,

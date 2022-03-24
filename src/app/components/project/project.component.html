@@ -112,7 +112,7 @@
                 <tr>
                   <td>Client</td>
                   <td class="font-weight-bold">
-                    <p *ngFor="let c of client" class="m-0">{{c.id === proj.client_id ? c.name:''}}</p>
+                    <p *ngFor="let c of client | filterClient: proj.client_id" class="m-0">{{c.name}}</p>
                   </td>
                 </tr>
                 <tr>
@@ -125,9 +125,10 @@
                   <td class="text-warning font-weight-bold ">
                     <ul class="overflow p-0">
                       <li *ngFor="let idUser of proj.user_ids">
-                        <span *ngFor="let u of users">{{idUser === u.id ? u.name: null}}
-                          {{idUser === u.id ? u.surname: null }}
-                        </span>
+                       
+                        <p *ngFor="let u of users | filterUsers: idUser ">
+                          {{u.name}}
+                        </p>
                       </li>
                     </ul>
                   </td>
