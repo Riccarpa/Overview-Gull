@@ -73,6 +73,17 @@ export class UserService {
 
      return this.http.patch(`${this.url}/${id}`, body,{headers: headers});
   }
+  updateImage(picture:any,id:any){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    })
+    let body = {
+      "picture_data" : picture
+     };
+     return this.http.patch(`${this.url}/${id}`, body,{headers: headers});
+
+  }
   deleteUser(id:any){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -102,6 +102,12 @@ export class UpdateUserComponent implements OnInit {
       base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
       this.profileForm.value.picture_data = base64PngWithoutIndex;
     }
+    
+    
+    this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
+      console.log(res)
+      this.user.picture =  `http://80.211.57.191/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+      })
   }
   
   
