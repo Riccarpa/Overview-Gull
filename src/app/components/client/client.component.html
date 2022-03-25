@@ -11,7 +11,7 @@
                 <h3 class="m-0">{{client.name}}</h3>
                 <h5 class="mt-0 text-muted">P. IVA: {{client.vat_number}}</h5>
                 <div class="avatar box-shadow-2 my-5">
-                    <img src="http://80.211.57.191/{{client.logo}}" alt="">
+                    <img [src]="client.logo? 'http://80.211.57.191/overview_dev/'+ client.logo : ''" alt="">
                 </div>
                 <div class="d-flex justify-content-center my-4">
                     <!-- justify-content-beetween -->
