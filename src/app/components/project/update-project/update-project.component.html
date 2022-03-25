@@ -2,7 +2,7 @@
   <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center ">
       <div class="avatar box-shadow-2 m-0 mr-2">
-        <img *ngIf="project.logo" src="http://80.211.57.191{{project.logo}}" alt="">
+        <img *ngIf="project.logo" src="http://80.211.57.191/overview_dev{{project.logo}}" alt="">
         <img else src="assets/images/project.png" alt="">
       </div>
       <h2>{{project.name}}</h2>
@@ -10,7 +10,7 @@
 
     <div *ngIf="associateClient" class="card-body text-center d-flex flex-row align-items-center ">
       <div  class="avatar box-shadow-2 m-0 mr-2">
-        <img *ngIf="associateClient.logo" src="http://80.211.57.191{{associateClient.logo}}" alt="">
+        <img *ngIf="associateClient.logo" src="http://80.211.57.191/overview_dev{{associateClient.logo}}" alt="">
         <img else src="assets/images/stock.jpg" alt="">
       </div>
       <h2>{{associateClient.name}} </h2>
