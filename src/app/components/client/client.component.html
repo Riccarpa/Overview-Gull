@@ -28,7 +28,8 @@
                         <h5 class="mt-0 text-muted">Progetti attuali</h5>
                     </div>
                 </div>
-                <button class="btn btn-primary px-5 m-2" (click)="editClient(client.id, modalBasic)">Modifica</button>
+                <button class="btn btn-primary px-5 m-2"
+                    (click)="openModalEditClient(client.id, modalBasic)">Modifica</button>
             </div>
         </div>
     </div>
@@ -95,8 +96,10 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark btn-rounded"
-            (click)="modal.close('Save click')">Salva</button>
+        <button *ngIf="titleModal == 'Aggiungi Cliente'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="addClient()">Salva</button>
+        <button *ngIf="titleModal == 'Modifica Cliente'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="editClient()">Salva</button>
         <button *ngIf="titleModal == 'Modifica Cliente'" class="btn btn-outline-danger btn-rounded"
             (click)="deleteClient(client.id, client.name, modalConfirm)">Elimina</button>
     </div>

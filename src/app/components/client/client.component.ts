@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientService } from 'src/app/services/client/client.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -44,34 +44,48 @@ export class ClientComponent implements OnInit {
   }
 
   clientForm = new FormGroup({
-    name: new FormControl(''),
-    vat_number: new FormControl(''),
-    business_name: new FormControl(''),
-    representatives: new FormControl(''),
+    name: new FormControl('', Validators.required),
+    vat_number: new FormControl('', Validators.required),
+    business_name: new FormControl('', Validators.required),
+    representatives: new FormControl('', Validators.required),
   });
 
   // aggiunge un nuovo cliente
   addClient() {
-    console.log(this.clientForm.value);
-    const newClient = this.clientForm.value;
-    this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo_data)
-      .subscribe(() => {
-        this.clientForm.setValue({
-          name: '',
-          vat_number: '',
-          business_name: '',
-          representatives: '',
+    if (this.clientForm.status == 'INVALID') {
+      this.warningBar()
+    } else {
+      console.log(this.clientForm.value);
+      const newClient = this.clientForm.value;
+      this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo_data)
+        .subscribe(() => {
+          this.modalService.dismissAll();
+          this.clientForm.setValue({
+            name: '',
+            vat_number: '',
+            business_name: '',
+            representatives: '',
+          });
+          this.data.image = '';
+          this.getClients();
+          this.successAddClient();
         });
-        this.data.image = '';
-        this.getClients();
-        this.successAddClient();
-      });
+    }
   }
 
   // modifica il cliente selezionato
-  editClient(id: any, content: any) {
-    this.clientService.currentClient = id;
-    this.openModalEditClient(id, content);
+  editClient() {
+    if (this.clientForm.status == 'INVALID') {
+      this.warningBar()
+    } else {
+      const client = this.clientForm.value;
+      this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
+        .subscribe(() => {
+          this.modalService.dismissAll();
+          this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
+          this.getClients();
+        })
+    }
   }
 
   // cancella il cliente selezionato
@@ -105,6 +119,10 @@ export class ClientComponent implements OnInit {
     this.toastr.success('Operazione riuscita!', 'Aggiunto cliente', { timeOut: 3000 });
   }
 
+  warningBar() {
+    this.toastr.warning('Tutti i campi sono obbligatori', 'Warning', { timeOut: 3000 });
+  }
+
   // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
     this.titleModal = "Aggiungi Cliente";
@@ -118,7 +136,7 @@ export class ClientComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        this.addClient();
+        console.log('ok');
       }, () => {
         console.log('annullato');
       });
@@ -128,6 +146,7 @@ export class ClientComponent implements OnInit {
 
   // richiama la modale per modificare il cliente
   openModalEditClient(id: any, content: any) {
+    this.clientService.currentClient = id;
     this.titleModal = "Modifica Cliente";
     this.clientService.getClient(id).subscribe((res) => {
       this.client = res.data;
@@ -147,13 +166,7 @@ export class ClientComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        const client = this.clientForm.value;
-        this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
-          .subscribe(() => {
-            console.log('ok');
-            this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
-            this.getClients();
-          })
+        console.log('ok');
       }, () => {
         console.log('annullato');
       });

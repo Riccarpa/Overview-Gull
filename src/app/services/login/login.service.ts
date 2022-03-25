@@ -9,7 +9,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  baseUrl = 'http://80.211.57.191';
+  baseUrl = 'http://80.211.57.191/overview_dev';
 
   checkLogin(user: string, pass: string): Observable<any> {
     let url = `${this.baseUrl}/api/login`;
