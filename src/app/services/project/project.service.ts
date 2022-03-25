@@ -11,10 +11,11 @@ import { User } from 'src/app/models/user.model';
 export class ProjectService {
 
   token:any
+  url = 'http://80.211.57.191/api/projects'
   updatedProject:any
   currentProject:any // id progetto singolo corrente
   project: Project[]
-  client: Client[]
+  clients: Client[]
   users: User[]
 
   constructor(private http: HttpClient) {
@@ -22,10 +23,20 @@ export class ProjectService {
     this.token = localStorage.getItem('token')
    }
 
+  // get projects all
+  getProjects(): Observable<any> {
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    }
+    return this.http.get(this.url, { headers })
+  }
+
    // retrive su progetto singolo
   getUpdateProject(): Observable<any> {
 
-    let url = `http://80.211.57.191/api/projects/${this.currentProject}`;
+    let url = `${this.url}/${this.currentProject}`;
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -36,7 +47,7 @@ export class ProjectService {
 
   //patch progetto
   updateProject(form:any,projId:number): Observable<any> {
-    let url = `http://80.211.57.191/api/projects/${projId}`
+
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -55,35 +66,25 @@ export class ProjectService {
     if (form.logo_data) {
       body['logo_data'] = form.logo_data;
     }
-    return this.http.patch(url, body, { headers })
+    return this.http.patch(`${this.url}/${projId}`, body, { headers })
   }
 
 
   // delete project
   deleteProject(id:number){
 
-    let url = `http://80.211.57.191/api/projects/${id}`
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
     }
-    return this.http.delete(url, { headers })
+    return this.http.delete(`${this.url}/${id}`, { headers })
 
   }
 
-  // get projects all
-  getProjects(): Observable<any> {
-    let url = 'http://80.211.57.191/api/projects' ;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.get(url,{headers})
-  }
 
   // post agiunta project
   addProject(form: any): Observable<any>{
-    let url = 'http://80.211.57.191/api/projects';
+    
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -99,11 +100,17 @@ export class ProjectService {
         'client_id': form.client_id ,
         'user_ids': form.user_ids
     }
-    return this.http.post(url,body,{headers})
+
+   
+    return this.http.post(this.url,body,{headers})
 
   }
 
 
+  randomNumber() {
+    let num = Math.floor(Math.random() * 100000)
+    return num.toString()
+  }
   
 
     

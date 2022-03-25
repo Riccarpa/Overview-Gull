@@ -19,46 +19,53 @@
           <div class="card mb-4">
             <div class="card-body">
               <div class="card-title mb-3"></div>
-              <form [formGroup]="projectForm" >
+              <form [formGroup]="projectForm" novalidate>
                 <div class="row">
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="name">project</label>
-                    <input type="text" class="form-control" formControlName="name">
+                    <input type="text" class="form-control" formControlName="name" placeholder="nome proggetto">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">client</label>
                     <select class="form-control" formControlName="client_id" name="client_id">
                       <option value="" selected disabled hidden>clienti</option>
-                      <option *ngFor="let c of client" [value]="c.id">{{c.name}}</option>
+                      <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
                     </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="revenue">revenue</label>
-                    <input class="form-control" type="number" name="revenue" formControlName="revenue">
+                    <input class="form-control" type="number" name="revenue" formControlName="revenue" placeholder="revenue">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="status">status</label>
-                    <input class="form-control" type="number" name="status" formControlName="status">
+                    <select class="form-control" type="number" name="status" formControlName="status" placeholder="status">
+                      <option selected disabled hidden [value]="null">status</option>
+                      <option [value]="0">pending</option>
+                      <option [value]="1">open</option>
+                      <option [value]="2">close</option>
+                    </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">progress</label>
                     <select class="form-control" formControlName="progress" name="progress">
-                      <option value="" selected disabled hidden>progress</option>
-                      <option [value]="50">50</option>
-                      <option [value]="80">80</option>
-                      <option [value]="100">100</option>
+                      <option [value]="null" selected disabled hidden>progress</option>
+                      <option [value]="0">0 %</option>
+                      <option [value]="20">20 %</option>
+                      <option [value]="50">50 %</option>
+                      <option [value]="80">80 %</option>
+                      <option [value]="100">100 %</option>
                     </select>
                   </div>
 
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">start date</label>
-                    <input type="date" class="form-control" formControlName="start_date">
+                    <input type="date" class="form-control" formControlName="start_date" >
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
@@ -66,9 +73,9 @@
                     <input type="date" class="form-control" formControlName="end_date">
                   </div>
 
-                  
 
-                  
+
+
                 </div>
               </form>
             </div>
@@ -90,18 +97,19 @@
   </div>
 </div>
 
-<section  class="d-flex align-items-stretch flex-wrap">
+<section class="d-flex align-items-stretch flex-wrap">
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
-    <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
-      <div class="card-body h-100">
+    <div  (click)="updateProject(proj.id)" class="card mb-4 h-100">
+      <div  class="card-body h-100">
 
         <div class=" d-flex justify-content-start align-items-center mb-2">
-          <img *ngIf="proj.logo" src="http://80.211.57.191/{{proj.logo}}" class="col-sm-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
-            alt="">
+          <img *ngIf="proj.logo" src="http://80.211.57.191/{{proj.logo}}"
+            class="col-sm-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+
           <div class="card-title m-0">{{proj.name}}</div>
         </div>
 
-        <div class="row" >
+        <div class="row">
           <div class="col-md-6">
             <table class="table">
               <tbody>
@@ -112,12 +120,14 @@
                 <tr>
                   <td>Client</td>
                   <td class="font-weight-bold">
-                    <p *ngFor="let c of client | filterClient: proj.client_id" class="m-0">{{c.name}}</p>
+                    <p *ngFor="let c of clients | filterClient: proj.client_id" class="m-0">{{c.name}}</p>
                   </td>
                 </tr>
-                <tr>
+                <tr [ngSwitch]="proj.status">
                   <td>Status</td>
-                  <td class="text-danger font-weight-bold">{{proj.status}}</td>
+                  <td *ngSwitchCase="0" class="text-danger font-weight-bold">pending</td>
+                  <td *ngSwitchCase="1" class="text-danger font-weight-bold">open</td>
+                  <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
                 </tr>
 
                 <tr>
@@ -125,7 +135,6 @@
                   <td class="text-warning font-weight-bold ">
                     <ul class="overflow p-0">
                       <li *ngFor="let idUser of proj.user_ids">
-                       
                         <p *ngFor="let u of users | filterUsers: idUser ">
                           {{u.name}}
                         </p>
@@ -133,7 +142,6 @@
                     </ul>
                   </td>
                 </tr>
-
               </tbody>
             </table>
           </div>
@@ -146,6 +154,9 @@
             </div>
 
             <div *ngSwitchCase="100" echarts [options]="chartPie3" [autoResize]="true" style="height: 200px;">
+            </div>
+
+            <div *ngSwitchCase="20" echarts [options]="chartPie4" [autoResize]="true" style="height: 200px;">
             </div>
 
             <div *ngSwitchDefault echarts [options]="chartPieDef" [autoResize]="true" style="height: 200px;">

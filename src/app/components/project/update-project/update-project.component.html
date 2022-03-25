@@ -2,14 +2,15 @@
   <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center ">
       <div class="avatar box-shadow-2 m-0 mr-2">
-        <img *ngIf="project.logo" src="http://80.211.57.191/{{project.logo}}" alt="">
+        <img *ngIf="project.logo" src="http://80.211.57.191{{project.logo}}" alt="">
+        <img else src="assets/images/project.png" alt="">
       </div>
       <h2>{{project.name}}</h2>
     </div>
 
     <div *ngIf="associateClient" class="card-body text-center d-flex flex-row align-items-center ">
       <div  class="avatar box-shadow-2 m-0 mr-2">
-        <img *ngIf="associateClient.logo" src="http://80.211.57.191/{{associateClient.logo}}" alt="">
+        <img *ngIf="associateClient.logo" src="http://80.211.57.191{{associateClient.logo}}" alt="">
         <img else src="assets/images/stock.jpg" alt="">
       </div>
       <h2>{{associateClient.name}} </h2>
@@ -105,9 +106,11 @@
             <label for="picker1">progress</label>
             <select class="form-control" formControlName="progress" name="progress">
               <option value="" selected disabled hidden>progress</option>
-              <option [value]="50">50</option>
-              <option [value]="80">80</option>
-              <option [value]="100">100</option>
+              <option [value]="0">0 %</option>
+              <option [value]="20">20 %</option>
+              <option [value]="50">50 %</option>
+              <option [value]="80">80 %</option>
+              <option [value]="100">100 %</option>
             </select>
           </div>
 
@@ -122,10 +125,18 @@
             <input type="date" class="form-control" formControlName="end_date">
           </div>
 
+          <div class="col-md-6 form-group mb-3">
+            <label for="status">status</label>
+            <select class="form-control"  type="number" name="status" formControlName="status" placeholder="status">
+              <option [value]="0">pending</option>
+              <option [value]="1">open</option>
+              <option [value]="2">close</option>
+            </select>
+          </div>
         
-          <div class="d-flex mb-3 col-lg-12 p-0 align-items-center" >
+          <div class="d-flex mb-3 col-lg-6 p-0 align-items-center" >
 
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3" id="scrollNone">
               <label for="picker1">users</label>
               <select class="form-control" formControlName="user_ids" multiple>
                 <option value="" selected disabled >collaboratori</option>
@@ -134,24 +145,24 @@
             </div>
 
           </div>
-          
-          
-          
-          
         </div>
+
+          
+          
+          
+          
         
-        <div class="col-md-6">
+        <div class="col-lg-6 p-0 ">
           <btn-loading btnClass="btn-primary btn-rounded" [loading]="loading">update project</btn-loading>
-        </div>
-        <div class="col-md-6">
-          <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-primary btn-rounded">delete
+          <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-danger btn-rounded m-4">
+            delete
           </btn-loading>
         </div>
         
       </form>
       <div class="row col-sm-3">
          <div>
-           <button class="btn btn-outline-primary btn-rounded mr-3" (click)="open(modalCropper)">modifica
+           <button class="btn btn-outline-primary btn-rounded mr-3 mb-3" (click)="open(modalCropper)">modifica
              logo</button>
            <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image" [width]="cropperSettings.croppedWidth"
              [height]="cropperSettings.croppedHeight">

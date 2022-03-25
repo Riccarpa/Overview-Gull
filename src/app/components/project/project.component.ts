@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
@@ -27,20 +28,22 @@ export class ProjectComponent implements OnInit {
     private service: ProjectService,
     private fb: FormBuilder,
     private clientService: ClientService,
-    private userService: UserService) { }
-
+    private userService: UserService,
+    private toastr: ToastrService) { }
 
   projects: Project[] = []
-  client: Client[] = []
+  clients: Client[] = []
   users: User[] = []
-
+  
+  confirmResut: any;
   active = false
 
+  //gruppo variabili opzioni chart
   chartPie1: any;
   chartPie2: any;
   chartPie3: any;
+  chartPie4:any;
   chartPieDef: any;
-  confirmResut: any;
 
 
 
@@ -57,26 +60,18 @@ export class ProjectComponent implements OnInit {
       user_ids: new FormControl(''),
     }
   )
-  logo: any
-
-  // sendImage() {
-
-
-  //   this.service.testPost(this.logo).subscribe((res) => {
-
-  //     console.log(res);
-
-  //   })
-  // }
+  
 
   addProject() {
 
     let newProj = this.projectForm.value
     this.service.addProject(newProj).subscribe()
+    this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
   }
 
   updateProject(id: number) {
 
+    //invio dell'id proggetto al service
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
   }
@@ -91,23 +86,32 @@ export class ProjectComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    //get di tutti i proggetti dal service e controllo immagine
     this.service.getProjects().subscribe((res) => {
 
       this.projects = res.data
       this.service.project = res.data
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].logo) {
+          this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
+        }
+      }
 
     }, (error) => {
       this.route.navigate(['/'])
     })
 
+    //get di tutti i client dal clientService
     this.clientService.getClients().subscribe((res) => {
 
-      this.client = res.data
-      this.service.client = res.data
+      this.clients = res.data
+      this.service.clients = res.data
     }, (error) => {
       this.route.navigate(['/'])
     })
 
+    //get di tutti gli user da userService
     this.userService.getUsers().subscribe((res) => {
 
       this.users = res.data
@@ -117,6 +121,7 @@ export class ProjectComponent implements OnInit {
     })
 
 
+    //varie opzioni per il chart del progresso del proggetto in %
     this.chartPie1 = {
       ...echartStyles.defaultOptions, ...{
         legend: {
@@ -198,6 +203,34 @@ export class ProjectComponent implements OnInit {
         }]
       }
     };
+    this.chartPie4 = {
+      ...echartStyles.defaultOptions, ...{
+        legend: {
+          show: true,
+          bottom: 0,
+        },
+        series: [{
+          type: 'pie',
+          ...echartStyles.pieRing,
+
+          label: echartStyles.pieLabelCenterHover,
+          data: [{
+            name: 'Completed',
+            value: 20,
+            itemStyle: {
+              color: '#663399',
+            }
+          }, {
+            name: 'Pending',
+            value: 80,
+            itemStyle: {
+              color: '#ced4da',
+            }
+          }]
+        }]
+      }
+    };
+    //chart di defult allo 0%
     this.chartPieDef = {
       ...echartStyles.defaultOptions, ...{
         legend: {
@@ -225,7 +258,6 @@ export class ProjectComponent implements OnInit {
         }]
       }
     };
-
 
   }
 

@@ -1,0 +1,7 @@
+#scrollNone {
+    &::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    scrollbar-width: 50px;
+}

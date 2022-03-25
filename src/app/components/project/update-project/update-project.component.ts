@@ -48,8 +48,7 @@ export class UpdateProjectComponent implements OnInit {
   clients:Client[] // lista clienti
   users: User[] = [] // lista utenti 
   associateClient:Client // cliente associato al project
-  associateUser:number //numero di user associati al project
-  imgClient:any
+  associateUser:number //numero di user associati al project(.lenght)
   data: any;
   cropperSettings: CropperSettings;
 
@@ -78,10 +77,9 @@ export class UpdateProjectComponent implements OnInit {
 
   updateProject() {
 
+    //invio del form e id al service per update
     let updatedProj = this.projectForm.value
     this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
-      
-      console.log(res, 'log della res update');
       
       this.route.navigate(['home/project'])
 
@@ -128,19 +126,20 @@ export class UpdateProjectComponent implements OnInit {
   }
 
 
-
-
-
-
   ngOnInit(): void {
     
     if (!this.service.currentProject) {
       this.service.currentProject = this.active.snapshot.paramMap.get('id')
     }
 
+    //retrive del proggetto singolo
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
+  
+      if (this.project.logo) {
+        this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
+      }
 
       this.projectForm = this.fb.group({
 
@@ -155,8 +154,10 @@ export class UpdateProjectComponent implements OnInit {
         
       })
 
-      
+      //calcolo del numero di utenti associati al proggetto
       this.associateUser = this.project.user_ids.length
+
+      //get cliente associato al proggetto tramite id
       let idClient = res.data.client_id
       this.clientService.getClient(idClient).subscribe((res) => {
         this.associateClient = res.data
