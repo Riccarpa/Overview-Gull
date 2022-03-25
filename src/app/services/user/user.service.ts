@@ -12,7 +12,7 @@ export class UserService {
   }
   
     token:any
-    url = `http://80.211.57.191/api/users` 
+    url = `http://80.211.57.191/overview_dev/api/users` 
     
     
     getUsers():Observable<any>{
