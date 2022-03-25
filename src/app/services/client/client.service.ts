@@ -19,7 +19,7 @@ export class ClientService {
 
   // lista di tutti i clienti
   getClients(): Observable<any> {
-    const url = 'http://80.211.57.191/api/clients';
+    const url = 'http://80.211.57.191/overview_dev/api/clients';
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export class ClientService {
 
   // aggiungi nuovo cliente
   addClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
-    const url = 'http://80.211.57.191/api/clients';
+    const url = 'http://80.211.57.191/overview_dev/api/clients';
 
     let body = {
       "name": name,
@@ -52,7 +52,7 @@ export class ClientService {
 
   // retrieve cliente
   getClient(id: any): Observable<any> {
-    const url = `http://80.211.57.191/api/clients/${id}`;
+    const url = `http://80.211.57.191/overview_dev/api/clients/${id}`;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export class ClientService {
 
   // modifica cliente
   updateClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
-    const url = `http://80.211.57.191/api/clients/${this.currentClient}`;
+    const url = `http://80.211.57.191/overview_dev/api/clients/${this.currentClient}`;
 
     let body = {
       "name": name,
@@ -85,7 +85,7 @@ export class ClientService {
 
   // cancella cliente
   deleteClient(id: any): Observable<any> {
-    const url = `http://80.211.57.191/api/clients/${id}`;
+    const url = `http://80.211.57.191/overview_dev/api/clients/${id}`;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

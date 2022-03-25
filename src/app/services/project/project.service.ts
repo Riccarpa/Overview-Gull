@@ -36,7 +36,7 @@ export class ProjectService {
    // retrive su progetto singolo
   getUpdateProject(): Observable<any> {
 
-    let url = `${this.url}/${this.currentProject}`;
+    let url = `http://80.211.57.191/overview_dev/api/projects/${this.currentProject}`;
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -47,7 +47,7 @@ export class ProjectService {
 
   //patch progetto
   updateProject(form:any,projId:number): Observable<any> {
-
+    let url = `http://80.211.57.191/overview_dev/api/projects/${projId}`
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -73,6 +73,7 @@ export class ProjectService {
   // delete project
   deleteProject(id:number){
 
+    let url = `http://80.211.57.191/overview_dev/api/projects/${id}`
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
