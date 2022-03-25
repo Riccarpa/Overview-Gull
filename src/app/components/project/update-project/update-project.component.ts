@@ -81,6 +81,7 @@ export class UpdateProjectComponent implements OnInit {
     let updatedProj = this.projectForm.value
     this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
       
+      this.toastr.success(`proggetto modificato con successo`, 'Success', { timeOut: 3000, progressBar: true });
       this.route.navigate(['home/project'])
 
     })

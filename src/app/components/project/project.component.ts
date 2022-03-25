@@ -60,12 +60,53 @@ export class ProjectComponent implements OnInit {
       user_ids: new FormControl(''),
     }
   )
+
+  getAllProjects(){
+    this.service.getProjects().subscribe((res) => {
+
+      this.projects = res.data
+      this.service.project = res.data
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].logo) {
+          this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
+        }
+      }
+
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
+  }
+
+  getAllClients(){
+    this.clientService.getClients().subscribe((res) => {
+
+      this.clients = res.data
+      this.service.clients = res.data
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
+  }
+
+  getAllUsers(){
+
+    this.userService.getUsers().subscribe((res) => {
+
+      this.users = res.data
+      this.service.users = res.data
+    }, (error) => {
+      this.route.navigate(['/'])
+    })
+  }
   
 
   addProject() {
 
     let newProj = this.projectForm.value
-    this.service.addProject(newProj).subscribe()
+    this.service.addProject(newProj).subscribe((res) =>{
+      if (res) {
+        this.getAllProjects()
+      }
+    })
     this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
   }
 
@@ -88,37 +129,13 @@ export class ProjectComponent implements OnInit {
   ngOnInit() {
 
     //get di tutti i proggetti dal service e controllo immagine
-    this.service.getProjects().subscribe((res) => {
-
-      this.projects = res.data
-      this.service.project = res.data
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].logo) {
-          this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
-        }
-      }
-
-    }, (error) => {
-      this.route.navigate(['/'])
-    })
+    this.getAllProjects()
 
     //get di tutti i client dal clientService
-    this.clientService.getClients().subscribe((res) => {
-
-      this.clients = res.data
-      this.service.clients = res.data
-    }, (error) => {
-      this.route.navigate(['/'])
-    })
+    this.getAllClients()
 
     //get di tutti gli user da userService
-    this.userService.getUsers().subscribe((res) => {
-
-      this.users = res.data
-      this.service.users = res.data
-    }, (error) => {
-      this.route.navigate(['/'])
-    })
+    this.getAllUsers()
 
 
     //varie opzioni per il chart del progresso del proggetto in %
