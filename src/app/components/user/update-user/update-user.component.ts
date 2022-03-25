@@ -47,7 +47,7 @@ export class UpdateUserComponent implements OnInit {
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
       if(this.user.picture){
-        this.user.picture =  `http://80.211.57.191/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+        this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
       }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name),
@@ -106,7 +106,7 @@ export class UpdateUserComponent implements OnInit {
     
     this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
       console.log(res)
-      this.user.picture =  `http://80.211.57.191/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+      this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
       })
   }
   
