@@ -140,7 +140,7 @@
               <label for="picker1">users</label>
               <select class="form-control" formControlName="user_ids" multiple>
                 <option value="" selected disabled >collaboratori</option>
-                <option *ngFor="let u of users" [value]="u.id">{{u.name}}</option>
+                <option *ngFor="let u of users" [value]="{id:u.id,cost:u.cost,percent:u.percent}">{{u.name}}</option>
               </select>
             </div>
 
@@ -162,7 +162,7 @@
       </form>
       <div class="row col-sm-3">
          <div>
-           <button class="btn btn-outline-primary btn-rounded mr-3 mb-3" (click)="open(modalCropper)">modifica
+           <button class="btn btn-outline-primary btn-rounded mr-3 mb-3" (click)="openModalImg(modalCropper)">modifica
              logo</button>
            <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image" [width]="cropperSettings.croppedWidth"
              [height]="cropperSettings.croppedHeight">

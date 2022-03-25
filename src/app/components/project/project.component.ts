@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -34,7 +34,7 @@ export class ProjectComponent implements OnInit {
   projects: Project[] = []
   clients: Client[] = []
   users: User[] = []
-  
+
   confirmResut: any;
   active = false
 
@@ -42,7 +42,7 @@ export class ProjectComponent implements OnInit {
   chartPie1: any;
   chartPie2: any;
   chartPie3: any;
-  chartPie4:any;
+  chartPie4: any;
   chartPieDef: any;
 
 
@@ -50,7 +50,7 @@ export class ProjectComponent implements OnInit {
 
   projectForm = this.fb.group(
     {
-      name: new FormControl(''),
+      name: new FormControl('', Validators.required),
       status: new FormControl(''),
       start_date: new FormControl(''),
       end_date: new FormControl(''),
@@ -61,7 +61,7 @@ export class ProjectComponent implements OnInit {
     }
   )
 
-  getAllProjects(){
+  getAllProjects() {
     this.service.getProjects().subscribe((res) => {
 
       this.projects = res.data
@@ -72,12 +72,14 @@ export class ProjectComponent implements OnInit {
         }
       }
 
+      console.log(res.data);
+
     }, (error) => {
       this.route.navigate(['/'])
     })
   }
 
-  getAllClients(){
+  getAllClients() {
     this.clientService.getClients().subscribe((res) => {
 
       this.clients = res.data
@@ -87,7 +89,7 @@ export class ProjectComponent implements OnInit {
     })
   }
 
-  getAllUsers(){
+  getAllUsers() {
 
     this.userService.getUsers().subscribe((res) => {
 
@@ -97,17 +99,23 @@ export class ProjectComponent implements OnInit {
       this.route.navigate(['/'])
     })
   }
-  
+
 
   addProject() {
 
     let newProj = this.projectForm.value
-    this.service.addProject(newProj).subscribe((res) =>{
-      if (res) {
-        this.getAllProjects()
-      }
-    })
-    this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+    if (this.projectForm.status == 'INVALID') {
+      this.warningBar()
+    }else{
+
+      this.service.addProject(newProj).subscribe((res) => {
+        if (res) {
+          this.getAllProjects()
+          this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+          this.modalService.dismissAll()
+        }
+      })
+    }
   }
 
   updateProject(id: number) {
@@ -117,13 +125,17 @@ export class ProjectComponent implements OnInit {
     this.route.navigate(['home/updateProject', id])
   }
 
-  confirm(content: any) {
+  openCreateModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then((result) => {
         this.confirmResut = `Closed with: ${result}`;
       }, (reason) => {
         this.confirmResut = `Dismissed with: ${reason}`;
       });
+  }
+
+  warningBar() {
+    this.toastr.warning('Name project fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 
   ngOnInit() {
@@ -283,4 +295,8 @@ export class ProjectComponent implements OnInit {
 
 }
 
+
+function warningBar() {
+  throw new Error('Function not implemented.');
+}
 

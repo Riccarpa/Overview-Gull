@@ -63,7 +63,7 @@ export class UpdateProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl([]),
+      user_ids: new FormControl('')
 
     }
 
@@ -71,7 +71,11 @@ export class UpdateProjectComponent implements OnInit {
 
   delProject(id: number) {
 
-    this.service.deleteProject(id).subscribe()
+    this.service.deleteProject(id).subscribe(res=>{
+
+      this.toastr.success(`proggetto eliminato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+
+    })
     this.route.navigate(['home/project'])
   }
 
@@ -117,12 +121,12 @@ export class UpdateProjectComponent implements OnInit {
 
   }
 
-  open(modal) {
+  openModalImg(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
-        console.log(result);
+     
       }, (reason) => {
-        console.log('Err!', reason);
+        
       });
   }
 
@@ -159,11 +163,14 @@ export class UpdateProjectComponent implements OnInit {
       this.associateUser = this.project.user_ids.length
 
       //get cliente associato al proggetto tramite id
-      let idClient = res.data.client_id
-      this.clientService.getClient(idClient).subscribe((res) => {
-        this.associateClient = res.data
+      if (res.data.client_id) {
         
-      })
+        let idClient = res.data.client_id
+        this.clientService.getClient(idClient).subscribe((res) => {
+  
+            this.associateClient = res.data
+        })
+      }
 
       
     })
@@ -171,7 +178,6 @@ export class UpdateProjectComponent implements OnInit {
     this.userService.getUsers().subscribe((res) => {
       
       this.users = res.data
-
     })
 
     this.clientService.getClients().subscribe((res)=>{

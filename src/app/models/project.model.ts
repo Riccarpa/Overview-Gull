@@ -12,6 +12,6 @@ export class Project {
     status: number | null
     type: string | null
     sprint_ids: number[] | null
-    user_ids: number[] | null
+    user_ids: any | null
 
 }
