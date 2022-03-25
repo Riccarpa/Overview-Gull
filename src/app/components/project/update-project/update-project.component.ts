@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { number } from 'ngx-custom-validators/src/app/number/validator';
 import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
@@ -51,10 +52,9 @@ export class UpdateProjectComponent implements OnInit {
   associateUser:number //numero di user associati al project(.lenght)
   data: any;
   cropperSettings: CropperSettings;
-
-
-
-  projectForm = this.fb.group(
+  arrayUsersIds=[]
+  
+  projectForm = new FormGroup(
     {
       name: new FormControl(''),
       status: new FormControl(''),
@@ -63,11 +63,12 @@ export class UpdateProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl('')
-
+      user_ids: new FormControl(),
     }
 
   )
+
+
 
   delProject(id: number) {
 
@@ -81,11 +82,13 @@ export class UpdateProjectComponent implements OnInit {
 
   updateProject() {
 
-    //invio del form e id al service per update
+    
+    //invio del form  id e array userIds  al service per update
     let updatedProj = this.projectForm.value
-    this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
+    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
       
       this.toastr.success(`proggetto modificato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+      
       this.route.navigate(['home/project'])
 
     })
@@ -130,6 +133,54 @@ export class UpdateProjectComponent implements OnInit {
       });
   }
 
+  remuveUserToProject(id:number){
+
+    for (let i = 0; i < this.arrayUsersIds.length; i++) {
+      const e = this.arrayUsersIds[i];
+      if (e.id === id) {
+        this.arrayUsersIds.splice(i,1)
+        this.toastr.success('user rimosso con successo.', 'Success!', { progressBar: true });
+        break
+      }
+        
+    }
+  
+  }
+
+  addUserToProject(user:any){
+
+    let int = parseInt(user.percent)//parso
+    user.percent = int//valorizzo
+    if (this.arrayUsersIds.length == 0) {
+      this.arrayUsersIds.push(user)
+      this.toastr.success('user aggiunto con successo.', 'Success!', { progressBar: true });
+    }else{
+
+      for (let i = 0; i < this.arrayUsersIds.length; i++) {
+        let e = this.arrayUsersIds[i];
+        if (e.id !== user.id && i == this.arrayUsersIds.length -1 ) {
+          this.arrayUsersIds.push(user)
+          this.toastr.success('user aggiunto con successo.', 'Success!', { progressBar: true });
+          break
+        } else if (e.id === user.id) {
+          this.toastr.warning('utente giá associato al progetto.', 'Success!', { progressBar: true });
+          break
+        }
+      }
+    }
+    
+   
+      
+      
+    
+    
+
+
+    
+  }
+
+ 
+
 
   ngOnInit(): void {
     
@@ -145,8 +196,8 @@ export class UpdateProjectComponent implements OnInit {
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
-
-      this.projectForm = this.fb.group({
+      
+      this.projectForm = new FormGroup({
 
         name: new FormControl(this.project.name),
         status: new FormControl(this.project.status),
@@ -156,7 +207,7 @@ export class UpdateProjectComponent implements OnInit {
         revenue: new FormControl(this.project.revenue),
         client_id: new FormControl(this.project.client_id),
         user_ids: new FormControl(this.project.user_ids)
-        
+
       })
 
       //calcolo del numero di utenti associati al proggetto
@@ -191,6 +242,7 @@ export class UpdateProjectComponent implements OnInit {
     this.radioGroup = this.fb.group({
       radio: []
     });
+    
     
     
     

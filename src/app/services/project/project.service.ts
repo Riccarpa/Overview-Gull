@@ -46,7 +46,7 @@ export class ProjectService {
   }
 
   //patch progetto
-  updateProject(form: any, projId: number): Observable<any> {
+  updateProject(form: any, projId: number,userIds:any): Observable<any> {
 
     const headers = {
       'Content-Type': 'application/json',
@@ -55,14 +55,15 @@ export class ProjectService {
 
     let body = {
       'name': form.name,
-      'status': form.status,
-      'start_date': form.start_date,
-      'end_date': form.end_date,
-      'progress': form.progress,
+      'status': form.status ? form.status : 0,
+      'start_date': form.start_date ,
+      'end_date': form.end_date ,
+      'progress': form.progress ? form.progress : 0,
       'revenue': form.revenue,
       'client_id': form.client_id,
-      'user_ids': form.user_ids
+      'user_ids': userIds
     }
+
     if (form.logo_data) {
       body['logo_data'] = form.logo_data;
     }

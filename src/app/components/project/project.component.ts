@@ -57,7 +57,7 @@ export class ProjectComponent implements OnInit {
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl(''),
+      user_ids: new FormControl([]),
     }
   )
 
@@ -71,8 +71,6 @@ export class ProjectComponent implements OnInit {
           this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
         }
       }
-
-      console.log(res.data);
 
     }, (error) => {
       this.route.navigate(['/'])
