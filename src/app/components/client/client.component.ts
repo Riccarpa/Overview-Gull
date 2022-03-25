@@ -158,7 +158,7 @@ export class ClientComponent implements OnInit {
         representatives: this.client.representatives,
       });
       if (this.client.logo) {
-        this.data.image = `http://80.211.57.191/${this.client.logo}?time=${new Date()}`;
+        this.data.image = `http://80.211.57.191/overview_dev/${this.client.logo}?time=${new Date()}`;
       } else {
         this.data.image = '';
       }
