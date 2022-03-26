@@ -95,12 +95,18 @@ export class UpdateUserComponent implements OnInit {
     this.modalService.dismissAll();
     let base64JpgWithoutIndex;
     let base64PngWithoutIndex;
+    if(this.data.image==undefined){
+      this.errorBar('Selezionare un immagine')
+    }
     if(this.data.image.includes('data:image/jpeg;base64,')){
       base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
       this.profileForm.value.picture_data = base64JpgWithoutIndex;
-    }else{
+    }if(this.data.image.includes('data:image/png;base64,')){
+
       base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
       this.profileForm.value.picture_data = base64PngWithoutIndex;
+    }else{
+      this.errorBar('Selezionare un formato jpg o png')
     }
     
     
@@ -138,5 +144,8 @@ export class UpdateUserComponent implements OnInit {
     randomNumber(){
     let num = Math.floor(Math.random()*100000)
     return num.toString()
+  }
+  errorBar(error:any) {
+    this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 }
