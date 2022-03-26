@@ -97,8 +97,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary btn-rounded"
           (click)="modal.dismiss('cancel')">Cancel</button>
-        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded"
-          (click)="addProject()">Ok</button>
+        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
+          (click)="addProject()">Ok</btn-loading>
       </div>
     </ng-template>
 

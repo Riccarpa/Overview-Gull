@@ -21,6 +21,19 @@ import { ProductService } from 'src/app/shared/services/product.service';
 })
 export class ProjectComponent implements OnInit {
 
+
+  //variabili template
+  confirmResut: any;
+  active = false
+  loading:boolean
+
+  //gruppo variabili opzioni chart
+  chartPie1: any;
+  chartPie2: any;
+  chartPie3: any;
+  chartPie4: any;
+  chartPieDef: any;
+
   constructor(
     private modalService: NgbModal,
     private productService: ProductService,
@@ -35,15 +48,7 @@ export class ProjectComponent implements OnInit {
   clients: Client[] = []
   users: User[] = []
 
-  confirmResut: any;
-  active = false
-
-  //gruppo variabili opzioni chart
-  chartPie1: any;
-  chartPie2: any;
-  chartPie3: any;
-  chartPie4: any;
-  chartPieDef: any;
+  
 
 
 
@@ -108,13 +113,19 @@ export class ProjectComponent implements OnInit {
 
       this.service.addProject(newProj).subscribe((res) => {
         if (res) {
-          this.getAllProjects()
-          this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
-          this.modalService.dismissAll()
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.getAllProjects()
+            this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+            this.modalService.dismissAll()
+          }, 2000);
         }
       })
     }
   }
+            
+            
 
   updateProject(id: number) {
 

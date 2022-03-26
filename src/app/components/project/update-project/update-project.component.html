@@ -169,9 +169,10 @@
 
         <div class="col-lg-12 d-flex align-items-center mt-3">
            <div class="col-lg-6 p-0 ">
-             <btn-loading (click)="updateProject()" btnClass=" btn-primary btn-rounded" [loading]="loading">update
+             <btn-loading (click)="updateProject()" btnClass=" btn-primary btn-rounded" [loading]="loadingUpdate">update
                project</btn-loading>
-             <btn-loading (click)="delProject(project.id)" [loading]="loading" btnClass="btn-danger btn-rounded m-4 ">
+             <btn-loading (click)="delProject(project.id)" [loading]="loadingDelete"
+               btnClass="btn-danger btn-rounded m-4 ">
                delete
              </btn-loading>
 
@@ -188,7 +189,7 @@
                <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
                  {{user.name}} 
                 </p>
-                <i (click)="remuveUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
+                <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
              </div>
 
 
