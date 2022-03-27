@@ -141,7 +141,7 @@
           <div ngbDropdown class="mega-menu col-lg-6 col-md-6 align-items-center mt-3 p-3">
             <button ngbDropdownToggle href="#"
               class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control ">Associa
-              Collaboratiri</button>
+              Collaboratori</button>
             <div ngbDropdownMenu perfectScrollbar >
               <div class="row m-0">
                 
@@ -212,29 +212,25 @@
 
 
        
+        <!-- modale img -->
+        <ng-template #modalCropper let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Carica Un Immagine</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings"></img-cropper>
+            <br>
+           
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-rounded btn-outline-dark"
+              (click)="saveImg();modal.close()">Save</button>
+          </div>
+        </ng-template>
       </form>
-
-
-
-
-      <!-- modale img -->
-      <ng-template #modalCropper let-modal>
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <img-cropper [image]="data" [settings]="cropperSettings">{{data}}</img-cropper><br>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-rounded btn-outline-dark"
-            (click)="updateImg();modal.close()">Save</button>
-        </div>
-      </ng-template>
-
 
     </div>
   </div>

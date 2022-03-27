@@ -23,15 +23,14 @@
                 <div class="row">
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="name">project</label>
-                    <input type="text" class="form-control " formControlName="name"
-                    placeholder="nome proggetto">
-                    
+                    <label for="name">Project</label>
+                    <input type="text" class="form-control " formControlName="name" placeholder="* nome proggetto">
+
                     <div *ngIf="projectForm.get('name').invalid &&  projectForm.get('name').touched"
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
                       role="alert">
                       <div>
-                       il nome del progetto é obbligatorio
+                        il nome del progetto é obbligatorio
                       </div>
                     </div>
                   </div>
@@ -45,45 +44,73 @@
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="revenue">revenue</label>
-                    <input class="form-control" type="number" name="revenue" formControlName="revenue" placeholder="revenue">
+                    <label for="revenue">Revenue</label>
+                    <input class="form-control" type="number" name="revenue" formControlName="revenue"
+                      placeholder="revenue">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="status">status</label>
-                    <select class="form-control"  name="status" formControlName="status" placeholder="status">
-                      <option selected disabled hidden [value]="null">status</option>
-                      <option [value]="0">pending</option>
-                      <option [value]="1">open</option>
-                      <option [value]="2">close</option>
+                    <label for="status">Status</label>
+                    <select class="form-control" name="status" formControlName="status" placeholder="status">
+                      <option selected disabled hidden [value]="null">Status</option>
+                      <option [value]="0">Pending</option>
+                      <option [value]="1">Open</option>
+                      <option [value]="2">Close</option>
                     </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="picker1">progress</label>
+                    <label for="picker1">Progress</label>
                     <select class="form-control" formControlName="progress" name="progress">
-                      <option selected disabled hidden>progress</option>
-                      <option [value]="0">0 %</option>
-                      <option [value]="20">20 %</option>
-                      <option [value]="50">50 %</option>
-                      <option [value]="80">80 %</option>
-                      <option [value]="100">100 %</option>
+                      <option selected disabled hidden>Progress</option>
+                      <option [value]="0">0%</option>
+                      <option [value]="20">20%</option>
+                      <option [value]="50">50%</option>
+                      <option [value]="80">80%</option>
+                      <option [value]="100">100%</option>
                     </select>
                   </div>
 
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="picker1">start date</label>
-                    <input type="date" class="form-control" formControlName="start_date" >
+                    <label for="picker1">Start date</label>
+                    <input type="date" class="form-control" formControlName="start_date">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
-                    <label for="picker1">end date</label>
+                    <label for="picker1">End Date</label>
                     <input type="date" class="form-control" formControlName="end_date">
                   </div>
 
+                  <div class="col-md-6 form-group mb-3 d-flex flex-column">
+                    <label for="picker1">Project Logo</label>
+                    <button class="form-control text-left" (click)="openModalImg(modalCropper)">Aggiungi Un
+                      Logo Al Proggetto</button>
+                    <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
+                      [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+                  </div>
 
 
+
+                  <!-- cropper per img -->
+                  <ng-template #modalCropper let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="modal-basic-title">Carica Un Immagine</h4>
+                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings">
+                      </img-cropper>
+                      <br>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-rounded btn-outline-dark"
+                        (click)="saveImg();modal.close()">Save</button>
+                    </div>
+                  </ng-template>
 
                 </div>
               </form>
@@ -98,7 +125,7 @@
         <button type="button" class="btn btn-outline-secondary btn-rounded"
           (click)="modal.dismiss('cancel')">Cancel</button>
         <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
-          (click)="addProject()">Ok</btn-loading>
+          (click)="addProject(projectForm)">Ok</btn-loading>
       </div>
     </ng-template>
 
@@ -108,8 +135,8 @@
 
 <section class="d-flex align-items-stretch flex-wrap">
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
-    <div  (click)="updateProject(proj.id)" class="card mb-4 h-100">
-      <div  class="card-body h-100">
+    <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
+      <div class="card-body h-100">
 
         <div class=" d-flex justify-content-start align-items-center mb-2">
           <img *ngIf="proj.logo" src="http://80.211.57.191/overview_dev/{{proj.logo}}"

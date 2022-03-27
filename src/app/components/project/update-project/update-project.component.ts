@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,8 +35,7 @@ export class UpdateProjectComponent implements OnInit {
     private clientService: ClientService,
     private userService: UserService,
     private toastr: ToastrService,
-    private modalService: NgbModal
-
+    private modalService: NgbModal,
   ) {
 
     this.cropperSettings = new CropperSettings();
@@ -47,6 +47,7 @@ export class UpdateProjectComponent implements OnInit {
   }
 
 
+
   project: Project //progetto singolo
   idProject: number //id progetto singolo
   clients: Client[] // lista clienti
@@ -55,6 +56,7 @@ export class UpdateProjectComponent implements OnInit {
   associateUser: number //numero di user associati al project(.lenght)
   arrayUsersIds = []//array di users associati al proggetto
 
+  imageSelect: File
 
 
 
@@ -68,6 +70,7 @@ export class UpdateProjectComponent implements OnInit {
       revenue: new FormControl(''),
       client_id: new FormControl(''),
       user_ids: new FormControl(),
+      logo: new FormControl([])
     }
 
   )
@@ -91,7 +94,7 @@ export class UpdateProjectComponent implements OnInit {
 
     //invio del form  id e array userIds  al service per update
     let updatedProj = this.projectForm.value
-    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
+    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds, this.data).subscribe((res) => {
 
       this.loadingUpdate = true;
       setTimeout(() => {
@@ -103,26 +106,34 @@ export class UpdateProjectComponent implements OnInit {
   }
 
 
-  updateImg() {
+  uploadImg(event: any) {
 
-    this.modalService.dismissAll();
-    let base64JpgWithoutIndex;
-    let base64PngWithoutIndex;
-    if (this.data.image.includes('data:image/jpeg;base64,')) {
-      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-      this.projectForm.value.logo_data = base64JpgWithoutIndex;
-    } else {
-      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
-      this.projectForm.value.logo_data = base64PngWithoutIndex;
-    }
+
+    this.imageSelect = event.target.files[0]
+    console.log(this.imageSelect);
   }
+
+  saveImg() {
+
+
+    this.service.uploadImagePost(this.imageSelect).subscribe(
+
+      (res) => {
+        console.log(res);
+
+        this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
+        if (res) {
+          this.data = this.projectForm.value.logo.message
+        }
+
+      })
+  }
+
 
   openModalImg(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
-
       }, (reason) => {
-
       });
   }
 
@@ -171,15 +182,6 @@ export class UpdateProjectComponent implements OnInit {
         }
       }
     }
-
-
-
-
-
-
-
-
-
   }
 
 
@@ -195,11 +197,13 @@ export class UpdateProjectComponent implements OnInit {
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
+      console.log(this.project);
 
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
 
+      
       this.projectForm = new FormGroup({
 
         name: new FormControl(this.project.name),
@@ -209,7 +213,8 @@ export class UpdateProjectComponent implements OnInit {
         progress: new FormControl(this.project.progress),
         revenue: new FormControl(this.project.revenue),
         client_id: new FormControl(this.project.client_id),
-        user_ids: new FormControl(this.project.user_ids)
+        user_ids: new FormControl(this.project.user_ids),
+        logo: new FormControl(this.project.logo)
 
       })
 
@@ -245,8 +250,6 @@ export class UpdateProjectComponent implements OnInit {
           }
         }
       }
-
-      console.log(this.arrayUsersIds);
 
     })
 

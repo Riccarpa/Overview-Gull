@@ -46,10 +46,10 @@ export class ProjectService {
   }
 
   //patch progetto
-  updateProject(form: any, projId: number,userIds:any): Observable<any> {
+  updateProject(form: any, projId: number,userIds:any,logo:any): Observable<any> {
 
     const headers = {
-      'Content-Type': 'application/json',
+ 
       'Authorization': `Bearer ${this.token}`
     }
 
@@ -61,13 +61,27 @@ export class ProjectService {
       'progress': form.progress ? form.progress : 0,
       'revenue': form.revenue,
       'client_id': form.client_id,
-      'user_ids': userIds
+      'user_ids': userIds,
+      'logo_path': logo
     }
 
-    if (form.logo_data) {
-      body['logo_data'] = form.logo_data;
-    }
+   
     return this.http.patch(`${this.url}/${projId}`, body, { headers })
+  }
+
+  // post upload image
+  uploadImagePost(file:any){
+
+    let url = 'http://80.211.57.191/overview_dev/api/uploadImage'
+
+    const fd = new FormData()
+    fd.append('image',file,file.name)
+    const headers = {
+      
+      'Authorization': `Bearer ${this.token}`
+    }
+    return this.http.post(`${url}`, fd, { headers })
+
   }
 
 
@@ -102,14 +116,17 @@ export class ProjectService {
       'progress': form.progress ? form.progress : 0,
       'revenue': form.revenue,
       'client_id': form.client_id,
-      'user_ids': form.user_ids
+      'user_ids': form.user_ids,
+      'logo_path': form.logo.message
     }
+    //  if (form.logo) {
+    //    body['logo_path'] = form.logo.message;
+    // }
 
+   
     
-
     
     return this.http.post(this.url, body, { headers })
-
   }
 
 
@@ -117,7 +134,5 @@ export class ProjectService {
     let num = Math.floor(Math.random() * 100000)
     return num.toString()
   }
-
-
 
 }

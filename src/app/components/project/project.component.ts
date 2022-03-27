@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
@@ -25,7 +26,9 @@ export class ProjectComponent implements OnInit {
   //variabili template
   confirmResut: any;
   active = false
-  loading:boolean
+  loading: boolean
+  data: any;
+  cropperSettings: CropperSettings;
 
   //gruppo variabili opzioni chart
   chartPie1: any;
@@ -42,13 +45,21 @@ export class ProjectComponent implements OnInit {
     private fb: FormBuilder,
     private clientService: ClientService,
     private userService: UserService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
+    this.cropperSettings = new CropperSettings();
+
+    this.cropperSettings.cropperDrawSettings.lineDash = true;
+    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
+
+    this.data = {};
+  }
 
   projects: Project[] = []
   clients: Client[] = []
   users: User[] = []
 
-  
+  imageSelect: File
+  dataRes: any
 
 
 
@@ -63,6 +74,7 @@ export class ProjectComponent implements OnInit {
       revenue: new FormControl(''),
       client_id: new FormControl(''),
       user_ids: new FormControl([]),
+      logo: new FormControl([])
     }
   )
 
@@ -74,6 +86,7 @@ export class ProjectComponent implements OnInit {
       for (let i = 0; i < this.projects.length; i++) {
         if (this.projects[i].logo) {
           this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
+         
         }
       }
 
@@ -104,28 +117,68 @@ export class ProjectComponent implements OnInit {
   }
 
 
-  addProject() {
+  addProject(form:any) {
 
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
       this.warningBar()
-    }else{
+    } else {
 
       this.service.addProject(newProj).subscribe((res) => {
-        if (res) {
-          this.loading = true;
-          setTimeout(() => {
+          this.dataRes = res.data
+        
+      })
+      this.loading = true;
+      setTimeout(() => {
+        this.service.updateProject(this.dataRes, this.dataRes.id, this.dataRes.user_ids, this.dataRes.logo).subscribe()
+        
+        
+        console.log(this.data,'this.data');
+        console.log(this.dataRes.logo,'logo datares');
+        
+        
             this.loading = false;
-            this.getAllProjects()
+            this.updateProject(this.dataRes.id)
             this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
             this.modalService.dismissAll()
           }, 2000);
-        }
-      })
+        
     }
   }
-            
-            
+
+
+
+
+  uploadImg(event: any) {
+
+    this.imageSelect = event.target.files[0]
+
+  }
+
+  saveImg() {
+
+
+    this.service.uploadImagePost(this.imageSelect).subscribe(
+
+      (res) => {
+
+        this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
+        if (res) {
+          this.data = this.projectForm.value.logo.message
+          
+        }
+        
+      })
+  }
+
+  openModalImg(modal) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then((result) => {
+      }, (reason) => {
+      });
+  }
+
+
 
   updateProject(id: number) {
 
@@ -298,10 +351,6 @@ export class ProjectComponent implements OnInit {
     };
 
   }
-
-
-
-
 }
 
 
