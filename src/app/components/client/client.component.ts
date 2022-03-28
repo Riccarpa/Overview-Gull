@@ -54,6 +54,8 @@ export class ClientComponent implements OnInit {
   addClient() {
     if (this.clientForm.status == 'INVALID') {
       this.warningBar()
+      this.data.image = '';
+      this.clientForm.value.logo_data = '';
     } else {
       console.log(this.clientForm.value);
       const newClient = this.clientForm.value;
@@ -76,7 +78,8 @@ export class ClientComponent implements OnInit {
   // modifica il cliente selezionato
   editClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.warningBar()
+      this.warningBar();
+      this.data.image = `http://80.211.57.191/overview_dev/${this.client.logo}?time=${new Date()}`;
     } else {
       const client = this.clientForm.value;
       this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
