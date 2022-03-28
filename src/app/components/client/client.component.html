@@ -113,7 +113,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <img-cropper [image]="data" [settings]="cropperSettings"></img-cropper><br>
+        <img-cropper [image]="data" [settings]="cropperSettings" (change)="fileChange($event)"></img-cropper><br>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-rounded btn-outline-dark"

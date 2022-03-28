@@ -176,19 +176,10 @@ export class ClientComponent implements OnInit {
   openModalCropper(modal: any) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log(this.data.image);
-        if (this.data.image.includes('data:image/jpeg;base64,')) {
-          let base64WithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-          this.clientForm.value.logo_data = base64WithoutIndex;
-        }
-        else if (this.data.image.includes('data:image/png;base64,')) {
-          let base64WithoutIndex = this.data.image.replace('data:image/png;base64,', '');
-          this.clientForm.value.logo_data = base64WithoutIndex;
-        }
-        else {
-          this.toastr.error('Inserisci immagine con formato valido', 'Formato non valido!', { timeOut: 3000 });
-        }
-
+        this.clientService.updateImage(this.currentImage).subscribe((res) => {
+          console.log(res);
+          this.clientForm.value.logo_data = res.message;
+        });
       }, () => {
         console.log('Err!');
       });
@@ -196,4 +187,12 @@ export class ClientComponent implements OnInit {
 
   data: any;
   cropperSettings: CropperSettings;
+  currentImage: any;
+
+  fileChange(event: any) {
+    let fileList = event.target.files;
+    if (fileList.length > 0) {
+      this.currentImage = fileList[0];
+    }
+  }
 }

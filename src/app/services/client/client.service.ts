@@ -39,7 +39,7 @@ export class ClientService {
       "representatives": representatives,
     };
     if (logo) {
-      body['logo_data'] = logo;
+      body['logo_path'] = logo;
     }
 
     const headers = new HttpHeaders({
@@ -72,7 +72,7 @@ export class ClientService {
       "representatives": representatives,
     };
     if (logo) {
-      body['logo_data'] = logo;
+      body['logo_path'] = logo;
     }
 
     const headers = new HttpHeaders({
@@ -93,5 +93,17 @@ export class ClientService {
     });
 
     return this.http.delete(url, { headers: headers });
+  }
+
+  // aggiorna immagine
+  updateImage(image: any): Observable<any> {
+    let url = 'http://80.211.57.191/overview_dev/api/uploadImage';
+
+    const formData = new FormData()
+    formData.append('image', image, image.name);
+    const headers = {
+      'Authorization': `Bearer ${this.token}`
+    }
+    return this.http.post(url, formData, { headers: headers });
   }
 }
