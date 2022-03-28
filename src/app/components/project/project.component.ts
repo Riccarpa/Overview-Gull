@@ -4,14 +4,13 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
+import { Chart } from 'src/app/models/chartPie.model';
 import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { UserService } from 'src/app/services/user/user.service';
-
-import { echartStyles } from 'src/app/shared/echart-styles';
 import { ProductService } from 'src/app/shared/services/product.service';
 
 
@@ -31,11 +30,18 @@ export class ProjectComponent implements OnInit {
   cropperSettings: CropperSettings;
 
   //gruppo variabili opzioni chart
-  chartPie1: any;
-  chartPie2: any;
-  chartPie3: any;
-  chartPie4: any;
-  chartPieDef: any;
+  chartPie0: any;
+  chartPie10: any;
+  chartPie20: any;
+  chartPie30: any;
+  chartPie40: any;
+  chartPie50: any;
+  chartPie60: any;
+  chartPie70: any;
+  chartPie80: any;
+  chartPie90: any;
+  chartPie100: any;
+
 
   constructor(
     private modalService: NgbModal,
@@ -64,6 +70,7 @@ export class ProjectComponent implements OnInit {
 
 
 
+
   projectForm = this.fb.group(
     {
       name: new FormControl('', Validators.required),
@@ -76,20 +83,20 @@ export class ProjectComponent implements OnInit {
       user_ids: new FormControl([]),
       logo: new FormControl([])
     }
-    )
-    
-    getAllProjects() {
-      this.service.getProjects().subscribe((res) => {
-        
-        this.projects = res.data
-        this.service.project = res.data
-        for (let i = 0; i < this.projects.length; i++) {
-          if (this.projects[i].logo) {
-            this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
-            
-          }
+  )
+
+  getAllProjects() {
+
+    this.service.getProjects().subscribe((res) => {
+
+      this.projects = res.data
+      this.service.project = res.data
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].logo) {
+          this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
+
         }
-        console.log(this.projects);
+      }
 
     }, (error) => {
       this.route.navigate(['/'])
@@ -99,16 +106,16 @@ export class ProjectComponent implements OnInit {
   getAllClients() {
     this.clientService.getClients().subscribe((res) => {
 
-      
+
       this.clients = res.data
       this.service.clients = res.data
     }, (error) => {
       this.route.navigate(['/'])
     })
   }
-  
+
   getAllUsers() {
-    
+
     this.userService.getUsers().subscribe((res) => {
 
       this.users = res.data
@@ -117,71 +124,73 @@ export class ProjectComponent implements OnInit {
       this.route.navigate(['/'])
     })
   }
-  
 
-  addProject(form:any) {
-    
+
+  addProject(form: any) {
+    let start = this.projectForm.value.start_date ? Date.parse(this.projectForm.value.start_date) : Date.parse(new Date().toISOString().slice(0, 10))
+    let end = this.projectForm.value.end_date ? Date.parse(this.projectForm.value.end_date) : start
+    let diff = end >= start //end date nn puo essere minore della start date
+    console.log(start, end, diff);
+
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
       this.warningBar()
+    } else if (!diff) {
+      this.warningBarDate()
     } else {
-      
+
       this.service.addProject(newProj).subscribe((res) => {
         this.dataRes = res.data
-        
-      })
-      this.loading = true;
-      setTimeout(() => {        
-        this.loading = false;
-        this.updateProject(this.dataRes.id)
-            this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
-            this.modalService.dismissAll()
-          }, 2000);
-          
-        }
-      }
 
-      
-      
-      
-      uploadImg(event: any) {
-        
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.updateProject(this.dataRes.id)
+          this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+          this.modalService.dismissAll()
+        }, 2000);
+      })
+
+    }
+  }
+  // take file
+  uploadImg(event: any) {
+    
     this.imageSelect = event.target.files[0]
     
   }
   
+  // multipart upload
   saveImg() {
-    
-    
+
+
     this.service.uploadImagePost(this.imageSelect).subscribe(
-      
+
       (res) => {
-        
+
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
           this.data = this.projectForm.value.logo.message
-          
-        }
-        
-      })
-    }
 
-    openModalImg(modal) {
-      this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+        }
+
+      })
+  }
+// modale cropper img
+  openModalImg(modal) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
       }, (reason) => {
       });
-    }
+  }
 
-    
-    
   updateProject(id: number) {
-    
+
     //invio dell'id proggetto al service
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
   }
-
+// modale di creazione
   openCreateModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then((result) => {
@@ -190,166 +199,60 @@ export class ProjectComponent implements OnInit {
         this.confirmResut = `Dismissed with: ${reason}`;
       });
   }
-  
+
   warningBar() {
-    this.toastr.warning('Name project fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+    this.toastr.warning('Nome Proggetto Obbligatorio e di almeno 3 caratteri', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }
-  
+
+  warningBarDate() {
+    this.toastr.warning('La Data di fine proggetto é precedente alla data di creazione', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
+
+// percentuali progress 
+  chartPercent() {
+    const chartPie0 = new Chart(0)
+    const chartPie10 = new Chart(10)
+    const chartPie20 = new Chart(20)
+    const chartPie30 = new Chart(30)
+    const chartPie40 = new Chart(40)
+    const chartPie50 = new Chart(50)
+    const chartPie60 = new Chart(60)
+    const chartPie70 = new Chart(70)
+    const chartPie80 = new Chart(80)
+    const chartPie90 = new Chart(90)
+    const chartPie100 = new Chart(100)
+
+    this.chartPie0 = chartPie0.chartPie
+    this.chartPie10 = chartPie10.chartPie
+    this.chartPie20 = chartPie20.chartPie
+    this.chartPie30 = chartPie30.chartPie
+    this.chartPie40 = chartPie40.chartPie
+    this.chartPie50 = chartPie50.chartPie
+    this.chartPie60 = chartPie60.chartPie
+    this.chartPie70 = chartPie70.chartPie
+    this.chartPie80 = chartPie80.chartPie
+    this.chartPie90 = chartPie90.chartPie
+    this.chartPie100 = chartPie100.chartPie
+
+  }
+
+
+
+
   ngOnInit() {
-    
+
     //get di tutti i proggetti dal service e controllo immagine
     this.getAllProjects()
-    
+
     //get di tutti i client dal clientService
     this.getAllClients()
-    
+
     //get di tutti gli user da userService
     this.getAllUsers()
-    
-    
+
     //varie opzioni per il chart del progresso del proggetto in %
-    this.chartPie1 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 50,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 50,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-    this.chartPie2 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 80,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 20,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-    this.chartPie3 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 100,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 0,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-    this.chartPie4 = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 20,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 80,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
-    //chart di defult allo 0%
-    this.chartPieDef = {
-      ...echartStyles.defaultOptions, ...{
-        legend: {
-          show: true,
-          bottom: 0,
-        },
-        series: [{
-          type: 'pie',
-          ...echartStyles.pieRing,
-
-          label: echartStyles.pieLabelCenterHover,
-          data: [{
-            name: 'Completed',
-            value: 0,
-            itemStyle: {
-              color: '#663399',
-            }
-          }, {
-            name: 'Pending',
-            value: 100,
-            itemStyle: {
-              color: '#ced4da',
-            }
-          }]
-        }]
-      }
-    };
+    this.chartPercent()
 
   }
-}
-
-
-function warningBar() {
-  throw new Error('Function not implemented.');
 }
 

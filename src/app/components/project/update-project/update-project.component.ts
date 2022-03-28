@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { number } from 'ngx-custom-validators/src/app/number/validator';
@@ -50,30 +50,17 @@ export class UpdateProjectComponent implements OnInit {
 
   project: Project //progetto singolo
   idProject: number //id progetto singolo
+
   clients: Client[] // lista clienti
-  users: User[] = [] // lista utenti 
   associateClient: Client // cliente associato al project
+
+  users: User[] = [] // lista utenti 
   associateUser: number //numero di user associati al project(.lenght)
-  arrayUsersIds = []//array di users associati al proggetto
+  arrayUsersIds = [] //array di users associati al proggetto
 
-  imageSelect: File
+  imageSelect:File //img File
 
-
-
-  projectForm = new FormGroup(
-    {
-      name: new FormControl(''),
-      status: new FormControl(''),
-      start_date: new FormControl(''),
-      end_date: new FormControl(''),
-      progress: new FormControl(''),
-      revenue: new FormControl(''),
-      client_id: new FormControl(''),
-      user_ids: new FormControl(),
-      logo: new FormControl([])
-    }
-
-  )
+  projectForm :FormGroup //form patch
 
 
 
@@ -92,34 +79,45 @@ export class UpdateProjectComponent implements OnInit {
 
   updateProject() {
 
+    let start = Date.parse(this.projectForm.value.start_date)
+    let end = Date.parse(this.projectForm.value.end_date)
+    let diff = end >= start //end date nn puo essere minore della start date
+
+
     //invio del form  id e array userIds  al service per update
-    let updatedProj = this.projectForm.value
-    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
+    if (this.projectForm.status == 'INVALID') {
+      this.warningBar()
+    }else if(!diff){
+      this.warningBarDate()
+    }else{
 
-      this.loadingUpdate = true;
-      setTimeout(() => {
-        this.loadingUpdate = false;
-        this.toastr.success(`proggetto modificato con successo`, 'Success', { timeOut: 3000, progressBar: true });
-        this.route.navigate(['home/project'])
-      }, 2000);
-    })
+      let updatedProj = this.projectForm.value
+      
+        this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
+    
+          this.loadingUpdate = true;
+          setTimeout(() => {
+            this.loadingUpdate = false;
+            this.toastr.success(`proggetto modificato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+            this.route.navigate(['home/project'])
+          }, 2000);
+        })
+    }
+    
   }
 
-
+  
+  // take file
   uploadImg(event: any) {
-
-
     this.imageSelect = event.target.files[0]
-    console.log(this.imageSelect);
   }
 
+  // post miltipart
   saveImg() {
-
 
     this.service.uploadImagePost(this.imageSelect).subscribe(
 
       (res) => {
-        console.log(res);
 
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
@@ -129,7 +127,7 @@ export class UpdateProjectComponent implements OnInit {
       })
   }
 
-
+  // cropper img
   openModalImg(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
@@ -137,6 +135,7 @@ export class UpdateProjectComponent implements OnInit {
       });
   }
 
+  // dissocia user dal proggetto
   removeUserToProject(id: number) {
 
     for (let i = 0; i < this.arrayUsersIds.length; i++) {
@@ -157,6 +156,9 @@ export class UpdateProjectComponent implements OnInit {
     let int = parseInt(user.percent)//parso
     user.percent = int//valorizzo
 
+
+
+
     if (this.arrayUsersIds.length == 0) {
       this.arrayUsersIds.push(user)
       this.toastr.success('user aggiunto con successo.', 'Success!', { progressBar: true });
@@ -164,28 +166,40 @@ export class UpdateProjectComponent implements OnInit {
 
       for (let i = 0; i < this.arrayUsersIds.length; i++) {
         let e = this.arrayUsersIds[i];
+
         if (e.id !== user.id && i == this.arrayUsersIds.length - 1) { //se ha finito di ciclare e non trova id allora pusha
           this.arrayUsersIds.push(user)
           this.toastr.success('user aggiunto con successo.', 'Success!', { progressBar: true });
+
           break
-        } else if (e.id === user.id) { // se trova un doppione , ma senza percent  allora lo modifica
-          if (user.percent) {
-            this.arrayUsersIds.splice(i, 1, user)
-            this.toastr.success('modifica effettuata ', 'Success!', { progressBar: true });
-            console.log(this.arrayUsersIds);
+        } else if (e.id === user.id) { // se trova un doppione 
+
+          if (isNaN(user.percent) && isNaN(e.percent) || e.percent === user.percent) {// se sono uguali non modifica valori
+            this.toastr.warning('utente giá associato al progetto. o niente da modificare', 'Success!', { progressBar: true });
 
             break
-          } else {
-            this.toastr.warning('utente giá associato al progetto. o niente da modificare', 'Success!', { progressBar: true });
+          } else {// se sono diversi modifica valori
+            this.arrayUsersIds.splice(i, 1, user)
+            this.toastr.success('modifica effettuata ', 'Success!', { progressBar: true });
+
             break
           }
+
+
         }
       }
+
+
     }
   }
 
+  warningBar() {
+    this.toastr.warning('Nome Proggetto Obbligatorio e di almeno 3 caratteri', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
 
-
+  warningBarDate() {
+    this.toastr.warning('La Data di fine proggetto é precedente alla data di creazione', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
 
   ngOnInit(): void {
 
@@ -197,16 +211,15 @@ export class UpdateProjectComponent implements OnInit {
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
-      console.log(this.project);
 
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
 
-      
+      // valorizzazione form 
       this.projectForm = new FormGroup({
 
-        name: new FormControl(this.project.name),
+        name: new FormControl(this.project.name,Validators.required),
         status: new FormControl(this.project.status),
         start_date: new FormControl(this.project.start_date),
         end_date: new FormControl(this.project.end_date),
@@ -235,6 +248,7 @@ export class UpdateProjectComponent implements OnInit {
 
     })
 
+    // get Users
     this.userService.getUsers().subscribe((res) => {
 
       this.users = res.data
@@ -252,7 +266,7 @@ export class UpdateProjectComponent implements OnInit {
       }
 
     })
-
+    // get Clients
     this.clientService.getClients().subscribe((res) => {
 
       this.clients = res.data
