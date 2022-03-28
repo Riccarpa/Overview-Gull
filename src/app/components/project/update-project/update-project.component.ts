@@ -94,7 +94,7 @@ export class UpdateProjectComponent implements OnInit {
 
     //invio del form  id e array userIds  al service per update
     let updatedProj = this.projectForm.value
-    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds, this.data).subscribe((res) => {
+    this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
 
       this.loadingUpdate = true;
       setTimeout(() => {

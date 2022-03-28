@@ -76,19 +76,20 @@ export class ProjectComponent implements OnInit {
       user_ids: new FormControl([]),
       logo: new FormControl([])
     }
-  )
-
-  getAllProjects() {
-    this.service.getProjects().subscribe((res) => {
-
-      this.projects = res.data
-      this.service.project = res.data
-      for (let i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].logo) {
-          this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
-         
+    )
+    
+    getAllProjects() {
+      this.service.getProjects().subscribe((res) => {
+        
+        this.projects = res.data
+        this.service.project = res.data
+        for (let i = 0; i < this.projects.length; i++) {
+          if (this.projects[i].logo) {
+            this.projects[i].logo = `${this.projects[i].logo}?r=${this.service.randomNumber()}`
+            
+          }
         }
-      }
+        console.log(this.projects);
 
     }, (error) => {
       this.route.navigate(['/'])
@@ -98,15 +99,16 @@ export class ProjectComponent implements OnInit {
   getAllClients() {
     this.clientService.getClients().subscribe((res) => {
 
+      
       this.clients = res.data
       this.service.clients = res.data
     }, (error) => {
       this.route.navigate(['/'])
     })
   }
-
+  
   getAllUsers() {
-
+    
     this.userService.getUsers().subscribe((res) => {
 
       this.users = res.data
@@ -115,53 +117,46 @@ export class ProjectComponent implements OnInit {
       this.route.navigate(['/'])
     })
   }
-
+  
 
   addProject(form:any) {
-
+    
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
       this.warningBar()
     } else {
-
+      
       this.service.addProject(newProj).subscribe((res) => {
-          this.dataRes = res.data
+        this.dataRes = res.data
         
       })
       this.loading = true;
-      setTimeout(() => {
-        this.service.updateProject(this.dataRes, this.dataRes.id, this.dataRes.user_ids, this.dataRes.logo).subscribe()
-        
-        
-        console.log(this.data,'this.data');
-        console.log(this.dataRes.logo,'logo datares');
-        
-        
-            this.loading = false;
-            this.updateProject(this.dataRes.id)
+      setTimeout(() => {        
+        this.loading = false;
+        this.updateProject(this.dataRes.id)
             this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
             this.modalService.dismissAll()
           }, 2000);
+          
+        }
+      }
+
+      
+      
+      
+      uploadImg(event: any) {
         
-    }
-  }
-
-
-
-
-  uploadImg(event: any) {
-
     this.imageSelect = event.target.files[0]
-
+    
   }
-
+  
   saveImg() {
-
-
+    
+    
     this.service.uploadImagePost(this.imageSelect).subscribe(
-
+      
       (res) => {
-
+        
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
           this.data = this.projectForm.value.logo.message
@@ -169,19 +164,19 @@ export class ProjectComponent implements OnInit {
         }
         
       })
-  }
+    }
 
-  openModalImg(modal) {
-    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+    openModalImg(modal) {
+      this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
       }, (reason) => {
       });
-  }
+    }
 
-
-
+    
+    
   updateProject(id: number) {
-
+    
     //invio dell'id proggetto al service
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
@@ -195,23 +190,23 @@ export class ProjectComponent implements OnInit {
         this.confirmResut = `Dismissed with: ${reason}`;
       });
   }
-
+  
   warningBar() {
     this.toastr.warning('Name project fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }
-
+  
   ngOnInit() {
-
+    
     //get di tutti i proggetti dal service e controllo immagine
     this.getAllProjects()
-
+    
     //get di tutti i client dal clientService
     this.getAllClients()
-
+    
     //get di tutti gli user da userService
     this.getAllUsers()
-
-
+    
+    
     //varie opzioni per il chart del progresso del proggetto in %
     this.chartPie1 = {
       ...echartStyles.defaultOptions, ...{

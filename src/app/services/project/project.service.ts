@@ -46,7 +46,7 @@ export class ProjectService {
   }
 
   //patch progetto
-  updateProject(form: any, projId: number,userIds:any,logo:any): Observable<any> {
+  updateProject(form: any, projId: number,userIds:any): Observable<any> {
 
     const headers = {
  
@@ -62,7 +62,10 @@ export class ProjectService {
       'revenue': form.revenue,
       'client_id': form.client_id,
       'user_ids': userIds,
-      'logo_path': logo
+      // 'logo_path': logo
+    }
+    if (form.logo) {
+      body['logo_path'] = form.logo.message;
     }
 
    
@@ -117,11 +120,10 @@ export class ProjectService {
       'revenue': form.revenue,
       'client_id': form.client_id,
       'user_ids': form.user_ids,
-      'logo_path': form.logo.message
     }
-    //  if (form.logo) {
-    //    body['logo_path'] = form.logo.message;
-    // }
+     if (form.logo) {
+       body['logo_path'] = form.logo.message;
+    }
 
    
     

@@ -4,8 +4,8 @@
   <div>
     <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">Aggiungi Progetto</button>
 
-
-    <ng-template class="m-0" #modalConfirm let-modal>
+    <!-- modale di creazione -->
+    <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
         <h4 class="modal-title" id="modal-title">Crea Un Proggetto</h4>
         <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
@@ -85,7 +85,7 @@
                   <div class="col-md-6 form-group mb-3 d-flex flex-column">
                     <label for="picker1">Project Logo</label>
                     <button class="form-control text-left" (click)="openModalImg(modalCropper)">Aggiungi Un
-                      Logo Al Proggetto</button>
+                      Logo</button>
                     <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
                       [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
                   </div>
@@ -129,18 +129,22 @@
       </div>
     </ng-template>
 
-
   </div>
 </div>
 
+
+    <!-- main container -->
 <section class="d-flex align-items-stretch flex-wrap">
+
+    <!-- card project -->
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100">
 
+        <!-- header card -->
         <div class=" d-flex justify-content-start align-items-center mb-2">
           <img *ngIf="proj.logo" src="http://80.211.57.191/overview_dev/{{proj.logo}}"
-            class="col-sm-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
 
           <div class="card-title m-0">{{proj.name}}</div>
         </div>
@@ -171,7 +175,7 @@
                   <td class="text-warning font-weight-bold ">
                     <ul class="overflow p-0">
                       <li *ngFor="let idUser of proj.user_ids">
-                        <p *ngFor="let u of users | filterUsers: idUser ">
+                        <p *ngFor="let u of users | filterUsers: idUser "> 
                           {{u.name}}
                         </p>
                       </li>
