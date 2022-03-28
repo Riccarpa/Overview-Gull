@@ -62,7 +62,6 @@ export class ProjectService {
       'revenue': form.revenue,
       'client_id': form.client_id,
       'user_ids': userIds,
-      // 'logo_path': logo
     }
     if (form.logo) {
       body['logo_path'] = form.logo.message;
