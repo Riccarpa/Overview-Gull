@@ -1,7 +1,9 @@
+
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { number } from 'ngx-custom-validators/src/app/number/validator';
 import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
@@ -18,9 +20,12 @@ import { UserService } from 'src/app/services/user/user.service';
 
 export class UpdateProjectComponent implements OnInit {
 
+  //variabili di template
   formBasic: FormGroup;
-  loading: boolean;
-  radioGroup: FormGroup;
+  loadingUpdate: boolean;
+  loadingDelete: boolean;
+  cropperSettings: CropperSettings;
+  data: any;
 
   constructor(
     private service: ProjectService,
@@ -30,105 +35,176 @@ export class UpdateProjectComponent implements OnInit {
     private clientService: ClientService,
     private userService: UserService,
     private toastr: ToastrService,
-    private modalService: NgbModal
-
-  ) { 
-
+    private modalService: NgbModal,
+  ) {
     this.cropperSettings = new CropperSettings();
-  
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-    
     this.data = {};
   }
-  
- 
+
+
+
   project: Project //progetto singolo
   idProject: number //id progetto singolo
-  clients:Client[] // lista clienti
+
+  clients: Client[] // lista clienti
+  associateClient: Client // cliente associato al project
+
   users: User[] = [] // lista utenti 
-  associateClient:Client // cliente associato al project
-  associateUser:number //numero di user associati al project(.lenght)
-  data: any;
-  cropperSettings: CropperSettings;
+  associateUser: number //numero di user associati al project(.lenght)
+  arrayUsersIds = [] //array di users associati al proggetto
+
+  imageSelect: File //file img
 
 
 
-  projectForm = this.fb.group(
+  projectForm = new FormGroup(
     {
-      name: new FormControl(''),
+      name: new FormControl('', Validators.required),
       status: new FormControl(''),
       start_date: new FormControl(''),
       end_date: new FormControl(''),
       progress: new FormControl(''),
       revenue: new FormControl(''),
       client_id: new FormControl(''),
-      user_ids: new FormControl([]),
-
+      user_ids: new FormControl(),
+      logo: new FormControl([])
     }
-
   )
+
+
+
 
   delProject(id: number) {
 
-    this.service.deleteProject(id).subscribe()
-    this.route.navigate(['home/project'])
+    this.service.deleteProject(id).subscribe(res => {
+
+      this.loadingDelete = true;
+      setTimeout(() => {
+        this.loadingDelete = false;
+        this.service.successBar(`proggetto eliminato con successo`)
+        this.route.navigate(['home/project'])
+      }, 2000);
+    })
   }
 
   updateProject() {
 
-    //invio del form e id al service per update
-    let updatedProj = this.projectForm.value
-    this.service.updateProject(updatedProj, this.project.id).subscribe((res) => {
+    let start = Date.parse(this.projectForm.value.start_date)
+    let end = Date.parse(this.projectForm.value.end_date)
+    let diff = end >= start //end date nn puo essere minore della start date
+
+
+    //invio del form  id e array userIds  al service per update
+    if (this.projectForm.status == 'INVALID') {
+      this.service.warningBar('Nome Proggetto Obbligatorio e di almeno 3 caratteri')
+    }else if(!diff){
+      this.service.warningBar('La Data di fine proggetto é precedente alla data di creazione')
+    }else{
+
+      let updatedProj = this.projectForm.value
       
-      this.toastr.success(`proggetto modificato con successo`, 'Success', { timeOut: 3000, progressBar: true });
-      this.route.navigate(['home/project'])
-
-    })
-
-  }
-
-  updateImg() {
-
-    this.modalService.dismissAll();
-    let base64JpgWithoutIndex;
-    let base64PngWithoutIndex;
-    if (this.data.image.includes('data:image/jpeg;base64,')) {
-      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-      this.projectForm.value.logo_data = base64JpgWithoutIndex;
-    } else {
-      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
-      this.projectForm.value.logo_data = base64PngWithoutIndex;
+        this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
+    
+          this.loadingUpdate = true;
+          setTimeout(() => {
+            this.loadingUpdate = false;
+            this.service.successBar(`proggetto modificato con successo`)
+            this.route.navigate(['home/project'])
+          }, 2000);
+        })
     }
+    
   }
 
-  buildFormBasic() {
-    this.formBasic = this.fb.group({
-      experience: []
-    });
+  
+
+  // take file
+  uploadImg(event: any) {
+    this.imageSelect = event.target.files[0]
   }
 
-  submit() {
-    this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-      this.toastr.success('Project updated.', 'Success!', { progressBar: true });
-    }, 2000);
+  // post miltipart
+  saveImg() {
 
+    this.service.uploadImagePost(this.imageSelect).subscribe(
+
+      (res) => {
+
+        this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
+        if (res) {
+          this.data = this.projectForm.value.logo.message
+          this.service.successBar('file caricato con successo')
+        }
+
+      })
   }
 
-  open(modal) {
+  // cropper img
+  openModalImg(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
-        console.log(result);
       }, (reason) => {
-        console.log('Err!', reason);
       });
   }
 
+  // dissocia user dal proggetto
+  removeUserToProject(id: number) {
+
+    for (let i = 0; i < this.arrayUsersIds.length; i++) {
+      const e = this.arrayUsersIds[i];
+      if (e.id === id) {// se trova doppione elimina 
+
+        this.arrayUsersIds.splice(i, 1)
+        this.service.successBar('user rimosso con successo.')
+        break
+      }
+
+    }
+
+  }
+
+  addUserToProject(user: any) {
+
+    let int = parseInt(user.percent)//parso
+    user.percent = int//valorizzo
+
+
+    if (this.arrayUsersIds.length == 0) {
+      this.arrayUsersIds.push(user)
+      this.service.successBar('user aggiunto con successo.')
+    } else {
+
+      for (let i = 0; i < this.arrayUsersIds.length; i++) {
+        let e = this.arrayUsersIds[i];
+
+        if (e.id !== user.id && i == this.arrayUsersIds.length - 1) { //se ha finito di ciclare e non trova id allora pusha
+          this.arrayUsersIds.push(user)
+          this.service.successBar('user aggiunto con successo.')
+          break
+        } else if (e.id === user.id) { // se trova un doppione 
+
+          if (isNaN(user.percent) && isNaN(e.percent) || e.percent === user.percent) {// se sono uguali non modifica valori
+            this.service.warningBar('utente giá associato al progetto. o niente da modificare')
+            break
+          } else {// se sono diversi modifica valori
+            this.arrayUsersIds.splice(i, 1, user)
+            this.toastr.success('modifica effettuata ', 'Success!', { progressBar: true });
+            this.service.successBar('modifica effettuata con successo.')
+            break
+          }
+
+
+        }
+      }
+
+
+    }
+  }
 
   ngOnInit(): void {
-    
+
     if (!this.service.currentProject) {
       this.service.currentProject = this.active.snapshot.paramMap.get('id')
     }
@@ -137,58 +213,64 @@ export class UpdateProjectComponent implements OnInit {
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
-  
+
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
 
-      this.projectForm = this.fb.group({
 
-        name: new FormControl(this.project.name),
+      this.projectForm = new FormGroup({
+
+        name: new FormControl(this.project.name,Validators.required),
         status: new FormControl(this.project.status),
         start_date: new FormControl(this.project.start_date),
         end_date: new FormControl(this.project.end_date),
         progress: new FormControl(this.project.progress),
         revenue: new FormControl(this.project.revenue),
         client_id: new FormControl(this.project.client_id),
-        user_ids: new FormControl(this.project.user_ids)
-        
+        user_ids: new FormControl(this.project.user_ids),
+        logo: new FormControl(this.project.logo)
+
       })
 
       //calcolo del numero di utenti associati al proggetto
       this.associateUser = this.project.user_ids.length
 
-      //get cliente associato al proggetto tramite id
-      let idClient = res.data.client_id
-      this.clientService.getClient(idClient).subscribe((res) => {
-        this.associateClient = res.data
-        
-      })
 
-      
+      //get cliente associato al proggetto tramite id
+      if (res.data.client_id) {
+
+        let idClient = res.data.client_id
+        this.clientService.getClient(idClient).subscribe((res) => {
+
+          this.associateClient = res.data
+        })
+      }
+
+
     })
-    
+    // get Users
     this.userService.getUsers().subscribe((res) => {
-      
+
       this.users = res.data
 
-    })
+      for (let j = 0; j < this.users.length; j++) {
+        let u = this.users[j];
 
-    this.clientService.getClients().subscribe((res)=>{
+        for (let i = 0; i < this.project.user_ids.length; i++) {
+          let e = this.project.user_ids[i];
+          if (e === u.id) {
+
+            this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+          }
+        }
+      }
+
+    })
+    // get Clients
+    this.clientService.getClients().subscribe((res) => {
 
       this.clients = res.data
     })
-
-    
-
-    this.buildFormBasic();
-    this.radioGroup = this.fb.group({
-      radio: []
-    });
-    
-    
-    
-    
-    
   }
 }

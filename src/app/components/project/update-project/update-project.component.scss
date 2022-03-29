@@ -5,3 +5,24 @@
 
     scrollbar-width: 50px;
 }
+
+.mega-menu .dropdown-menu {
+    width: calc(100% - 52%);
+    max-width: 50%;
+    padding: 0;
+    overflow: hidden;
+    max-height: calc(100vh - 100px);
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.card-icon-bg [class^=i-]{
+    font-size: 3rem;
+}
+
+._alert {
+    right: 15px;
+    top: -5px;
+    left: 15px;
+}
+
