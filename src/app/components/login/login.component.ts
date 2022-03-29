@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login/login.service';
-import { ToastrService } from 'ngx-toastr';
+import { ProjectService } from 'src/app/services/project/project.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router, private loginService: LoginService, private toastr: ToastrService) { }
+  constructor(private router: Router, private loginService: LoginService, private projectService: ProjectService) { }
 
   ngOnInit(): void {
   }
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
   error() {
-    this.toastr.error('Dati inseriti non validi', 'Acceso non riuscito', { timeOut: 3000 });
+    this.projectService.errorBar('Acceso non riuscito, dati non validi');
   }
 
   checkText() {
