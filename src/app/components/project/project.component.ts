@@ -134,9 +134,9 @@ export class ProjectComponent implements OnInit {
 
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
-      this.warningBar()
+      this.service.warningBar('Nome Proggetto Obbligatorio e di almeno 3 caratteri')
     } else if (!diff) {
-      this.warningBarDate()
+      this.service.warningBar('La Data di fine proggetto é precedente alla data di creazione')
     } else {
 
       this.service.addProject(newProj).subscribe((res) => {
@@ -146,7 +146,7 @@ export class ProjectComponent implements OnInit {
         setTimeout(() => {
           this.loading = false;
           this.updateProject(this.dataRes.id)
-          this.toastr.success(`proggetto creato con successo`, 'Success', { timeOut: 3000, progressBar: true });
+          this.service.successBar(`proggetto creato con successo`)
           this.modalService.dismissAll()
         }, 2000);
       })
@@ -171,7 +171,7 @@ export class ProjectComponent implements OnInit {
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
           this.data = this.projectForm.value.logo.message
-
+          this.service.successBar('file caricato con successo')
         }
 
       })
@@ -198,14 +198,6 @@ export class ProjectComponent implements OnInit {
       }, (reason) => {
         this.confirmResut = `Dismissed with: ${reason}`;
       });
-  }
-
-  warningBar() {
-    this.toastr.warning('Nome Proggetto Obbligatorio e di almeno 3 caratteri', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
-  }
-
-  warningBarDate() {
-    this.toastr.warning('La Data di fine proggetto é precedente alla data di creazione', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 
 // percentuali progress 
@@ -235,8 +227,6 @@ export class ProjectComponent implements OnInit {
     this.chartPie100 = chartPie100.chartPie
 
   }
-
-
 
 
   ngOnInit() {

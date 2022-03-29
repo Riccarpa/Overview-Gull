@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { Client } from 'src/app/models/client.model';
 import { User } from 'src/app/models/user.model';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -19,7 +20,7 @@ export class ProjectService {
   clients: Client[]
   users: User[]
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
 
     this.token = localStorage.getItem('token')
   }
@@ -131,6 +132,13 @@ export class ProjectService {
     return this.http.post(this.url, body, { headers })
   }
 
+  warningBar(message:string) {
+    this.toastr.warning(message, 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
+
+  successBar(message:string){
+    this.toastr.success(message, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
+  }
 
 
 
