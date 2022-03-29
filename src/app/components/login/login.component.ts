@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login/login.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
@@ -16,9 +16,11 @@ export class LoginComponent implements OnInit {
   }
 
   loginForm = new FormGroup({
-    user: new FormControl(''),
-    password: new FormControl(''),
+    user: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
   });
+
+  disable = true;
 
   onSubmit() {
     this.loginService.checkLogin(this.loginForm.value.user, this.loginForm.value.password).subscribe((res) => {
@@ -34,6 +36,10 @@ export class LoginComponent implements OnInit {
 
   error() {
     this.toastr.error('Dati inseriti non validi', 'Acceso non riuscito', { timeOut: 3000 });
+  }
+
+  checkText() {
+    this.disable = this.loginForm.value.user && this.loginForm.value.password ? false : true;
   }
 
 }
