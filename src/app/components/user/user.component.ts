@@ -57,8 +57,10 @@ export class UserComponent implements OnInit {
       this.filteredUsers = res.data
       console.log(res)
       for(let i=0;i<this.users.length;i++){
-        if(this.users[i].picture){
+        if(this.users[i].picture && this.users[i].picture.includes('.png') ){
           this.users[i].picture = `/overview_dev/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
+        }else{
+          this.users[i].picture = `/overview_dev/images/users/${this.users[i].id}.jpg?r=${this.randomNumber()}`
         }
       }
     },(error)=>{
@@ -87,19 +89,19 @@ export class UserComponent implements OnInit {
   updateImg(){
     let base64JpgWithoutIndex;
     let base64PngWithoutIndex;
-    if(this.data.image==undefined){
-      this.errorBar('Selezionare un immagine')
-    }
-    if(this.data.image.includes('data:image/jpeg;base64,')){
-      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-      this.profileForm.value.picture_data = base64JpgWithoutIndex;
-    }if(this.data.image.includes('data:image/png;base64,')){
-
-      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
-      this.profileForm.value.picture_data = base64PngWithoutIndex;
+    if(this.data.image == undefined){
+      this.errorBar('Select a valid image')
     }else{
-      this.errorBar('Selezionare un formato jpg o png')
+
+      if(this.data.image.includes('data:image/jpeg;base64,')){
+        base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+        this.profileForm.value.picture_data = base64JpgWithoutIndex;
+      }else{
+        base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+        this.profileForm.value.picture_data = base64PngWithoutIndex;
+      }
     }
+    
     
   }
 

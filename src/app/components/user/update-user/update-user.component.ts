@@ -46,8 +46,10 @@ export class UpdateUserComponent implements OnInit {
   retrieveUser(){
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-      if(this.user.picture){
-        this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+      if(this.user.picture && this.user.picture.includes('.png') ){
+        this.user.picture = `http://80.211.57.191/overview_dev/images/users/${res.data.id}.png?r=${this.randomNumber()}`
+      }else{
+        this.user.picture = `http://80.211.57.191/overview_dev/images/users/${res.data.id}.jpg?r=${this.randomNumber()}`
       }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name),
@@ -95,19 +97,22 @@ export class UpdateUserComponent implements OnInit {
     this.modalService.dismissAll();
     let base64JpgWithoutIndex;
     let base64PngWithoutIndex;
-    if(this.data.image==undefined){
-      this.errorBar('Selezionare un immagine')
-    }
-    if(this.data.image.includes('data:image/jpeg;base64,')){
-      base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
-      this.profileForm.value.picture_data = base64JpgWithoutIndex;
-    }if(this.data.image.includes('data:image/png;base64,')){
 
-      base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
-      this.profileForm.value.picture_data = base64PngWithoutIndex;
+
+    if(this.data.image == undefined){
+      this.toastr.error('Select a valid image','Error!',{progressBar: true})
     }else{
-      this.errorBar('Selezionare un formato jpg o png')
+
+      if(this.data.image.includes('data:image/jpeg;base64,')){
+        base64JpgWithoutIndex = this.data.image.replace('data:image/jpeg;base64,', '');
+        this.profileForm.value.picture_data = base64JpgWithoutIndex;
+      }else{
+        base64PngWithoutIndex = this.data.image.replace('data:image/png;base64,', '');
+        this.profileForm.value.picture_data = base64PngWithoutIndex;
+      }
+
     }
+  
     
     
     this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
