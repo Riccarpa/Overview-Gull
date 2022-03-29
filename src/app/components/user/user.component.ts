@@ -119,7 +119,7 @@ export class UserComponent implements OnInit {
   }
 
   successBar(user:any) {
-    this.toastr.success(`utente ${user} creato con successo`, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
+    this.toastr.success(`User ${user} created successfully`, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
   }
   warningBar() {
     this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });

@@ -111,14 +111,15 @@ export class UpdateUserComponent implements OnInit {
         this.profileForm.value.picture_data = base64PngWithoutIndex;
       }
 
+      this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
+       
+        this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+        this.toastr.success('Image saved successfully', 'Success!', {progressBar: true})
+        })
     }
   
     
     
-    this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
-      console.log(res)
-      this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
-      })
   }
   
   
