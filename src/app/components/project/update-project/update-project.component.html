@@ -24,7 +24,7 @@
 <div class="row" *ngIf="project ">
 
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
+  <div (click)="modal_client_id = true;openCreateModal(modalConfirm)" class=" col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-left">
         <i class="i-Business-Man"></i>
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
+  <div (click)="modal_revenue = true;openCreateModal(modalConfirm)" class="col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-center">
         <i class="i-Money-2"></i>
@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
+  <div (click)="modal_progress = true;openCreateModal(modalConfirm)" class="col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-center">
         <i class="i-Loading"></i>
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
+  <div (click)="modal_user_ids = true;openCreateModal(modalConfirm)" class="col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-center">
         <i class="i-Business-Mens"></i>
@@ -77,6 +77,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- sezione form -->
@@ -114,7 +115,7 @@
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">client</label>
             <select class="form-control" formControlName="client_id" name="client_id">
-              <option value="" selected disabled hidden>clienti</option>
+              <option value="" disabled >clienti</option>
               <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
             </select>
           </div>
@@ -196,9 +197,6 @@
             </div>
           </div>
 
-
-
-
         </div>
 
 
@@ -246,6 +244,109 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-rounded btn-outline-dark"
               (click)="saveImg();modal.close()">Save</button>
+          </div>
+        </ng-template>
+
+        <!-- modale per cards -->
+        <ng-template class="m-0" id="modal" #modalConfirm let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-title">Modifica </h4>
+            <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+              (click)="modal.dismiss('Cross click');visibleModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body ">
+
+            <div class="col-md-12">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="card-title mb-3"></div>
+
+                  <div class="row">
+
+                    <div *ngIf="modal_client_id" class="col-md-6 form-group mb-3">
+                      <label for="picker1">client</label>
+                      <select class="form-control" formControlName="client_id" name="client_id">
+                        <option value="" selected disabled hidden>clienti</option>
+                        <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+                      </select>
+                    </div>
+
+                    <div *ngIf="modal_revenue" class="col-md-6 form-group mb-3">
+                      <label for="revenue">Revenue</label>
+                      <input min="0" class="form-control" type="number" name="revenue" formControlName="revenue"
+                        placeholder="revenue">
+                    </div>
+
+                    <div *ngIf="modal_progress" class="col-md-6 form-group mb-3">
+                      <label for="picker1">Progress</label>
+                      <select class="form-control" formControlName="progress" name="progress">
+                        <option selected disabled hidden>Progress</option>
+                        <option [value]="0">0%</option>
+                        <option [value]="10">10%</option>
+                        <option [value]="20">20%</option>
+                        <option [value]="30">30%</option>
+                        <option [value]="40">40%</option>
+                        <option [value]="50">50%</option>
+                        <option [value]="60">60%</option>
+                        <option [value]="70">70%</option>
+                        <option [value]="80">80%</option>
+                        <option [value]="90">90%</option>
+                        <option [value]="100">100%</option>
+                      </select>
+                    </div>
+
+                    <div *ngIf="modal_user_ids" ngbDropdown
+                      class="mega-menu col-lg-6 col-md-6 align-items-center mt-2 p-3">
+                      <button ngbDropdownToggle href="#"
+                        class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control ">Associa
+                        Collaboratori</button>
+                      <div ngbDropdownMenu perfectScrollbar>
+                        <div class="row m-0">
+
+                          <div class="col-md-12 col-lg-12 p-2">
+                            <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
+
+
+                            <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
+                              <div *ngFor="let u of users "
+                                class="col-md-5 col-sm-12 col-lg-4 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
+                                <div class="">
+                                  <label for="picker1 text-24">{{u.name}}</label>
+                                  <input type="number" min="0" #percent name="percent" class="form-control"
+                                    placeholder="percent">
+
+                                </div>
+                                <div>
+                                  <i (click)="addUserToProject({id:u.id,cost:u.cost,percent:percent.value})"
+                                    class="text-success ml-1 mr-4  i-Add text-24"></i>
+                                </div>
+                              </div>
+
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary btn-rounded"
+              (click)="modal.dismiss('cancel');visibleModal()">Cancel</button>
+            <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
+              (click)="updateProject();visibleModal();modal.close()">Ok</btn-loading>
           </div>
         </ng-template>
       </form>

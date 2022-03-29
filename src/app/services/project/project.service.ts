@@ -5,7 +5,7 @@ import { Project } from 'src/app/models/project.model';
 import { Client } from 'src/app/models/client.model';
 import { User } from 'src/app/models/user.model';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ProjectService {
 
   token: any
-  url = 'http://80.211.57.191/overview_dev/api/projects'
+  url = environment.apiURL + '/projects'
   updatedProject: any
   currentProject: any // id progetto singolo corrente
   project: Project[]
@@ -76,7 +76,7 @@ export class ProjectService {
   // post upload image
   uploadImagePost(file:any){
 
-    let url = 'http://80.211.57.191/overview_dev/api/uploadImage'
+    let url = environment.apiURL + '/uploadImage'
 
     const fd = new FormData()
     fd.append('image',file,file.name)
@@ -133,14 +133,16 @@ export class ProjectService {
   }
 
   warningBar(message:string) {
-    this.toastr.warning(message, 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+    this.toastr.warning(message, 'Warning', { timeOut: 2000, closeButton: true, progressBar: true });
   }
 
   successBar(message:string){
-    this.toastr.success(message, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
+    this.toastr.success(message, 'Success', { timeOut: 2000, closeButton: true, progressBar: true });
   }
 
-
+  errorBar(message: any) {
+    this.toastr.error(message, 'Error', { timeOut: 2000, closeButton: true, progressBar: true });
+  }
 
   randomNumber() {
     let num = Math.floor(Math.random() * 100000)

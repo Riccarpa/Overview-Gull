@@ -27,6 +27,12 @@ export class UpdateProjectComponent implements OnInit {
   cropperSettings: CropperSettings;
   data: any;
 
+  // variabili visibilitá campi modale
+  modal_progress:false
+  modal_revenue:false
+  modal_client_id:false
+  modal_user_id:false
+
   constructor(
     private service: ProjectService,
     private route: Router,
@@ -56,7 +62,7 @@ export class UpdateProjectComponent implements OnInit {
   arrayUsersIds = [] //array di users associati al proggetto
 
   imageSelect: File //file img
-
+  confirmResut:any
 
 
   projectForm = new FormGroup(
@@ -111,9 +117,9 @@ export class UpdateProjectComponent implements OnInit {
           setTimeout(() => {
             this.loadingUpdate = false;
             this.service.successBar(`proggetto modificato con successo`)
-            this.route.navigate(['home/project'])
           }, 2000);
         })
+        this.service.getUpdateProject().subscribe()
     }
     
   }
@@ -201,6 +207,25 @@ export class UpdateProjectComponent implements OnInit {
 
 
     }
+  }
+
+  // modale cards
+  openCreateModal(content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+      .result.then((result) => {
+        this.confirmResut = `Closed with: ${result}`;
+        this.visibleModal()
+      }, (reason) => {
+        this.confirmResut = `Dismissed with: ${reason}`;
+        this.visibleModal()
+      });
+  }
+
+  visibleModal(){
+    this.modal_progress = false
+    this.modal_revenue = false
+    this.modal_client_id = false
+    this.modal_user_id = false
   }
 
   ngOnInit(): void {
