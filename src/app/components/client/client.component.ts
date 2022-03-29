@@ -24,11 +24,14 @@ export class ClientComponent implements OnInit {
 
   ngOnInit(): void {
     this.getClients();
+    this.currentDate = new Date();
   }
 
   clientsList: any;
 
   titleModal: any;
+
+  currentDate: Date;
 
   //genera lista di tutti i clienti 
   getClients() {
