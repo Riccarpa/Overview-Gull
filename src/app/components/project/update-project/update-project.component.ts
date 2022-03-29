@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { number } from 'ngx-custom-validators/src/app/number/validator';
 import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
@@ -12,6 +11,7 @@ import { User } from 'src/app/models/user.model';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-update-project',
   templateUrl: './update-project.component.html',
@@ -31,7 +31,7 @@ export class UpdateProjectComponent implements OnInit {
   modal_progress:false
   modal_revenue:false
   modal_client_id:false
-  modal_user_id:false
+  modal_user_ids:false
 
   constructor(
     private service: ProjectService,
@@ -50,7 +50,7 @@ export class UpdateProjectComponent implements OnInit {
   }
 
 
-
+  url = 'http://80.211.57.191/overview_dev'
   project: Project //progetto singolo
   idProject: number //id progetto singolo
 
@@ -112,14 +112,15 @@ export class UpdateProjectComponent implements OnInit {
       let updatedProj = this.projectForm.value
       
         this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
-    
+          
           this.loadingUpdate = true;
           setTimeout(() => {
             this.loadingUpdate = false;
             this.service.successBar(`proggetto modificato con successo`)
+            this.ngOnInit()
           }, 2000);
         })
-        this.service.getUpdateProject().subscribe()
+        
     }
     
   }
@@ -141,7 +142,8 @@ export class UpdateProjectComponent implements OnInit {
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
           this.data = this.projectForm.value.logo.message
-          this.service.successBar('file caricato con successo')
+          this.updateProject()
+          
         }
 
       })
@@ -225,8 +227,9 @@ export class UpdateProjectComponent implements OnInit {
     this.modal_progress = false
     this.modal_revenue = false
     this.modal_client_id = false
-    this.modal_user_id = false
+    this.modal_user_ids = false
   }
+
 
   ngOnInit(): void {
 
@@ -239,6 +242,8 @@ export class UpdateProjectComponent implements OnInit {
 
       this.project = res.data
 
+
+      
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
@@ -269,33 +274,45 @@ export class UpdateProjectComponent implements OnInit {
         this.clientService.getClient(idClient).subscribe((res) => {
 
           this.associateClient = res.data
+         
         })
       }
 
 
     })
-    // get Users
-    this.userService.getUsers().subscribe((res) => {
 
-      this.users = res.data
-
-      for (let j = 0; j < this.users.length; j++) {
-        let u = this.users[j];
-
-        for (let i = 0; i < this.project.user_ids.length; i++) {
-          let e = this.project.user_ids[i];
-          if (e === u.id) {
-
-            this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+    
+    
+    if (this.users.length == 0) {
+      // get Users
+      this.userService.getUsers().subscribe((res) => {
+  
+        this.users = res.data
+  
+        for (let j = 0; j < this.users.length; j++) {
+          let u = this.users[j];
+  
+          for (let i = 0; i < this.project.user_ids.length; i++) {
+            let e = this.project.user_ids[i];
+            if (e === u.id) {
+  
+              this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+            }
           }
         }
-      }
-
-    })
-    // get Clients
-    this.clientService.getClients().subscribe((res) => {
-
-      this.clients = res.data
-    })
+  
+      })
+      
+    }
+    
+    
+    if (this.clients === undefined) {
+      // get Clients
+      this.clientService.getClients().subscribe((res) => {
+  
+        this.clients = res.data
+      })
+      
+    }
   }
 }

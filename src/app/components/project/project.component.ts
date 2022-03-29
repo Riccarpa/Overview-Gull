@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { number } from 'ngx-custom-validators/src/app/number/validator';
 import { CropperSettings } from 'ngx-img-cropper';
 import { ToastrService } from 'ngx-toastr';
 import { Chart } from 'src/app/models/chartPie.model';
@@ -20,27 +21,16 @@ import { ProductService } from 'src/app/shared/services/product.service';
   styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent implements OnInit {
-
-
+  
+  
   //variabili template
+  chartPercent:any
   confirmResut: any;
   active = false
   loading: boolean
   data: any;
   cropperSettings: CropperSettings;
 
-  //gruppo variabili opzioni chart
-  chartPie0: any;
-  chartPie10: any;
-  chartPie20: any;
-  chartPie30: any;
-  chartPie40: any;
-  chartPie50: any;
-  chartPie60: any;
-  chartPie70: any;
-  chartPie80: any;
-  chartPie90: any;
-  chartPie100: any;
 
 
   constructor(
@@ -53,10 +43,8 @@ export class ProjectComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService) {
     this.cropperSettings = new CropperSettings();
-
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-
     this.data = {};
   }
 
@@ -70,7 +58,6 @@ export class ProjectComponent implements OnInit {
 
 
 
-
   projectForm = this.fb.group(
     {
       name: new FormControl('', Validators.required),
@@ -78,7 +65,7 @@ export class ProjectComponent implements OnInit {
       start_date: new FormControl(''),
       end_date: new FormControl(''),
       progress: new FormControl(''),
-      revenue: new FormControl(''),
+      revenue: new FormControl(),
       client_id: new FormControl(''),
       user_ids: new FormControl([]),
       logo: new FormControl([])
@@ -90,6 +77,8 @@ export class ProjectComponent implements OnInit {
     this.service.getProjects().subscribe((res) => {
 
       this.projects = res.data
+  
+      
       this.service.project = res.data
       for (let i = 0; i < this.projects.length; i++) {
         if (this.projects[i].logo) {
@@ -130,7 +119,7 @@ export class ProjectComponent implements OnInit {
     let start = this.projectForm.value.start_date ? Date.parse(this.projectForm.value.start_date) : Date.parse(new Date().toISOString().slice(0, 10))
     let end = this.projectForm.value.end_date ? Date.parse(this.projectForm.value.end_date) : start
     let diff = end >= start //end date nn puo essere minore della start date
-    console.log(start, end, diff);
+    
 
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
@@ -201,32 +190,12 @@ export class ProjectComponent implements OnInit {
   }
 
 // percentuali progress 
-  chartPercent() {
-    const chartPie0 = new Chart(0)
-    const chartPie10 = new Chart(10)
-    const chartPie20 = new Chart(20)
-    const chartPie30 = new Chart(30)
-    const chartPie40 = new Chart(40)
-    const chartPie50 = new Chart(50)
-    const chartPie60 = new Chart(60)
-    const chartPie70 = new Chart(70)
-    const chartPie80 = new Chart(80)
-    const chartPie90 = new Chart(90)
-    const chartPie100 = new Chart(100)
+  getChartPercent(value:number) {
 
-    this.chartPie0 = chartPie0.chartPie
-    this.chartPie10 = chartPie10.chartPie
-    this.chartPie20 = chartPie20.chartPie
-    this.chartPie30 = chartPie30.chartPie
-    this.chartPie40 = chartPie40.chartPie
-    this.chartPie50 = chartPie50.chartPie
-    this.chartPie60 = chartPie60.chartPie
-    this.chartPie70 = chartPie70.chartPie
-    this.chartPie80 = chartPie80.chartPie
-    this.chartPie90 = chartPie90.chartPie
-    this.chartPie100 = chartPie100.chartPie
-
+    return  this.chartPercent = new Chart(value).chartPie
+    
   }
+
 
 
   ngOnInit() {
@@ -239,9 +208,6 @@ export class ProjectComponent implements OnInit {
 
     //get di tutti gli user da userService
     this.getAllUsers()
-
-    //varie opzioni per il chart del progresso del proggetto in %
-    this.chartPercent()
 
   }
 }

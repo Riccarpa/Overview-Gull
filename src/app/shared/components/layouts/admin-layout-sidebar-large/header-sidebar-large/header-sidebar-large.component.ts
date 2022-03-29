@@ -69,24 +69,14 @@ export class HeaderSidebarLargeComponent implements OnInit {
   
     toggelSidebar() {
       const state = this.navService.sidebarState;
-      if (state.childnavOpen && state.sidenavOpen) {
-        return state.childnavOpen = false;
-      }
-      if (!state.childnavOpen && state.sidenavOpen) {
+      console.log(state);
+      
+      if ( state.sidenavOpen) {
         return state.sidenavOpen = false;
+      }else{
+        return state.sidenavOpen = true;
       }
-      // item has child items
-      if (!state.sidenavOpen && !state.childnavOpen 
-        && this.navService.selectedItem.type === 'dropDown') {
-          state.sidenavOpen = true;
-          setTimeout(() => {
-              state.childnavOpen = true;
-          }, 50);
-      }
-      // item has no child items
-      if (!state.sidenavOpen && !state.childnavOpen) {
-        state.sidenavOpen = true;
-      }
+      
     }
   
     signout() {

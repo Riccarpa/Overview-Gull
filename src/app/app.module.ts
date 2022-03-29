@@ -25,6 +25,7 @@ import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +37,7 @@ import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
     UpdateProjectComponent,
     FilterClientPipe,
     FilterUsersPipe,
+ 
   ],
   imports: [
     BrowserModule,

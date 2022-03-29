@@ -71,20 +71,8 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">Progress</label>
-                    <select class="form-control" formControlName="progress" name="progress">
-                      <option selected disabled hidden>Progress</option>
-                      <option [value]="0">0%</option>
-                      <option [value]="10">10%</option>
-                      <option [value]="20">20%</option>
-                      <option [value]="30">30%</option>
-                      <option [value]="40">40%</option>
-                      <option [value]="50">50%</option>
-                      <option [value]="60">60%</option>
-                      <option [value]="70">70%</option>
-                      <option [value]="80">80%</option>
-                      <option [value]="90">90%</option>
-                      <option [value]="100">100%</option>
-                    </select>
+                    <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
+                      
                   </div>
 
                   <div class="col-md-6 form-group mb-3 d-flex flex-column">
@@ -142,7 +130,7 @@
 <section class="d-flex align-items-stretch flex-wrap">
 
   <!-- card project -->
-  <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
+  <div *ngFor="let proj of projects " class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100">
 
@@ -192,28 +180,8 @@
               </tbody>
             </table>
           </div>
-          <div [ngSwitch]="proj.progress" class="col-md-6">
-            <div *ngSwitchCase="0" echarts [options]="chartPie0" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="10" echarts [options]="chartPie10" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="20" echarts [options]="chartPie20" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="30" echarts [options]="chartPie30" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="40" echarts [options]="chartPie40" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="50" echarts [options]="chartPie50" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="60" echarts [options]="chartPie60" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="70" echarts [options]="chartPie70" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="80" echarts [options]="chartPie80" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="90" echarts [options]="chartPie90" [autoResize]="true" style="height: 200px;">
-            </div>
-            <div *ngSwitchCase="100" echarts [options]="chartPie100" [autoResize]="true" style="height: 200px;">
+          <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
+            <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true" style="height: 200px;">
             </div>
           </div>
         </div>
