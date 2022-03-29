@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,10 +9,10 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  baseUrl = 'http://80.211.57.191/overview_dev';
+  baseUrl = environment.apiURL + '/login';
 
   checkLogin(user: string, pass: string): Observable<any> {
-    let url = `${this.baseUrl}/api/login`;
+    let url = this.baseUrl;
     let body = {
       "email": user,
       "password": pass,
