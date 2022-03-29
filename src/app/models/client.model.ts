@@ -8,4 +8,6 @@ export class Client {
     business_name: string
     representatives: string
     project_ids: number[]
+    total_revenue: number
+    total_cost: number
 }
