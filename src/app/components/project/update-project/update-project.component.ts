@@ -50,7 +50,7 @@ export class UpdateProjectComponent implements OnInit {
   }
 
 
-  url = 'http://80.211.57.191/overview_dev'
+  url = environment.apiURL2
   project: Project //progetto singolo
   idProject: number //id progetto singolo
 
