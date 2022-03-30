@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-update-user',
@@ -47,9 +48,9 @@ export class UpdateUserComponent implements OnInit {
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
       if(this.user.picture && this.user.picture.includes('.png') ){
-        this.user.picture = `http://80.211.57.191/overview_dev/images/users/${res.data.id}.png?r=${this.randomNumber()}`
+        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.png?r=${this.randomNumber()}`
       }else{
-        this.user.picture = `http://80.211.57.191/overview_dev/images/users/${res.data.id}.jpg?r=${this.randomNumber()}`
+        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.randomNumber()}`
       }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name),
@@ -73,7 +74,7 @@ export class UpdateUserComponent implements OnInit {
         this.back()
       }, 1000);
     },(error)=>{
-      this.toastr.error(error.error.message,'Error!',{progressBar: true});
+      this.toastr.error(error.error.message);
     });
   }
   
@@ -87,7 +88,7 @@ export class UpdateUserComponent implements OnInit {
         this.router.navigate(['home/user'])
       }, 1000);
     },(error)=>{
-      this.toastr.error(error.error.message,'Error!',{progressBar: true});
+      this.toastr.error(error.error.message);
       this.loading = false
     });
     
@@ -100,7 +101,7 @@ export class UpdateUserComponent implements OnInit {
 
 
     if(this.data.image == undefined){
-      this.toastr.error('Select a valid image','Error!',{progressBar: true})
+      this.toastr.error('Select a valid image')
     }else{
 
       if(this.data.image.includes('data:image/jpeg;base64,')){
@@ -113,8 +114,8 @@ export class UpdateUserComponent implements OnInit {
 
       this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
        
-        this.user.picture =  `http://80.211.57.191/overview_dev/images/users/${this.user.id}.png?r=${this.randomNumber()}`
-        this.toastr.success('Image saved successfully', 'Success!', {progressBar: true})
+        this.user.picture =  `${environment.apiURL2}/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+        this.toastr.success('Image saved successfully')
         })
     }
   
@@ -151,7 +152,5 @@ export class UpdateUserComponent implements OnInit {
     let num = Math.floor(Math.random()*100000)
     return num.toString()
   }
-  errorBar(error:any) {
-    this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
-  }
+  
 }

@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime } from 'rxjs/operators';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -58,13 +59,13 @@ export class UserComponent implements OnInit {
       console.log(res)
       for(let i=0;i<this.users.length;i++){
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
-          this.users[i].picture = `/overview_dev/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
         }else{
-          this.users[i].picture = `/overview_dev/images/users/${this.users[i].id}.jpg?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.randomNumber()}`
         }
       }
     },(error)=>{
-      alert('you are not logged-in')
+      this.toastr.error('You are not logged in','Error',{ timeOut: 3000, closeButton: true})
       this.route.navigate(['/'])
     })
      
@@ -74,13 +75,13 @@ export class UserComponent implements OnInit {
   onSubmit(){
    
     if(this.profileForm.status == 'INVALID'){
-     this.warningBar()
+      this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true});
      
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
         this.modalService.dismissAll(res.data.name)
       },(error)=>{
-        this.errorBar(error.error.message)
+        this.toastr.error(error.error.message,'Error', { timeOut: 3000, closeButton: true})
       })
     }
   }
@@ -90,7 +91,7 @@ export class UserComponent implements OnInit {
     let base64JpgWithoutIndex;
     let base64PngWithoutIndex;
     if(this.data.image == undefined){
-      this.errorBar('Select a valid image')
+      this.toastr.error('Select a valid image','Error', { timeOut: 3000, closeButton: true})
     }else{
 
       if(this.data.image.includes('data:image/jpeg;base64,')){
@@ -112,21 +113,16 @@ export class UserComponent implements OnInit {
       console.log(result);
     }, (reason) => {
       if(reason){
-        this.successBar(reason)
+      
+        this.toastr.success(`User ${reason} created successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
         this.retrieveUsers()
       }
     });
   }
 
-  successBar(user:any) {
-    this.toastr.success(`User ${user} created successfully`, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
-  }
-  warningBar() {
-    this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
-  }
-  errorBar(error:any) {
-    this.toastr.error(`${error}`, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
-  }
+  
+ 
+ 
   
   // filter user data table
   filerData(val) {
