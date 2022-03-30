@@ -16,11 +16,11 @@
                 <div class="d-flex justify-content-between my-4">
                     <div class="col-12 col-md-4">
                         <h3 class="m-0">{{client.total_revenue}}</h3>
-                        <h5 class="mt-0 text-muted">Ricavi 2022</h5>
+                        <h5 class="mt-0 text-muted">Ricavi {{currentDate | date:'yyyy'}}</h5>
                     </div>
                     <div class="col-12 col-md-4">
                         <h3 class="m-0">{{client.total_cost}}</h3>
-                        <h5 class="mt-0 text-muted">Costi 2022</h5>
+                        <h5 class="mt-0 text-muted">Costi {{currentDate | date:'yyyy'}}</h5>
                     </div>
                     <div class="col-12 col-md-4">
                         <h3 class="m-0">{{client.project_ids.length}}</h3>

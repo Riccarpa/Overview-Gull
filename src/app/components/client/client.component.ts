@@ -3,9 +3,9 @@ import { ClientService } from 'src/app/services/client/client.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
 import { Client } from 'src/app/models/client.model';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
+import { ProjectService } from 'src/app/services/project/project.service';
 
 @Component({
   selector: 'app-client',
@@ -14,7 +14,7 @@ import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 })
 export class ClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private toastr: ToastrService) {
+  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private projectService: ProjectService) {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
@@ -24,11 +24,14 @@ export class ClientComponent implements OnInit {
 
   ngOnInit(): void {
     this.getClients();
+    this.currentDate = new Date();
   }
 
   clientsList: any;
 
   titleModal: any;
+
+  currentDate: Date;
 
   //genera lista di tutti i clienti 
   getClients() {
@@ -85,7 +88,7 @@ export class ClientComponent implements OnInit {
       this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
         .subscribe(() => {
           this.modalService.dismissAll();
-          this.toastr.success('Operazione riuscita!', 'Modificato cliente', { timeOut: 3000 });
+          this.projectService.successBar('Cliente modificato con successo!');
           this.getClients();
         })
     }
@@ -115,15 +118,15 @@ export class ClientComponent implements OnInit {
 
   // alert
   successDeleteClient() {
-    this.toastr.success('Operazione riuscita!', 'Rimosso cliente', { timeOut: 3000 });
+    this.projectService.successBar('Cliente eliminato');
   }
 
   successAddClient() {
-    this.toastr.success('Operazione riuscita!', 'Aggiunto cliente', { timeOut: 3000 });
+    this.projectService.successBar('Cliente aggiunto con successo!');
   }
 
   warningBar() {
-    this.toastr.warning('Tutti i campi sono obbligatori', 'Warning', { timeOut: 3000 });
+    this.projectService.warningBar('Tutti i campi sono obbligatori');
   }
 
   // richiama la modale per aggiungere il cliente

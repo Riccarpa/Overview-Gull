@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { Client } from 'src/app/models/client.model';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,10 +16,11 @@ export class ClientService {
   clientsList: Client[];
   token: any;
   currentClient: any;
+  url = environment.apiURL + '/clients';
 
   // lista di tutti i clienti
   getClients(): Observable<any> {
-    const url = 'http://80.211.57.191/overview_dev/api/clients';
+    const url = this.url;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -30,7 +31,7 @@ export class ClientService {
 
   // aggiungi nuovo cliente
   addClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
-    const url = 'http://80.211.57.191/overview_dev/api/clients';
+    const url = this.url;
 
     let body = {
       "name": name,
@@ -52,7 +53,7 @@ export class ClientService {
 
   // retrieve cliente
   getClient(id: any): Observable<any> {
-    const url = `http://80.211.57.191/overview_dev/api/clients/${id}`;
+    const url = `${this.url}/${id}`;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ export class ClientService {
 
   // modifica cliente
   updateClient(name: string, vat_number: string, business_name: string, representatives: string, logo: string): Observable<any> {
-    const url = `http://80.211.57.191/overview_dev/api/clients/${this.currentClient}`;
+    const url = `${this.url}/${this.currentClient}`;
 
     let body = {
       "name": name,
@@ -85,7 +86,7 @@ export class ClientService {
 
   // cancella cliente
   deleteClient(id: any): Observable<any> {
-    const url = `http://80.211.57.191/overview_dev/api/clients/${id}`;
+    const url = `${this.url}/${id}`;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -97,7 +98,7 @@ export class ClientService {
 
   // aggiorna immagine
   updateImage(image: any): Observable<any> {
-    let url = 'http://80.211.57.191/overview_dev/api/uploadImage';
+    let url = environment.apiURL + '/uploadImage';
 
     const formData = new FormData()
     formData.append('image', image, image.name);

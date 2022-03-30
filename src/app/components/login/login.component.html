@@ -11,14 +11,15 @@
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input id="username" class="form-control form-control-rounded" formControlName="user"
-                                type="text">
+                                type="text" (input)="checkText()">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input id="password" class="form-control form-control-rounded" formControlName="password"
-                                type="password">
+                                type="password" (input)="checkText()">
                         </div>
-                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-5">Accedi</button>
+                        <button type="submit" class="btn btn-rounded btn-primary btn-block mt-5"
+                            [disabled]="disable">Accedi</button>
                     </form>
                 </div>
             </div>
