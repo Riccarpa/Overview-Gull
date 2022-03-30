@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Client } from 'src/app/models/client.model';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { ProjectService } from 'src/app/services/project/project.service';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -32,6 +32,8 @@ export class ClientComponent implements OnInit {
   titleModal: any;
 
   currentDate: Date;
+
+  url = environment.apiURL2;
 
   //genera lista di tutti i clienti 
   getClients() {
