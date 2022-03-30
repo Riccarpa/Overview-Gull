@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,7 @@ export class UserService {
   }
   
     token:any
-    url = `http://80.211.57.191/overview_dev/api/users` 
+    url = `${environment.apiURL}/users` 
     
     
     getUsers():Observable<any>{
