@@ -151,7 +151,9 @@ export class UserComponent implements OnInit {
   }
 
  
-
+ goToFinancial(){
+   this.route.navigate(['home/financial'])
+ }
   
 
 }

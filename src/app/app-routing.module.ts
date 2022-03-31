@@ -7,6 +7,7 @@ import { UpdateProjectComponent } from './components/project/update-project/upda
 import { UserComponent } from './components/user/user.component';
 import { UpdateUserComponent } from './components/user/update-user/update-user.component';
 import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/admin-layout-sidebar-large/admin-layout-sidebar-large.component';
+import { FinancialComponent } from './components/financial/financial.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,6 +17,8 @@ const routes: Routes = [
     { path: 'user/:id', component: UpdateUserComponent },
     { path: 'project', component: ProjectComponent },
     { path: 'updateProject/:id', component: UpdateProjectComponent },
+    { path: 'financial', component: FinancialComponent },
+
   ] },
   
   { path: 'login', component: LoginComponent },
