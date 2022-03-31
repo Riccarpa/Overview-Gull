@@ -13,6 +13,7 @@ import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ProductService } from 'src/app/shared/services/product.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -30,9 +31,9 @@ export class ProjectComponent implements OnInit {
   loading: boolean
   data: any;
   cropperSettings: CropperSettings;
-
-
-
+  idClient:number //id cliente cliccato dalla pagina client da admin ricevuto dal client service
+  client:Client
+  url = environment.apiURL2
   constructor(
     private modalService: NgbModal,
     private productService: ProductService,
@@ -196,9 +197,30 @@ export class ProjectComponent implements OnInit {
     
   }
 
+  
+  back(){
+    this.route.navigate(['home/client'])
+  }
+
 
 
   ngOnInit() {
+
+    if (this.clientService.idClient) {
+
+      this.idClient = this.clientService.idClient
+      this.clientService.getClient(this.idClient).subscribe((res) => {
+
+        this.client = res.data
+        if (this.client.logo) {
+          
+          this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
+          console.log(this.client);
+        }
+
+
+      })
+    }
 
     //get di tutti i proggetti dal service e controllo immagine
     this.getAllProjects()
@@ -209,6 +231,10 @@ export class ProjectComponent implements OnInit {
     //get di tutti gli user da userService
     this.getAllUsers()
 
+   
+    
+    
+    
   }
 }
 

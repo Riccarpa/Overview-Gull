@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { debounceTime } from 'rxjs/operators';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { environment } from 'src/environments/environment';
+import { ClientService } from 'src/app/services/client/client.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -18,7 +19,7 @@ import { environment } from 'src/environments/environment';
 export class UserComponent implements OnInit {
 
   constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
+    private toastr: ToastrService,private clientService:ClientService) { this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
@@ -50,6 +51,7 @@ export class UserComponent implements OnInit {
       this.filerData(value);
     });
 
+    this.clientService.idClient = null
   }
  
   retrieveUsers(){

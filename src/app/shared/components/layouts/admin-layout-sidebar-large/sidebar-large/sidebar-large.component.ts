@@ -115,4 +115,8 @@ export class SidebarLargeComponent implements OnInit {
   onResize(event) {
     this.updateSidebar();
   }
+
+  refresh(page:any){
+    page.ngOnInit()
+  }
 }

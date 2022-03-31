@@ -25,6 +25,7 @@ export class ClientComponent implements OnInit {
   ngOnInit(): void {
     this.getClients();
     this.currentDate = new Date();
+    this.clientService.idClient = null
   }
 
   clientsList: any;
@@ -202,5 +203,13 @@ export class ClientComponent implements OnInit {
     if (fileList.length > 0) {
       this.currentImage = fileList[0];
     }
+  }
+
+
+  // redirect to dashboard progetti associati
+  goToDashboard(id:number){
+
+    this.clientService.idClient = id
+    this.router.navigate(['home/project'])
   }
 }

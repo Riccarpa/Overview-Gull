@@ -17,7 +17,9 @@ export class ClientService {
   token: any;
   currentClient: any;
   url = environment.apiURL + '/clients';
+  idClient:number // id passato al click per vedere i progetti associati
 
+  
   // lista di tutti i clienti
   getClients(): Observable<any> {
     const url = this.url;

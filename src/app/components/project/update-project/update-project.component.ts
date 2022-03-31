@@ -42,6 +42,7 @@ export class UpdateProjectComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService,
     private modalService: NgbModal,
+   
   ) {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
@@ -228,6 +229,10 @@ export class UpdateProjectComponent implements OnInit {
     this.modal_revenue = false
     this.modal_client_id = false
     this.modal_user_ids = false
+  }
+
+  back(){
+   this.route.navigate(['home/project'])
   }
 
 

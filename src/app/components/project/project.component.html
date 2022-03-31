@@ -1,6 +1,27 @@
 <div class="d-flex justify-content-between w-100 mb-4">
   <h2 class="">Projects</h2>
 
+  
+
+   
+     
+   
+      
+        <div *ngIf="client && idClient" class="col-lg-3 card-profile-1 d-flex justify-content-start align-items-center">
+          <div class="avatar box-shadow-2  m-0 mr-2">
+            <img *ngIf="client.logo == null" src="assets/images/stock.jpg" alt="">
+            <img  src="{{url}}{{client.logo}}" alt="">
+          </div>
+          
+          <h2>{{client.name}}</h2>
+        </div>
+        
+        
+
+
+
+   
+   
   <div>
     <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">Aggiungi Progetto</button>
 
@@ -125,18 +146,22 @@
   </div>
 </div>
 
+<div *ngIf="client && client.project_ids.length < 1 ">
+  <h2 class="text-center mt-5 ">Non Ci Sono Progetti Associati Per Questo Cliente</h2>
+  <button class="btn btn-success tex-center" (click)="back()">Back</button>
 
+</div>
 <!-- main container -->
 <section class="d-flex align-items-stretch flex-wrap">
 
   <!-- card project -->
-  <div *ngFor="let proj of projects " class="col-lg-6 col-md-12 mb-4">
+  <div *ngFor="let proj of projects | filterProject: idClient " class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100">
 
         <!-- header card -->
         <div class=" d-flex justify-content-start align-items-center mb-2">
-          <img *ngIf="proj.logo" src="http://80.211.57.191/overview_dev/{{proj.logo}}"
+          <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
             class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
           <img *ngIf="proj.logo === null" src="assets/images/project.png"
             class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">

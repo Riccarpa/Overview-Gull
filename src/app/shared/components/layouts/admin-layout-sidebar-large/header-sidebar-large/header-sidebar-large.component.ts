@@ -69,7 +69,7 @@ export class HeaderSidebarLargeComponent implements OnInit {
   
     toggelSidebar() {
       const state = this.navService.sidebarState;
-      console.log(state);
+
       
       if ( state.sidenavOpen) {
         return state.sidenavOpen = false;
