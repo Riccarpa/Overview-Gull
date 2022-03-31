@@ -60,7 +60,7 @@ export class UpdateProjectComponent implements OnInit {
 
   users: User[] = [] // lista utenti 
   associateUser: number //numero di user associati al project(.lenght)
-  arrayUsersIds = [] //array di users associati al proggetto
+  arrayUsersIds = [] //array di users associati al progetto
 
   imageSelect: File //file img
   confirmResut:any
@@ -90,7 +90,7 @@ export class UpdateProjectComponent implements OnInit {
       this.loadingDelete = true;
       setTimeout(() => {
         this.loadingDelete = false;
-        this.service.successBar(`proggetto eliminato con successo`)
+        this.service.successBar(`progetto eliminato con successo`)
         this.route.navigate(['home/project'])
       }, 2000);
     })
@@ -105,9 +105,9 @@ export class UpdateProjectComponent implements OnInit {
 
     //invio del form  id e array userIds  al service per update
     if (this.projectForm.status == 'INVALID') {
-      this.service.warningBar('Nome Proggetto Obbligatorio e di almeno 3 caratteri')
+      this.service.warningBar('Nome Progetto Obbligatorio e di almeno 3 caratteri')
     }else if(!diff){
-      this.service.warningBar('La Data di fine proggetto é precedente alla data di creazione')
+      this.service.warningBar('La Data di fine progetto é precedente alla data di creazione')
     }else{
 
       let updatedProj = this.projectForm.value
@@ -117,7 +117,7 @@ export class UpdateProjectComponent implements OnInit {
           this.loadingUpdate = true;
           setTimeout(() => {
             this.loadingUpdate = false;
-            this.service.successBar(`proggetto modificato con successo`)
+            this.service.successBar(`progetto modificato con successo`)
             this.ngOnInit()
           }, 2000);
         })
@@ -158,7 +158,7 @@ export class UpdateProjectComponent implements OnInit {
       });
   }
 
-  // dissocia user dal proggetto
+  // dissocia user dal progetto
   removeUserToProject(id: number) {
 
     for (let i = 0; i < this.arrayUsersIds.length; i++) {
@@ -242,7 +242,7 @@ export class UpdateProjectComponent implements OnInit {
       this.service.currentProject = this.active.snapshot.paramMap.get('id')
     }
 
-    //retrive del proggetto singolo
+    //retrive del progetto singolo
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
@@ -268,11 +268,11 @@ export class UpdateProjectComponent implements OnInit {
 
       })
 
-      //calcolo del numero di utenti associati al proggetto
+      //calcolo del numero di utenti associati al progetto
       this.associateUser = this.project.user_ids.length
 
 
-      //get cliente associato al proggetto tramite id
+      //get cliente associato al progetto tramite id
       if (res.data.client_id) {
 
         let idClient = res.data.client_id

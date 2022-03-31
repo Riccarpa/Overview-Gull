@@ -124,9 +124,9 @@ export class ProjectComponent implements OnInit {
 
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
-      this.service.warningBar('Nome Proggetto Obbligatorio e di almeno 3 caratteri')
+      this.service.warningBar('Nome Progetto Obbligatorio e di almeno 3 caratteri')
     } else if (!diff) {
-      this.service.warningBar('La Data di fine proggetto é precedente alla data di creazione')
+      this.service.warningBar('La Data di fine progetto é precedente alla data di creazione')
     } else {
 
       this.service.addProject(newProj).subscribe((res) => {
@@ -136,7 +136,7 @@ export class ProjectComponent implements OnInit {
         setTimeout(() => {
           this.loading = false;
           this.updateProject(this.dataRes.id)
-          this.service.successBar(`proggetto creato con successo`)
+          this.service.successBar(`progetto creato con successo`)
           this.modalService.dismissAll()
         }, 2000);
       })
@@ -176,7 +176,7 @@ export class ProjectComponent implements OnInit {
 
   updateProject(id: number) {
 
-    //invio dell'id proggetto al service
+    //invio dell'id progetto al service
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
   }
@@ -222,7 +222,7 @@ export class ProjectComponent implements OnInit {
       })
     }
 
-    //get di tutti i proggetti dal service e controllo immagine
+    //get di tutti i progetti dal service e controllo immagine
     this.getAllProjects()
 
     //get di tutti i client dal clientService

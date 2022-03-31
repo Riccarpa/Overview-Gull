@@ -28,7 +28,7 @@
     <!-- modale di creazione -->
     <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-title">Crea Un Proggetto</h4>
+        <h4 class="modal-title" id="modal-title">Crea Un Progetto</h4>
         <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
           (click)="modal.dismiss('Cross click')">
           <span aria-hidden="true">&times;</span>
@@ -45,7 +45,7 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="name">Project</label>
-                    <input minlength="3" maxlength="40" type="text" class="form-control " formControlName="name" placeholder="* nome proggetto">
+                    <input minlength="3" maxlength="40" type="text" class="form-control " formControlName="name" placeholder="* nome progetto">
 
                     <div *ngIf="projectForm.get('name').invalid &&  projectForm.get('name').touched"
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
