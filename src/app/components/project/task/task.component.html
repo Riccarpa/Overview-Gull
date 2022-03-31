@@ -22,7 +22,7 @@
                         {{row.end_date | date:'dd-MM-yyyy'}}
                     </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column>
+                <ngx-datatable-column [width]="300">
                     <ng-template ngx-datatable-header-template>Task Status</ng-template>
                     <ng-template ngx-datatable-cell-template let-row="row">
                         {{getStatus(row.status)}}
