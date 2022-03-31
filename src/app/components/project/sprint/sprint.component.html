@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-12" *ngFor="let sprint of currentSprints">
+        <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+            <div class="card-body">
+                <div class="card-title mb-3 d-flex justify-content-between align-items-center w-100">
+                    <h4 class="px-3 m-3">Sprint name: {{sprint.name}}</h4>
+                    <button class="btn btn-success px-3 m-3">Crea Nuovo Task</button>
+                </div>
+            </div>
+            <div class="card-body" *ngIf="sprint">
+                <app-task [sprint]="sprint"></app-task>
+            </div>
+        </div>
+    </div>
+</div>

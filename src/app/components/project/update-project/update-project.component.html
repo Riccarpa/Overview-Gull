@@ -2,7 +2,7 @@
 <div *ngIf="project && clients && users">
   <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center ">
-      <div  (click)="openModalImg(modalCropper)" class="avatar box-shadow-2 m-0 mr-2">
+      <div (click)="openModalImg(modalCropper)" class="avatar box-shadow-2 m-0 mr-2">
         <img *ngIf="project.logo == null" src="assets/images/project.png" alt="">
         <img *ngIf="project.logo !== null" src="{{url}}{{project.logo}}" alt="">
       </div>
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div  class="col-lg-3 col-md-6 col-sm-6">
+  <div class="col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-center">
         <i class="i-Money-2"></i>
@@ -130,7 +130,7 @@
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">progress</label>
             <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
-              
+
           </div>
 
           <!-- end-date -->
@@ -144,7 +144,7 @@
             <label for="picker1">start date</label>
             <input type="date" class="form-control" formControlName="start_date">
           </div>
-          
+
           <!-- status -->
           <div class="col-md-6 form-group mb-3">
             <label for="status">status</label>
@@ -272,9 +272,8 @@
                       <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
                     </div>
 
-                   <div *ngIf="modal_user_ids">
-                      <div ngbDropdown
-                        class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
+                    <div *ngIf="modal_user_ids">
+                      <div ngbDropdown class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
                         <button ngbDropdownToggle href="#"
                           class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control  ">Associa
                           Collaboratori</button>
@@ -285,8 +284,7 @@
                               <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
 
 
-                              <div
-                                class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
+                              <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
                                 <div *ngFor="let u of users "
                                   class="col-md-5 col-sm-12 col-lg-6 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
                                   <div class="">
@@ -309,7 +307,7 @@
                         </div>
                       </div>
 
-                   </div>
+                    </div>
 
                   </div>
 
@@ -331,4 +329,8 @@
 
     </div>
   </div>
+</div>
+
+<div *ngIf="project">
+  <app-sprint [project]="project"></app-sprint>
 </div>

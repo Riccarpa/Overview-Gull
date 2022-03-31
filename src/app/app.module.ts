@@ -21,6 +21,8 @@ import { SharedComponentsModule } from './shared/components/shared-components.mo
 import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
 import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
+import { SprintComponent } from './components/project/sprint/sprint.component';
+import { TaskComponent } from './components/project/task/task.component';
 
 
 
@@ -37,6 +39,8 @@ import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
     UpdateProjectComponent,
     FilterClientPipe,
     FilterUsersPipe,
+    SprintComponent,
+    TaskComponent,
  
   ],
   imports: [
