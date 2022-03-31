@@ -151,8 +151,8 @@ export class UserComponent implements OnInit {
   }
 
  
- goToFinancial(){
-   this.route.navigate(['home/financial'])
+ goToFinancial(id:any){
+   this.route.navigate([`home/financial/${id}`])
  }
   
 

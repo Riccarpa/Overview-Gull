@@ -17,7 +17,7 @@ const routes: Routes = [
     { path: 'user/:id', component: UpdateUserComponent },
     { path: 'project', component: ProjectComponent },
     { path: 'updateProject/:id', component: UpdateProjectComponent },
-    { path: 'financial', component: FinancialComponent },
+    { path: 'financial/:id', component: FinancialComponent },
 
   ] },
   
