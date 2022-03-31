@@ -48,4 +48,24 @@ export class TaskComponent implements OnInit {
     }
     return '-';
   }
+
+  getStatus(status: number) {
+    if (status == 0) {
+      return 'Aperto';
+    } else if (status == 1) {
+      return 'In corso';
+    } else {
+      return 'Completato';
+    }
+  }
+
+  getDate(status: number, startDate: string, endDate: string) {
+    if (status == 0) {
+      return '(' + startDate + ')';
+    } else if (status == 2) {
+      return '(' + endDate + ')';
+    } else {
+      return '';
+    }
+  }
 }
