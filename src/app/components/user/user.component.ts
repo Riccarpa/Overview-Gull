@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { debounceTime } from 'rxjs/operators';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { environment } from 'src/environments/environment';
+import { ProjectService } from 'src/app/services/project/project.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -18,7 +19,7 @@ import { environment } from 'src/environments/environment';
 export class UserComponent implements OnInit {
 
   constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService) { this.cropperSettings = new CropperSettings();
+    private toastr: ToastrService,private pService:ProjectService) { this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
@@ -59,9 +60,9 @@ export class UserComponent implements OnInit {
       console.log(res)
       for(let i=0;i<this.users.length;i++){
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
-          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.pService.randomNumber()}`
         }else{
-          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.pService.randomNumber()}`
         }
       }
     },(error)=>{
@@ -149,10 +150,7 @@ export class UserComponent implements OnInit {
     this.filteredUsers = rows;
   }
 
-  randomNumber(){
-    let num = Math.floor(Math.random()*100000)
-    return num.toString()
-  }
+ 
 
   
 

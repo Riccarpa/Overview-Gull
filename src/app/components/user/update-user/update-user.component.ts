@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { ProjectService } from 'src/app/services/project/project.service';
 
 @Component({
   selector: 'app-update-user',
@@ -17,7 +18,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UpdateUserComponent implements OnInit {
   constructor(private uService:UserService,private route:ActivatedRoute,private location:Location, private fb: FormBuilder,
-    private toastr: ToastrService, private modalService: NgbModal,private router:Router) {
+    private toastr: ToastrService, private modalService: NgbModal,private router:Router,private pService:ProjectService) {
       this.cropperSettings = new CropperSettings();
       this.cropperSettings.cropperDrawSettings.lineDash = true;
       this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
@@ -48,9 +49,9 @@ export class UpdateUserComponent implements OnInit {
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
       if(this.user.picture && this.user.picture.includes('.png') ){
-        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.png?r=${this.randomNumber()}`
+        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.png?r=${this.pService.randomNumber()}`
       }else{
-        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.randomNumber()}`
+        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.pService.randomNumber()}`
       }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name),
@@ -114,7 +115,7 @@ export class UpdateUserComponent implements OnInit {
 
       this.uService.updateImage(this.profileForm.value.picture_data,this.user.id).subscribe(res=>{
        
-        this.user.picture =  `${environment.apiURL2}/images/users/${this.user.id}.png?r=${this.randomNumber()}`
+        this.user.picture =  `${environment.apiURL2}/images/users/${this.user.id}.png?r=${this.pService.randomNumber()}`
         this.toastr.success('Image saved successfully')
         })
     }
@@ -148,9 +149,6 @@ export class UpdateUserComponent implements OnInit {
   back(){
     this.location.back()
   }
-    randomNumber(){
-    let num = Math.floor(Math.random()*100000)
-    return num.toString()
-  }
+    
   
 }
