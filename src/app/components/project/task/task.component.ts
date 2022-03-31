@@ -41,7 +41,7 @@ export class TaskComponent implements OnInit {
   users: User[];
 
   getAssignee(id: number) {
-    for (let i = 0; i < this.users.length; i++) {
+    for (let i = 0; i < this.users?.length; i++) {
       if (this.users[i].id == id) {
         return this.users[i].name + ' ' + this.users[i].surname;
       }
