@@ -2,6 +2,7 @@
     <button class="btn btn-success px-3 m-3" (click)="openModalAddTask(modalBasic)">Crea Nuovo Task</button>
 </div>
 
+<!-- table task -->
 <div class="row mb-5">
     <div class="col-md-12">
         <div class="card o-hidden">
@@ -37,7 +38,8 @@
                     <ng-template ngx-datatable-header-template>Actions</ng-template>
                     <ng-template ngx-datatable-cell-template let-row="row">
                         <button class="btn bg-transparent mr-2 p-0"><i class="text-20 i-Eye"></i></button>
-                        <button class="btn bg-transparent text-danger ml-2 p-0"><i class="text-20 i-Close"></i></button>
+                        <button (click)="deleteTask(row.id, modalConfirm)"
+                            class="btn bg-transparent text-danger ml-2 p-0"><i class="text-20 i-Close"></i></button>
                     </ng-template>
                 </ngx-datatable-column>
             </ngx-datatable>
@@ -45,7 +47,7 @@
     </div>
 </div>
 
-
+<!-- modale aggiunta/modifica task -->
 <ng-template #modalBasic let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
@@ -97,5 +99,24 @@
             (click)="addTask()">Salva</button>
         <button *ngIf="titleModal == 'Modifica Task'" type="button" class="btn btn-outline-dark btn-rounded"
             (click)="editTask()">Salva</button>
+    </div>
+</ng-template>
+
+<!-- modale cancellazione task -->
+<ng-template #modalConfirm let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Cancella Task</h4>
+        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p><strong>Sei sicuro di voler eliminare il task selezionato?</strong></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-rounded"
+            (click)="modal.dismiss('cancel')">Annulla</button>
+        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
     </div>
 </ng-template>

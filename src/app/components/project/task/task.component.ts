@@ -146,4 +146,26 @@ export class TaskComponent implements OnInit {
         });
     }
   }
+
+  // cancella il task selezionato
+  deleteTask(id: any, content: any) {
+    this.confirm(id, content);
+  }
+
+  // richiama la modale per eliminare il task
+  confirm(id: any, content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+      .result.then(() => {
+        this.taskService.deleteTask(id).subscribe(() => {
+          this.projectService.successBar('Task eliminato');
+          this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
+            this.currentTasksIds = res.data.task_ids;
+            this.getTasks();
+          });
+          this.modalService.dismissAll();
+        });
+      }, () => {
+        console.log('annullato');
+      });
+  }
 }
