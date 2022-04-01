@@ -1,5 +1,5 @@
 <div class="mb-3 d-flex justify-content-end w-100">
-    <button class="btn btn-success px-3 m-3">Crea Nuovo Task</button>
+    <button class="btn btn-success px-3 m-3" (click)="openModalAddTask(modalBasic)">Crea Nuovo Task</button>
 </div>
 
 <div class="row mb-5">
@@ -44,3 +44,58 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #modalBasic let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="taskForm">
+            <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                    <label for="name">Nome task</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
+                        formControlName="name">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="assignee_id">Assegnatario</label>
+                    <select class="form-control" type="number" name="assignee_id" formControlName="assignee_id">
+                        <option *ngFor="let c of collaborators" [value]="c.id">{{c.name}} {{c.surname}}</option>
+                    </select>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="status">Status</label>
+                    <select class="form-control" type="number" name="status" formControlName="status">
+                        <option [value]="0">Aperto</option>
+                        <option [value]="1">In corso</option>
+                        <option [value]="2">Completato</option>
+                    </select>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="start_date">Data inizio</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date"
+                        formControlName="start_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="end_date">Data fine</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="effort">Effort</label>
+                    <input type="number" class="form-control" id="effort" name="effort"
+                        placeholder="Inserisci rappresentanti" formControlName="effort">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="titleModal == 'Aggiungi Task'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="addTask()">Salva</button>
+        <button *ngIf="titleModal == 'Modifica Task'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="editTask()">Salva</button>
+    </div>
+</ng-template>

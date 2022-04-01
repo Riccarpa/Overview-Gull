@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="card-body" *ngIf="sprint">
-                <app-task [sprint]="sprint" class="w-100"></app-task>
+                <app-task [sprint]="sprint" [collaboratorsIds]="project.user_ids" class="w-100"></app-task>
             </div>
         </div>
     </div>

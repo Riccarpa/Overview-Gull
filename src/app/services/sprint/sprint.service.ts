@@ -25,4 +25,14 @@ export class SprintService {
     })
     return this.http.get(url, { headers: headers });
   }
+
+  getSprint(id: any): Observable<any> {
+    let url = `${this.url}/${id}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    }
+
+    return this.http.get(url, { headers });
+  }
 }
