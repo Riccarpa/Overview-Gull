@@ -4,13 +4,21 @@ import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { Client } from 'src/app/models/client.model';
 import { environment } from 'src/environments/environment';
+import { ProjectService } from '../project/project.service';
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
+  constructor(private http: HttpClient,private projectService:ProjectService) {
+    // this.token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'))
+ 
+    this.token = user.token
+
+    
+    
+    
   }
 
   clientsList: Client[];
