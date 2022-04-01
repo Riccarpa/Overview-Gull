@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { SprintService } from 'src/app/services/sprint/sprint.service';
+
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
@@ -45,10 +46,11 @@ export class TaskComponent implements OnInit {
   users: User[];
   titleModal: string;
   collaborators: User[];
+  task: Task;
 
   taskForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    assignee_id: new FormControl('', Validators.required),
+    assignee_id: new FormControl(''),
     status: new FormControl('', Validators.required),
     start_date: new FormControl('', Validators.required),
     end_date: new FormControl('', Validators.required),
@@ -168,4 +170,48 @@ export class TaskComponent implements OnInit {
         console.log('annullato');
       });
   }
+
+  // richiama la modale per modificare il task
+  openModalEditTask(id: any, content: any) {
+    this.taskService.currentTask = id;
+    this.titleModal = "Modifica Task";
+    this.taskService.getTask(id).subscribe((res) => {
+      this.task = res.data;
+
+      this.taskForm.setValue({
+        name: this.task.name,
+        assignee_id: this.task.assignee_id,
+        status: this.task.status,
+        start_date: this.task.start_date,
+        end_date: this.task.end_date,
+        effort: this.task.effort,
+      });
+    })
+
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(() => {
+        console.log('ok');
+      }, () => {
+        console.log('annullato');
+      });
+  }
+
+  // modifica il task selezionato
+  editTask() {
+    if (this.taskForm.status == 'INVALID') {
+      this.projectService.warningBar('Tutti i campi sono obbligatori');
+    } else {
+      const task = this.taskForm.value;
+      this.taskService.updateTask(task.name, task.assignee_id, task.status, task.start_date, task.end_date, task.effort)
+        .subscribe(() => {
+          this.modalService.dismissAll();
+          this.projectService.successBar('Task modificato con successo!');
+          this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
+            this.currentTasksIds = res.data.task_ids;
+            this.getTasks();
+          });
+        });
+    }
+  }
+
 }

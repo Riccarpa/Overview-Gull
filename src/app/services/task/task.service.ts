@@ -15,6 +15,7 @@ export class TaskService {
 
   token: any;
   url = environment.apiURL + '/tasks';
+  currentTask: any;
 
   getTasks(): Observable<any> {
     const url = this.url;
@@ -56,5 +57,37 @@ export class TaskService {
     });
 
     return this.http.delete(url, { headers: headers });
+  }
+
+  // retrieve task
+  getTask(id: any): Observable<any> {
+    const url = `${this.url}/${id}`;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+    })
+    return this.http.get(url, { headers: headers });
+  }
+
+  // modifica task
+  updateTask(name: string, assignee_id: number, status: number, start_date: Date, end_date: Date, effort: number): Observable<any> {
+    const url = `${this.url}/${this.currentTask}`;
+
+    let body = {
+      "name": name,
+      "assignee_id": assignee_id,
+      "status": status,
+      "start_date": start_date,
+      "end_date": end_date,
+      "effort": effort,
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+    });
+
+    return this.http.patch(url, body, { headers: headers });
   }
 }
