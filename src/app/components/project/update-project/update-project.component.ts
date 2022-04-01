@@ -26,7 +26,7 @@ export class UpdateProjectComponent implements OnInit {
   loadingDelete: boolean;
   cropperSettings: CropperSettings;
   data: any;
-
+  role:number
   // variabili visibilitá campi modale
   modal_progress:false
   modal_revenue:false
@@ -52,7 +52,7 @@ export class UpdateProjectComponent implements OnInit {
 
 
   url = environment.apiURL2
-  project: Project //progetto singolo
+  project: Project | any//progetto singolo
   idProject: number //id progetto singolo
 
   clients: Client[] // lista clienti
@@ -238,6 +238,7 @@ export class UpdateProjectComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.role = this.service.role
     if (!this.service.currentProject) {
       this.service.currentProject = this.active.snapshot.paramMap.get('id')
     }
@@ -271,53 +272,61 @@ export class UpdateProjectComponent implements OnInit {
       //calcolo del numero di utenti associati al progetto
       this.associateUser = this.project.user_ids.length
 
+      if(this.service.role == 1){
 
-      //get cliente associato al progetto tramite id
-      if (res.data.client_id) {
-
-        let idClient = res.data.client_id
-        this.clientService.getClient(idClient).subscribe((res) => {
-
-          this.associateClient = res.data
-         
-        })
+        if (res.data.client_id) {
+  
+          //get cliente associato al progetto tramite id
+          let idClient = res.data.client_id
+          this.clientService.getClient(idClient).subscribe((res) => {
+  
+            this.associateClient = res.data
+           
+          })
+        }
+      }else{
+        this.arrayUsersIds = this.project.user_details
+        this.associateClient = res.data.client_details
       }
 
 
     })
 
     
+    if (this.service.role == 1) {
+
+      if (this.users.length == 0) {
+        // get Users
+        this.userService.getUsers().subscribe((res) => {
     
-    if (this.users.length == 0) {
-      // get Users
-      this.userService.getUsers().subscribe((res) => {
-  
-        this.users = res.data
-  
-        for (let j = 0; j < this.users.length; j++) {
-          let u = this.users[j];
-  
-          for (let i = 0; i < this.project.user_ids.length; i++) {
-            let e = this.project.user_ids[i];
-            if (e === u.id) {
-  
-              this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+          this.users = res.data
+    
+          for (let j = 0; j < this.users.length; j++) {
+            let u = this.users[j];
+    
+            for (let i = 0; i < this.project.user_ids.length; i++) {
+              let e = this.project.user_ids[i];
+              if (e === u.id) {
+    
+                this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+              }
             }
           }
-        }
-  
-      })
-      
-    }
     
-    
-    if (this.clients === undefined) {
-      // get Clients
-      this.clientService.getClients().subscribe((res) => {
-  
-        this.clients = res.data
-      })
+        })
+        
+      }
       
+      
+      if (this.clients === undefined) {
+        // get Clients
+        this.clientService.getClients().subscribe((res) => {
+    
+          this.clients = res.data
+        })
+        
+      }
+
     }
   }
 }

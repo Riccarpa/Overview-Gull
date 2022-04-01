@@ -15,67 +15,65 @@ import { ProjectService } from 'src/app/services/project/project.service';
 })
 export class HeaderSidebarLargeComponent implements OnInit {
 
-    notifications: any[];
+  notifications: any[];
 
-    constructor(
-      private navService: NavigationService,
-      public searchService: SearchService,
-      private auth: AuthService,
-      private route:Router,
-      private userService:UserService,
-      private projectService:ProjectService
-    ) {
-     
-     
+  constructor(
+    private navService: NavigationService,
+    public searchService: SearchService,
+    private auth: AuthService,
+    private route: Router,
+    private userService: UserService,
+    private projectService: ProjectService
+  ) {
+
+    console.log('costruttore header sidebar')
+    const user = JSON.parse(localStorage.getItem('user'))
+    this.projectService.currentUser = user
+    if (user) {
+
+      this.userService.retrieveUser(user.id).subscribe(
+
+        (res) => {
+
+          this.currentUser = res
+          if (this.currentUser.data.picture && this.currentUser.data.picture.includes('.png')) {
+            this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.png?r=${this.projectService.randomNumber()}`
+          } else {
+            this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.jpg?r=${this.projectService.randomNumber()}`
+          }
+          this.role = user.role
+        }
+      )
+
+
+        this.user = user
     }
-  
-    currentUser:any
-    role:number
-    ngOnInit() {
 
-      // const user = JSON.parse(localStorage.getItem('user'))
+  }
 
-      // setTimeout(() => {
+  currentUser: any
+  role: number
+  user:any
+  ngOnInit() {
+    
+  }
 
-      //   if (user) {
-
-      //     this.userService.retrieveUser(user.id).subscribe(
-
-      //       (res) => {
-
-      //         this.currentUser = res
-      //         if (this.currentUser.data.picture && this.currentUser.data.picture.includes('.png')) {
-      //           this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.png?r=${this.projectService.randomNumber()}`
-      //         } else {
-      //           this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.jpg?r=${this.projectService.randomNumber()}`
-      //         }
-      //         this.role = user.role
-      //         console.log(res, 'res nella sidebar');
+  toggelSidebar() {
+    const state = this.navService.sidebarState;
 
 
-      //       }
-      //     )
-      //   }
-      // }, 1000);
-      
+    if (state.sidenavOpen) {
+      return state.sidenavOpen = false;
+    } else {
+      return state.sidenavOpen = true;
     }
-  
-    toggelSidebar() {
-      const state = this.navService.sidebarState;
 
-      
-      if ( state.sidenavOpen) {
-        return state.sidenavOpen = false;
-      }else{
-        return state.sidenavOpen = true;
-      }
-      
-    }
-  
-    signout() {
-      localStorage.clear()
-      this.route.navigate(['/'])
+  }
 
-    }
+  signout() {
+    localStorage.clear()
+    this.route.navigate(['/'])
+
+  }
 
 }

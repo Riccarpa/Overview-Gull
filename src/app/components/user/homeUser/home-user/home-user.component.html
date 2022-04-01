@@ -1,0 +1,28 @@
+
+<section class="col-lg-8 col-md-12 col-sm-12  m-auto">
+
+    <div *ngIf="user" class="card user-profile mt-5 mb-4 col-12">
+        <!-- immagine user -->
+        <div  class="user-info">
+            <img *ngIf="user.picture" class="profile-picture avatar-lg mb-2" src="{{url}}{{user.picture}}" alt="">
+            <p class="m-0 text-24">{{user.name}} {{user.surname}}</p>
+        </div>
+    </div>
+
+    <div *ngIf="user" class="row">
+        <div class="col-md-4 col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="mb-2 text-muted">Task Completati</h5>
+                    <p class="mb-1 text-22 font-weight-light">{{user.closed_tasks_percent}}%</p>
+                    <p class="mb-1">
+                        <ngb-progressbar type="success" [value]="user.closed_tasks_percent" height="4px">
+                        </ngb-progressbar>
+                        <small>task totali: {{user.total_tasks}}</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- da inserire i log delle ferie permessi -->
+</section>

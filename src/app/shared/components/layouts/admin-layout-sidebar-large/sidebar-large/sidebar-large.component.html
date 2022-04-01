@@ -1,7 +1,7 @@
-<div [ngClass]="{ open: navService.sidebarState.sidenavOpen }" class="sidebar-left rtl-ps-none"
+<div *ngIf="user" [ngClass]="{ open: navService.sidebarState.sidenavOpen }" class="sidebar-left rtl-ps-none"
   [perfectScrollbar]="{ suppressScrollX: true }">
   <div class="logo">
-    <img src="./assets/images/logo.png" alt="" />
+    <img src="./assets/images/logo.png" alt="">
   </div>
   <ul class="navigation-left">
     <li [ngClass]="{ active: item.active }" (click)="onClickChangeActiveFlag(item)" class="nav-item lvl1"

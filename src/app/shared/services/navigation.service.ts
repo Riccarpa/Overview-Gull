@@ -47,14 +47,17 @@ export class NavigationService {
     selectedItem: IMenuItem;
     
     constructor() {
-
-        this.menuItems = new BehaviorSubject<IMenuItem[]>(this.publishNavigationChange(this.role));
-        // navigation component has subscribed to this Observable
-        this.menuItems$ = this.menuItems.asObservable();
+        const user = JSON.parse(localStorage.getItem('user'))
+        if (user) {
+            
+            this.menuItems = new BehaviorSubject<IMenuItem[]>(this.publishNavigationChange(user.role));
+            // navigation component has subscribed to this Observable
+            this.menuItems$ = this.menuItems.asObservable();
+        }
      
     }
-    user = JSON.parse(localStorage.getItem('user'))
-    role = this.user.role
+
+
     menu: IMenuItem[] = []
     menuItems:any
     menuItems$:any
@@ -104,6 +107,13 @@ export class NavigationService {
     ];
 
     pmMenu: IMenuItem[] =[
+        {
+            name: 'User',
+            type: 'link',
+            state: 'user',
+            icon: 'i-Boy',
+
+        },
 
         {
             name: 'Projects',
@@ -113,10 +123,7 @@ export class NavigationService {
 
         },
     ];
-
-    // sets iconMenu as default;
    
-
     // You can customize this method to supply different menu for
     // different user type.
     publishNavigationChange(role: number) {

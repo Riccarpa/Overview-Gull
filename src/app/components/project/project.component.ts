@@ -22,18 +22,22 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./project.component.scss']
 })
 export class ProjectComponent implements OnInit {
-  
-  
+
+
   //variabili template
-  chartPercent:any
+  chartPercent: any
   confirmResut: any;
   active = false
   loading: boolean
   data: any;
   cropperSettings: CropperSettings;
-  idClient:number //id cliente cliccato dalla pagina client da admin ricevuto dal client service
-  client:Client
+  idClient: number //id cliente cliccato dalla pagina client da admin ricevuto dal client service
+  client: Client
+  user:any//utente loggato (da storage)
+  userRetrive:any // retrive user loggato 
   url = environment.apiURL2
+
+
   constructor(
     private modalService: NgbModal,
     private productService: ProductService,
@@ -47,16 +51,19 @@ export class ProjectComponent implements OnInit {
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
+    console.log('COSTRUTTORE');
+    
   }
 
   projects: Project[] = []
   clients: Client[] = []
   users: User[] = []
+  userProjects:any
 
   imageSelect: File
   dataRes: any
-
-
+  role:number
+  
 
 
   projectForm = this.fb.group(
@@ -78,8 +85,9 @@ export class ProjectComponent implements OnInit {
     this.service.getProjects().subscribe((res) => {
 
       this.projects = res.data
-  
+      console.log(this.projects);
       
+
       this.service.project = res.data
       for (let i = 0; i < this.projects.length; i++) {
         if (this.projects[i].logo) {
@@ -100,8 +108,8 @@ export class ProjectComponent implements OnInit {
       this.clients = res.data
       this.service.clients = res.data
     }, (error) => {
-      this.route.navigate(['login'])
-      localStorage.clear()
+      // this.route.navigate(['login'])
+      // localStorage.clear()
     })
   }
 
@@ -116,12 +124,20 @@ export class ProjectComponent implements OnInit {
     })
   }
 
+  getUserProjects(){
+
+    this.userService.getUserProject().subscribe(
+      (res) => {
+        this.userProjects = res.data
+      }
+    )
+  }
 
   addProject(form: any) {
     let start = this.projectForm.value.start_date ? Date.parse(this.projectForm.value.start_date) : Date.parse(new Date().toISOString().slice(0, 10))
     let end = this.projectForm.value.end_date ? Date.parse(this.projectForm.value.end_date) : start
     let diff = end >= start //end date nn puo essere minore della start date
-    
+
 
     let newProj = this.projectForm.value
     if (this.projectForm.status == 'INVALID') {
@@ -146,11 +162,11 @@ export class ProjectComponent implements OnInit {
   }
   // take file
   uploadImg(event: any) {
-    
+
     this.imageSelect = event.target.files[0]
-    
+
   }
-  
+
   // multipart upload
   saveImg() {
 
@@ -167,7 +183,7 @@ export class ProjectComponent implements OnInit {
 
       })
   }
-// modale cropper img
+  // modale cropper img
   openModalImg(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
@@ -181,7 +197,7 @@ export class ProjectComponent implements OnInit {
     this.service.currentProject = id
     this.route.navigate(['home/updateProject', id])
   }
-// modale di creazione
+  // modale di creazione
   openCreateModal(content: any) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then((result) => {
@@ -191,15 +207,15 @@ export class ProjectComponent implements OnInit {
       });
   }
 
-// percentuali progress 
-  getChartPercent(value:number) {
+  // percentuali progress 
+  getChartPercent(value: number) {
 
-    return  this.chartPercent = new Chart(value).chartPie
-    
+    return this.chartPercent = new Chart(value).chartPie
+
   }
 
-  
-  back(){
+
+  back() {
     this.route.navigate(['home/client'])
   }
 
@@ -207,43 +223,65 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
 
+  
+    
     const user = JSON.parse(localStorage.getItem('user'))
-    if (user) {
-      
-      
-      if (this.clientService.idClient) {
+    this.user = user
+    const role = user.role
+    this.role = role
+    this.service.role = this.role
 
-        this.idClient = this.clientService.idClient
+    if (this.clientService.idClient) {
+
+      this.idClient = this.clientService.idClient
       this.clientService.getClient(this.idClient).subscribe((res) => {
 
         this.client = res.data
         if (this.client.logo) {
-          
+
           this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
           console.log(this.client);
         }
-        
-        
+
+
       })
     }
 
-    
-    //get di tutti gli user da userService
-    this.getAllUsers()
-    
-    //get di tutti i client dal clientService
-    this.getAllClients()
-    
     //get di tutti i progetti dal service e controllo immagine
-    this.getAllProjects()
-  }else{
-    alert('ccccccoddí')
-  }
-    
-    
-    
-    
-    
+   
+    if (role == 2) {
+
+      this.getAllProjects()
+      
+
+    } else if (role == 0) {
+
+      this.getUserProjects()
+      this.userService.retrieveUser(this.user.id).subscribe(
+        (res)=>{
+
+          if (res) {
+            
+            this.userRetrive = res
+          }
+        }
+      )
+     
+    } else if (role == 1) {
+
+      this.getAllProjects()
+
+      //get di tutti gli user da userService
+      this.getAllUsers()
+
+      //get di tutti i client dal clientService
+      this.getAllClients()
+    }
+
+
+
+
+
   }
 }
 

@@ -40,10 +40,18 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.loginService.checkLogin(this.loginForm.value.user, this.loginForm.value.password).subscribe((res) => {
      
-      const userObj = JSON.stringify(res.data)
-      // localStorage.setItem('token', res.data.token);//lascio per debug probabilmente da eliminare
-      localStorage.setItem('user', userObj)
-      this.router.navigate(['home']);
+
+      if (res) {
+        
+        const userObj = JSON.stringify(res.data)
+        // localStorage.setItem('token', res.data.token);//lascio per debug probabilmente da eliminare
+        localStorage.setItem('user', userObj)
+  
+      
+            this.router.navigate(['home/project']);
+      }
+      
+      
     },
       (error) => {
         this.error();

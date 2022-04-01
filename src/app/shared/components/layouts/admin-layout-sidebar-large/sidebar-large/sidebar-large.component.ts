@@ -22,11 +22,11 @@ export class SidebarLargeComponent implements OnInit {
   psContainerSecSidebar: PerfectScrollbarDirective;
 
   constructor(public router: Router, public navService: NavigationService) {
-    setTimeout(() => {
-      this.psContainerSecSidebar = this.psContainers.toArray()[1];
-    });
+    const user = JSON.parse(localStorage.getItem('user'))
+    this.user = user
   }
 
+  user:any
   ngOnInit() {
     this.updateSidebar();
     // CLOSE SIDENAV ON ROUTE CHANGE

@@ -11,6 +11,7 @@ import { debounceTime } from 'rxjs/operators';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { environment } from 'src/environments/environment';
 import { ClientService } from 'src/app/services/client/client.service';
+import { ProjectService } from 'src/app/services/project/project.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -19,18 +20,22 @@ import { ClientService } from 'src/app/services/client/client.service';
 export class UserComponent implements OnInit {
 
   constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService,private clientService:ClientService) { this.cropperSettings = new CropperSettings();
+    private toastr: ToastrService,private clientService:ClientService,private pService:ProjectService) { this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
   }
- 
+  
+  role:number
+  user:any
   users:User[]
   filteredUsers;
   searchControl: FormControl = new FormControl();
   confirmResut;
   data: any;
   cropperSettings: CropperSettings;
+
+
   profileForm = new FormGroup({
     name: new FormControl('',Validators.required),
     surname: new FormControl('',Validators.required),
@@ -44,14 +49,23 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
 
-   this.retrieveUsers();
-   this.searchControl.valueChanges
-    .pipe(debounceTime(200))
-    .subscribe(value => {
-      this.filerData(value);
-    });
+    const user = JSON.parse(localStorage.getItem('user'))
+    this.user = user
+    this.role = user.role
 
-    this.clientService.idClient = null
+    if (this.pService.role == 1) {
+      
+      this.retrieveUsers();
+      this.searchControl.valueChanges
+       .pipe(debounceTime(200))
+       .subscribe(value => {
+         this.filerData(value);
+       });
+   
+       this.clientService.idClient = null
+    }else{
+      this.route.navigate([`home/homeUser/${this.user.id}`])
+    }
   }
  
   retrieveUsers(){

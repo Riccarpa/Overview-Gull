@@ -26,7 +26,7 @@ export class UserService {
   
     token:any
     url = `${environment.apiURL}/users` 
-    
+  url2 = `${environment.apiURL}/user` 
     
     getUsers():Observable<any>{
     const headers = new HttpHeaders({
@@ -35,6 +35,16 @@ export class UserService {
     })
     
     return this.http.get(this.url,{headers: headers});
+  }
+// get progetti collaboratore
+  getUserProject(): Observable<any> {
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    }
+    return this.http.get(`${this.url2}/projects`, { headers })
+
   }
 
   retrieveUser(id:any){

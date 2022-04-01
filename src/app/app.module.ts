@@ -22,6 +22,8 @@ import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
 import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
+import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
+import { CommonModule } from '@angular/common';
 
 
 
@@ -39,6 +41,8 @@ import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
     FilterClientPipe,
     FilterUsersPipe,
     FilterProjectPipe,
+    HomeUserComponent,
+
  
   ],
   imports: [
@@ -53,7 +57,9 @@ import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
     NgxEchartsModule,
     NgxDatatableModule,
     NgbModule,
-    ImageCropperModule
+    ImageCropperModule,
+    CommonModule,
+  
    
   ],
   providers: [],

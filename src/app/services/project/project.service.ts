@@ -14,6 +14,7 @@ import { UserService } from '../user/user.service';
 })
 export class ProjectService {
 
+  role:number
   token:any
   currentUser:any //utente loggato
   url = environment.apiURL + '/projects'
@@ -39,8 +40,6 @@ export class ProjectService {
   // get projects all
   getProjects(): Observable<any> {
 
-  
-    
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`

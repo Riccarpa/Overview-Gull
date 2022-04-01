@@ -21,7 +21,7 @@
 
 <!-- sezione card  -->
 
-<div class="row" *ngIf="project ">
+<div class="row" *ngIf="project && role == 1">
 
 
   <div (click)="modal_client_id = true;openCreateModal(modalConfirm)" class=" col-lg-3 col-md-6 col-sm-6">
@@ -82,7 +82,7 @@
 
 <!-- sezione form -->
 
-<div class="col-md-12 p-0">
+<div class="col-md-12 p-0" *ngIf="role == 1">
   <div class="card mb-4">
     <div class="card-body">
       <div class="card-title mb-3 d-flex justify-content-between">
@@ -328,6 +328,160 @@
               (click)="visibleModal();updateProject();modal.close()">Ok</btn-loading>
           </div>
         </ng-template>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- project manager -->
+
+<div *ngIf="project && role == 2" class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
+  <div class="card-body text-center d-flex flex-row align-items-center ">
+    <div class="avatar box-shadow-2 m-0 mr-2">
+      <img *ngIf="project.logo == null" src="assets/images/project.png" alt="">
+      <img *ngIf="project.logo !== null" src="{{url}}{{project.logo}}" alt="">
+    </div>
+    <h2>{{project.name}}</h2>
+  </div>
+
+  <div *ngIf="associateClient" class="card-body text-center d-flex flex-row align-items-center ">
+    <div class="avatar box-shadow-2 m-0 mr-2">
+      <img *ngIf="associateClient.logo" src="{{url}}{{associateClient.logo}}" alt="">
+      <img else src="assets/images/stock.jpg" alt="">
+    </div>
+    <h2>{{associateClient.name}} </h2>
+  </div>
+</div>
+
+<div class="row" *ngIf="project && role ==2">
+
+
+  <div class=" col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+      <div class="card-body text-left">
+        <i class="i-Business-Man"></i>
+        <div class=" content text-left ">
+          <p class=" text-center mt-2 mb-0">Client</p>
+          <p *ngIf="associateClient" class="text-primary  text-left text-18 line-height-1 mb-2">{{associateClient.name}}
+          </p>
+          <p *ngIf="!associateClient" class="text-primary  text-left text-18 line-height-1 mb-2">nessuno</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div  class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+      <div class="card-body text-center">
+        <i class="i-Money-2"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Revenue</p>
+          <p class="text-primary text-20 line-height-1 mb-2">{{project.revenue}}$</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div  class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+      <div class="card-body text-center">
+        <i class="i-Loading"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Progress</p>
+          <p *ngIf="project.progress" class="text-primary text-20 line-height-1 mb-2">{{project.progress}}%</p>
+          <p *ngIf="project.progress == 0 || project.progress == null " class="text-primary text-20 line-height-1 mb-2">
+            0%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div  class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+      <div class="card-body text-center">
+        <i class="i-Business-Mens"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Users</p>
+          <p *ngIf="associateUser" class="text-primary text-20 line-height-1 mb-2">{{associateUser}}</p>
+          <p *ngIf="associateUser == 0" class="text-primary text-20 line-height-1 mb-2">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 p-0" *ngIf="role == 2">
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <form [formGroup]="projectForm">
+        <div class="row flex-row-reverse">
+
+          <!-- input name -->
+          <div class="col-md-6 form-group mb-3 position-relative">
+            <label for="name">project</label>
+            <input disabled minlength="3" maxlength="40" type="text" class="form-control" name="name" formControlName="name">
+          </div>
+
+          <!-- clienti -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="picker1">client</label>
+              <input disabled type="text" class="form-control" value="{{associateClient ? associateClient.name : '' }}">
+          </div>
+
+          <!-- revenue -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="revenue">revenue</label>
+            <input disabled min="0" class="form-control" type="number" name="revenue" formControlName="revenue">
+          </div>
+          <!-- progress -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="picker1">progress</label>
+            <input disabled type="number" min="0" class="form-control" formControlName="progress" name="progress">
+
+          </div>
+
+          <!-- end-date -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="picker1">end date</label>
+            <input disabled type="date" class="form-control" formControlName="end_date">
+          </div>
+
+          <!-- start-date -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="picker1">start date</label>
+            <input disabled type="date" class="form-control" formControlName="start_date">
+          </div>
+
+          <!-- status -->
+          <div class="col-md-6 form-group mb-3">
+            <label for="status">status</label>
+            <select disabled class="form-control" type="number" name="status" formControlName="status" placeholder="status">
+              <option [value]="0">pending</option>
+              <option [value]="1">open</option>
+              <option [value]="2">close</option>
+            </select>
+          </div>
+
+          <!-- collaboratori -->
+          <div class="col-lg-6 col-md-6 p-0 row flex-row">
+  
+            <div class="ml-1 btn btn-primary btn-rounded d-flex  align-items-center py-2 mb-1 collabs"
+              *ngFor="let u of arrayUsersIds">
+              <p class="m-0">
+                {{u.name}} {{u.surname}}
+              </p>
+            </div>
+  
+  
+  
+        </div>
+          
+        </div>
+
+
       </form>
 
     </div>
