@@ -6,8 +6,11 @@
     <div class="col-12" *ngFor="let sprint of currentSprints">
         <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
             <div class="card-body">
-                <div class="card-title mb-3 d-flex justify-content-start align-items-center w-100">
+                <div class="card-title mb-3 d-flex justify-content-start w-100">
                     <h4>Sprint name: {{sprint.name}}</h4>
+                    <button class="btn bg-transparent ml-2 p-0">
+                        <i class="text-20 i-File-Edit"></i>
+                    </button>
                 </div>
             </div>
             <div class="card-body" *ngIf="sprint">

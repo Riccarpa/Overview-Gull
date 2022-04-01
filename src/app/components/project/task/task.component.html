@@ -8,8 +8,16 @@
         <div class="card o-hidden">
             <ngx-datatable style="height: auto; box-shadow: none" class="material fullscreen" [columnMode]="'force'"
                 [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="currentTasks">
-                <ngx-datatable-column name="name">
+                <ngx-datatable-column name="name" [width]="200">
                     <ng-template ngx-datatable-header-template>Task name</ng-template>
+                    <ng-template ngx-datatable-cell-template let-row="row">
+                        <span class="d-inline-block" style="width: 80%;">
+                            {{row.name}}
+                        </span>
+                        <button class="btn bg-transparent ml-2 p-0">
+                            <i class="text-20 i-Clouds" style="color: blue;"></i>
+                        </button>
+                    </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column>
                     <ng-template ngx-datatable-header-template>Assignee</ng-template>
