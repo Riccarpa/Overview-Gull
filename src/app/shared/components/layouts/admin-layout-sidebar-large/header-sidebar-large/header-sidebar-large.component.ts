@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationService } from '../../../../services/navigation.service';
 import { SearchService } from '../../../../services/search.service';
 import { AuthService } from '../../../../services/auth.service';
+import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user/user.service';
+import { environment } from 'src/environments/environment';
+import { ProjectService } from 'src/app/services/project/project.service';
+
 
 @Component({
   selector: 'app-header-sidebar-large',
@@ -15,56 +20,44 @@ export class HeaderSidebarLargeComponent implements OnInit {
     constructor(
       private navService: NavigationService,
       public searchService: SearchService,
-      private auth: AuthService
+      private auth: AuthService,
+      private route:Router,
+      private userService:UserService,
+      private projectService:ProjectService
     ) {
-      this.notifications = [
-        {
-          icon: 'i-Speach-Bubble-6',
-          title: 'New message',
-          badge: '3',
-          text: 'James: Hey! are you busy?',
-          time: new Date(),
-          status: 'primary',
-          link: '/chat'
-        },
-        {
-          icon: 'i-Receipt-3',
-          title: 'New order received',
-          badge: '$4036',
-          text: '1 Headphone, 3 iPhone x',
-          time: new Date('11/11/2018'),
-          status: 'success',
-          link: '/tables/full'
-        },
-        {
-          icon: 'i-Empty-Box',
-          title: 'Product out of stock',
-          text: 'Headphone E67, R98, XL90, Q77',
-          time: new Date('11/10/2018'),
-          status: 'danger',
-          link: '/tables/list'
-        },
-        {
-          icon: 'i-Data-Power',
-          title: 'Server up!',
-          text: 'Server rebooted successfully',
-          time: new Date('11/08/2018'),
-          status: 'success',
-          link: '/dashboard/v2'
-        },
-        {
-          icon: 'i-Data-Block',
-          title: 'Server down!',
-          badge: 'Resolved',
-          text: 'Region 1: Server crashed!',
-          time: new Date('11/06/2018'),
-          status: 'danger',
-          link: '/dashboard/v3'
-        }
-      ];
+     
+     
     }
   
+    currentUser:any
+    role:number
     ngOnInit() {
+
+      // const user = JSON.parse(localStorage.getItem('user'))
+
+      // setTimeout(() => {
+
+      //   if (user) {
+
+      //     this.userService.retrieveUser(user.id).subscribe(
+
+      //       (res) => {
+
+      //         this.currentUser = res
+      //         if (this.currentUser.data.picture && this.currentUser.data.picture.includes('.png')) {
+      //           this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.png?r=${this.projectService.randomNumber()}`
+      //         } else {
+      //           this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.jpg?r=${this.projectService.randomNumber()}`
+      //         }
+      //         this.role = user.role
+      //         console.log(res, 'res nella sidebar');
+
+
+      //       }
+      //     )
+      //   }
+      // }, 1000);
+      
     }
   
     toggelSidebar() {
@@ -80,7 +73,9 @@ export class HeaderSidebarLargeComponent implements OnInit {
     }
   
     signout() {
-      this.auth.signout();
+      localStorage.clear()
+      this.route.navigate(['/'])
+
     }
 
 }

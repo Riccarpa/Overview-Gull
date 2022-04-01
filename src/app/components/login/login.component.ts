@@ -10,9 +10,24 @@ import { ProjectService } from 'src/app/services/project/project.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router, private loginService: LoginService, private projectService: ProjectService) { }
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private projectService: ProjectService,
+  ) { 
+    const user = localStorage.getItem('user')
+
+    if (user) {
+     
+      this.router.navigate(['home/project'])
+      
+    }
+  }
 
   ngOnInit(): void {
+    
+   
+    
   }
 
   loginForm = new FormGroup({
@@ -24,8 +39,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.loginService.checkLogin(this.loginForm.value.user, this.loginForm.value.password).subscribe((res) => {
-      localStorage.setItem('token', res.data.token);
-      this.router.navigate(['home/project']);
+     
+      const userObj = JSON.stringify(res.data)
+      // localStorage.setItem('token', res.data.token);//lascio per debug probabilmente da eliminare
+      localStorage.setItem('user', userObj)
+      this.router.navigate(['home']);
     },
       (error) => {
         this.error();

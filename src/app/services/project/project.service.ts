@@ -6,13 +6,16 @@ import { Client } from 'src/app/models/client.model';
 import { User } from 'src/app/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+import { ClientService } from '../client/client.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  token: any
+  token:any
+  currentUser:any //utente loggato
   url = environment.apiURL + '/projects'
   updatedProject: any
   currentProject: any // id progetto singolo corrente
@@ -20,14 +23,24 @@ export class ProjectService {
   clients: Client[]
   users: User[]
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {
+  constructor(
+    private http: HttpClient, 
+    private toastr: ToastrService,
+    ) {
 
-    this.token = localStorage.getItem('token')
+    const user = JSON.parse(localStorage.getItem('user'))
+   if (user) {
+     
+     this.currentUser = user
+     this.token = user.token
+   }
   }
 
   // get projects all
   getProjects(): Observable<any> {
 
+  
+    
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`

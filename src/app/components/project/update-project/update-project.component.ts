@@ -166,7 +166,7 @@ export class UpdateProjectComponent implements OnInit {
       if (e.id === id) {// se trova doppione elimina 
 
         this.arrayUsersIds.splice(i, 1)
-        this.service.successBar('user rimosso con successo.')
+        this.service.warningBar('user rimosso con successo, Ricordati di fare Update per salvare le modifiche')
         break
       }
 

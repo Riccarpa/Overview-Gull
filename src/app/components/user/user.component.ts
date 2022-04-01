@@ -60,6 +60,8 @@ export class UserComponent implements OnInit {
       this.filteredUsers = res.data
       console.log(res)
       for(let i=0;i<this.users.length;i++){
+        console.log(this.users[i].role);
+        
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
           this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
         }else{

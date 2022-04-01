@@ -23,14 +23,14 @@ export class AuthService {
     return of({});
   }
 
-  signin(credentials) {
-    this.authenticated = true;
-    this.store.setItem("demo_login_status", true);
-    return of({}).pipe(delay(1500));
-  }
+  // signin(credentials) {
+  //   this.authenticated = true;
+  //   this.store.setItem("demo_login_status", true);
+  //   return of({}).pipe(delay(1500));
+  // }
   signout() {
     this.authenticated = false;
-    this.store.setItem("demo_login_status", false);
-    this.router.navigateByUrl("/sessions/signin");
+    // this.store.setItem("demo_login_status", false);
+    // this.router.navigateByUrl("/sessions/signin");
   }
 }

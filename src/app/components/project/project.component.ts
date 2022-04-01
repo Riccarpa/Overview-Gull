@@ -89,7 +89,7 @@ export class ProjectComponent implements OnInit {
       }
 
     }, (error) => {
-      this.route.navigate(['/'])
+      // this.route.navigate(['login'])
     })
   }
 
@@ -100,7 +100,8 @@ export class ProjectComponent implements OnInit {
       this.clients = res.data
       this.service.clients = res.data
     }, (error) => {
-      this.route.navigate(['/'])
+      this.route.navigate(['login'])
+      localStorage.clear()
     })
   }
 
@@ -111,7 +112,7 @@ export class ProjectComponent implements OnInit {
       this.users = res.data
       this.service.users = res.data
     }, (error) => {
-      this.route.navigate(['/'])
+      // this.route.navigate(['login'])
     })
   }
 
@@ -206,9 +207,13 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.clientService.idClient) {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (user) {
+      
+      
+      if (this.clientService.idClient) {
 
-      this.idClient = this.clientService.idClient
+        this.idClient = this.clientService.idClient
       this.clientService.getClient(this.idClient).subscribe((res) => {
 
         this.client = res.data
@@ -217,21 +222,25 @@ export class ProjectComponent implements OnInit {
           this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
           console.log(this.client);
         }
-
-
+        
+        
       })
     }
 
-    //get di tutti i progetti dal service e controllo immagine
-    this.getAllProjects()
-
-    //get di tutti i client dal clientService
-    this.getAllClients()
-
+    
     //get di tutti gli user da userService
     this.getAllUsers()
-
-   
+    
+    //get di tutti i client dal clientService
+    this.getAllClients()
+    
+    //get di tutti i progetti dal service e controllo immagine
+    this.getAllProjects()
+  }else{
+    alert('ccccccoddí')
+  }
+    
+    
     
     
     

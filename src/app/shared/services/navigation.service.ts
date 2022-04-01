@@ -47,7 +47,17 @@ export class NavigationService {
     selectedItem: IMenuItem;
     
     constructor() {
+
+        this.menuItems = new BehaviorSubject<IMenuItem[]>(this.publishNavigationChange(this.role));
+        // navigation component has subscribed to this Observable
+        this.menuItems$ = this.menuItems.asObservable();
+     
     }
+    user = JSON.parse(localStorage.getItem('user'))
+    role = this.user.role
+    menu: IMenuItem[] = []
+    menuItems:any
+    menuItems$:any
 
     defaultMenu: IMenuItem[] = [
         
@@ -75,24 +85,51 @@ export class NavigationService {
         
     ];
 
+    userMenu:  IMenuItem[] =[
+
+        {
+            name: 'User',
+            type: 'link',
+            state: 'user',
+            icon: 'i-Boy',
+
+        },
+        {
+            name: 'Projects',
+            type: 'link',
+            state: 'project',
+            icon: 'i-Bar-Chart',
+
+        }, 
+    ];
+
+    pmMenu: IMenuItem[] =[
+
+        {
+            name: 'Projects',
+            type: 'link',
+            state: 'project',
+            icon: 'i-Bar-Chart',
+
+        },
+    ];
 
     // sets iconMenu as default;
-    menuItems = new BehaviorSubject<IMenuItem[]>(this.defaultMenu);
-    // navigation component has subscribed to this Observable
-    menuItems$ = this.menuItems.asObservable();
+   
 
     // You can customize this method to supply different menu for
     // different user type.
-    // publishNavigationChange(menuType: string) {
-    //   switch (userType) {
-    //     case 'admin':
-    //       this.menuItems.next(this.adminMenu);
-    //       break;
-    //     case 'user':
-    //       this.menuItems.next(this.userMenu);
-    //       break;
-    //     default:
-    //       this.menuItems.next(this.defaultMenu);
-    //   }
-    // }
+    publishNavigationChange(role: number) {
+      switch (role) {
+        case 2:
+            return this.pmMenu
+        case 0:
+            return this.userMenu
+       
+        default:
+            return  this.defaultMenu
+      }
+
+
+    }
 }
