@@ -15,16 +15,48 @@ export class FinancialComponent implements OnInit {
   id = this.route.snapshot.paramMap.get('id');
   user:any
   activities:any
+  monthlyLogs:any
+  month:any
+  year:any
+  currMonthLog:any
+
   ngOnInit(): void {
+    this.month=new Date().getMonth() +1
+    this.year=new Date().getFullYear()
+
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
       console.log('user',this.user)
     })
+
     this.aService.getActivities().subscribe((res:any)=>{
       this.activities = res.data;
       console.log('activities',this.activities)
     })
+
+    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+      this.monthlyLogs = res.data;
+      console.log('monthlyLog',this.monthlyLogs)
+      this.getCurrMonthLog();
+    })
+
+    
+    
   }
   
+  getCurrMonthLog(){
+    if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
+      this.currMonthLog =  this.monthlyLogs[this.year][this.month]
+      console.log('CurrMonth',this.currMonthLog)
+    }else{
+      
+      let date = `${this.year.toString()}-0${this.month.toString()} `
+      console.log(parseInt(this.id))
+      this.fService.createMonthlyLog(parseInt(this.id),date).subscribe((res)=>{
+        this.currMonthLog = res.data;
+      })
+    }
+
+  }
 
 }
