@@ -1,7 +1,8 @@
 <div class="d-flex justify-content-end w-100 mb-4">
-    <button class="btn btn-success px-3 m-3">Crea Nuovo Sprint</button>
+    <button class="btn btn-success px-3 m-3" (click)="openModalAddSprint(modalBasic)">Crea Nuovo Sprint</button>
 </div>
 
+<!-- lista sprint -->
 <div class="row">
     <div class="col-12" *ngFor="let sprint of currentSprints">
         <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
@@ -19,3 +20,48 @@
         </div>
     </div>
 </div>
+
+<!-- modale aggiunta/modifica sprint -->
+<ng-template #modalBasic let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="sprintForm">
+            <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                    <label for="name">Nome sprint</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
+                        formControlName="name">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="start_date">Data inizio</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date"
+                        formControlName="start_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="end_date">Data fine</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="effort_days">Effort</label>
+                    <input type="number" class="form-control" id="effort_days" name="effort_days"
+                        placeholder="Inserisci effort" formControlName="effort_days">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="revenue">Ricavi</label>
+                    <input type="number" class="form-control" id="revenue" name="revenue" formControlName="revenue">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="titleModal == 'Aggiungi Sprint'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="addSprint()">Salva</button>
+        <button *ngIf="titleModal == 'Modifica Sprint'" type="button" class="btn btn-outline-dark btn-rounded"
+            (click)="editSprint()">Salva</button>
+    </div>
+</ng-template>
