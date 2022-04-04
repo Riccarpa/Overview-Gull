@@ -15,6 +15,7 @@ export class SprintService {
 
   token: any;
   url = environment.apiURL + '/sprints';
+  currentSprint: any;
 
   getSprints(): Observable<any> {
     const url = this.url;
@@ -54,5 +55,25 @@ export class SprintService {
     });
 
     return this.http.post(url, body, { headers: headers });
+  }
+
+  // modifica sprint
+  updateSprint(name: string, start_date: Date, end_date: Date, effort_days: number, revenue: number): Observable<any> {
+    const url = `${this.url}/${this.currentSprint}`;
+
+    let body = {
+      "name": name,
+      "start_date": start_date,
+      "end_date": end_date,
+      "effort_days": effort_days,
+      "revenue": revenue,
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+    });
+
+    return this.http.patch(url, body, { headers: headers });
   }
 }

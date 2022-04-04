@@ -27,6 +27,7 @@ export class SprintComponent implements OnInit {
   currentSprintsIds: number[];
   currentSprints: Sprint[];
   titleModal: string;
+  sprint: Sprint;
 
   sprintForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -91,6 +92,48 @@ export class SprintComponent implements OnInit {
             this.getSprints();
           });
           this.projectService.successBar('Sprint aggiunto con successo!');
+        });
+    }
+  }
+
+  // richiama la modale per modificare lo sprint
+  openModalEditSprint(id: any, content: any) {
+    this.sprintService.currentSprint = id;
+    this.titleModal = "Modifica Sprint";
+    this.sprintService.getSprint(id).subscribe((res) => {
+      this.sprint = res.data;
+
+      this.sprintForm.setValue({
+        name: this.sprint.name,
+        start_date: this.sprint.start_date,
+        end_date: this.sprint.end_date,
+        effort_days: this.sprint.effort_days,
+        revenue: this.sprint.revenue,
+      });
+    })
+
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(() => {
+        console.log('ok');
+      }, () => {
+        console.log('annullato');
+      });
+  }
+
+  // modifica lo sprint selezionato
+  editSprint() {
+    if (this.sprintForm.status == 'INVALID') {
+      this.projectService.warningBar('Tutti i campi sono obbligatori');
+    } else {
+      const sprint = this.sprintForm.value;
+      this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue)
+        .subscribe(() => {
+          this.modalService.dismissAll();
+          this.projectService.successBar('Sprint modificato con successo!');
+          this.projectService.getUpdateProject().subscribe((res) => {
+            this.currentSprintsIds = res.data.sprint_ids;
+            this.getSprints();
+          });
         });
     }
   }
