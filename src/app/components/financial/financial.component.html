@@ -1,13 +1,44 @@
-<div *ngIf="days">
-  <div class="mb-2">
-    <button (click)="prevMonth()">prev</button>
-    <button (click)="nextMonth()">next</button>
+<div *ngIf="days" class="card">
+  <div class="table-head p-4 d-flex align-items-center">
+    <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
+    <div class="month m-2">
+      <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+    </div>
+    <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
   </div>
 
-  <div *ngFor="let day of days">
-    <span>{{ day.date | date: "MM/dd/yy" }}</span>
-    <span class="ml-3" *ngIf="day.activity_days_array[0]">{{
-      day.activity_days_array[0].activity_name
-    }}</span>
+  <div class="table-body p-4">
+    <div class="table-body-head d-flex align-items-center">
+      <span class="flex-grow-1">Date</span>
+      <span class="flex-grow-1">Select activity</span>
+      <span class="flex-grow-1">Hours</span>
+    </div>
+    <hr />
+
+    <div *ngFor="let day of days">
+      <div class="d-flex align-items-center">
+        <span class="flex-grow-1"
+          ><strong>{{ day.date | date: "d EEEE" }}</strong></span
+        >
+        <div class="flex-grow-1" *ngIf="day.activity_days_array[0]">
+          <span
+            class="d-block"
+            *ngFor="let activity of day.activity_days_array"
+          >
+            {{ activity.activity_name }}
+          </span>
+        </div>
+
+        <div class="flex-grow-1" *ngIf="day.activity_days_array[0]">
+          <span
+            class="d-block"
+            *ngFor="let activity of day.activity_days_array"
+          >
+            {{ activity.hours_spent }}
+          </span>
+        </div>
+      </div>
+      <hr />
+    </div>
   </div>
 </div>

@@ -21,6 +21,7 @@ export class FinancialComponent implements OnInit {
   year:any
   currMonthLog:any
   days:any
+  monthAndYear:any
 
   ngOnInit(): void {
     this.month=new Date().getMonth() +1
@@ -28,17 +29,17 @@ export class FinancialComponent implements OnInit {
 
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-      console.log('user',this.user)
+      // console.log('user',this.user)
     })
 
     this.aService.getActivities().subscribe((res:any)=>{
       this.activities = res.data;
-      console.log('activities',this.activities)
+      // console.log('activities',this.activities)
     })
 
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
-      console.log('monthlyLogs',this.monthlyLogs)
+      // console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
     })
 
@@ -52,9 +53,9 @@ export class FinancialComponent implements OnInit {
 
     if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
       this.currMonthLog =  this.monthlyLogs[this.year][this.month]
-      console.log('CurrMonth',this.currMonthLog)
+      // console.log('CurrMonth',this.currMonthLog)
       this.days =  this.monthlyLogs[this.year][this.month].daily_logs_array
-      console.log(this.days)
+      // console.log(this.days)
     }else{
       if(this.month<10){
         var date = `${this.year.toString()}-0${this.month.toString()} `
@@ -81,7 +82,7 @@ export class FinancialComponent implements OnInit {
     }
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
-      console.log('monthlyLogs',this.monthlyLogs)
+      // console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
     })
     
@@ -95,7 +96,7 @@ export class FinancialComponent implements OnInit {
       }
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
-      console.log('monthlyLogs',this.monthlyLogs)
+      // console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
     })
 
