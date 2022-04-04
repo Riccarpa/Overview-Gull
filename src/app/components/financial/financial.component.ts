@@ -81,11 +81,8 @@ export class FinancialComponent implements OnInit {
 
       this.month =this.month-1
     }
-    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
-      this.monthlyLogs = res.data;
-      // console.log('monthlyLogs',this.monthlyLogs)
-      this.getCurrMonthLog();
-    })
+ 
+    this.getCurrMonthLog();
     
   }
   nextMonth(){
@@ -97,11 +94,8 @@ export class FinancialComponent implements OnInit {
     }else{
         this.month= this.month+1
       }
-    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
-      this.monthlyLogs = res.data;
-      // console.log('monthlyLogs',this.monthlyLogs)
-      this.getCurrMonthLog();
-    })
+   
+    this.getCurrMonthLog();
 
   }
 
