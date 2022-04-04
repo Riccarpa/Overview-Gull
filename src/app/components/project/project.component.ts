@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
 import { ClientService } from 'src/app/services/client/client.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ProductService } from 'src/app/shared/services/product.service';
@@ -33,8 +34,8 @@ export class ProjectComponent implements OnInit {
   cropperSettings: CropperSettings;
   idClient: number //id cliente cliccato dalla pagina client da admin ricevuto dal client service
   client: Client
-  user:any//utente loggato (da storage)
-  userRetrive:any // retrive user loggato 
+  user: any//utente loggato 
+  userRetrive: any // retrive user loggato 
   url = environment.apiURL2
 
 
@@ -46,24 +47,26 @@ export class ProjectComponent implements OnInit {
     private fb: FormBuilder,
     private clientService: ClientService,
     private userService: UserService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private interc: ReqInterceptInterceptor
+    
+    ) {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
-    console.log('COSTRUTTORE');
-    
+
+
   }
 
   projects: Project[] = []
   clients: Client[] = []
   users: User[] = []
-  userProjects:any
-
+  userProjects: any
   imageSelect: File
   dataRes: any
-  role:number
-  
+  role: number
+
 
 
   projectForm = this.fb.group(
@@ -86,7 +89,7 @@ export class ProjectComponent implements OnInit {
 
       this.projects = res.data
       console.log(this.projects);
-      
+
 
       this.service.project = res.data
       for (let i = 0; i < this.projects.length; i++) {
@@ -124,7 +127,7 @@ export class ProjectComponent implements OnInit {
     })
   }
 
-  getUserProjects(){
+  getUserProjects() {
 
     this.userService.getUserProject().subscribe(
       (res) => {
@@ -219,69 +222,82 @@ export class ProjectComponent implements OnInit {
     this.route.navigate(['home/client'])
   }
 
+  ngOnDestroy(){
+    
+    
+    
+    
+  }
 
 
   ngOnInit() {
 
-  
+
+
+
+    this.user = this.interc.takeRole()
+    this.role = this.user.role
     
-    const user = JSON.parse(localStorage.getItem('user'))
-    this.user = user
-    const role = user.role
-    this.role = role
-    this.service.role = this.role
+    
 
-    if (this.clientService.idClient) {
-
-      this.idClient = this.clientService.idClient
-      this.clientService.getClient(this.idClient).subscribe((res) => {
-
-        this.client = res.data
-        if (this.client.logo) {
-
-          this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
-          console.log(this.client);
-        }
+  
 
 
-      })
-    }
+      if (this.clientService.idClient) {
 
-    //get di tutti i progetti dal service e controllo immagine
-   
-    if (role == 2) {
 
-      this.getAllProjects()
-      
+        this.idClient = this.clientService.idClient
+        this.clientService.getClient(this.idClient).subscribe((res) => {
 
-    } else if (role == 0) {
+          this.client = res.data
+          if (this.client.logo) {
 
-      this.getUserProjects()
-      this.userService.retrieveUser(this.user.id).subscribe(
-        (res)=>{
-
-          if (res) {
-            
-            this.userRetrive = res
+            this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
+            console.log(this.client);
           }
-        }
-      )
-     
-    } else if (role == 1) {
-
-      this.getAllProjects()
-
-      //get di tutti gli user da userService
-      this.getAllUsers()
-
-      //get di tutti i client dal clientService
-      this.getAllClients()
-    }
 
 
+        })
+      }
+
+
+      if (this.role === 2) {
+
+
+        this.getAllProjects()
+
+
+      } else if (this.role === 0) {
+
+        this.getUserProjects()
+        this.userService.retrieveUser(this.user.id).subscribe(
+          (res) => {
+
+            if (res) {
+
+              this.userRetrive = res.data
+              console.log(this.userRetrive,'log nel on init project to collab');
+              
+            }
+          }
+        )
+
+      } else if (this.role === 1) {
+
+        this.getAllProjects()
+
+        //get di tutti gli user da userService
+        this.getAllUsers()
+
+        //get di tutti i client dal clientService
+        this.getAllClients()
+      }
 
 
 
+
+
+    
   }
 }
 

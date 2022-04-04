@@ -6,8 +6,6 @@ import { Client } from 'src/app/models/client.model';
 import { User } from 'src/app/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
-import { ClientService } from '../client/client.service';
-import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,45 +25,27 @@ export class ProjectService {
   constructor(
     private http: HttpClient, 
     private toastr: ToastrService,
-    ) {
-
-    const user = JSON.parse(localStorage.getItem('user'))
-   if (user) {
-     
-     this.currentUser = user
-     this.token = user.token
-   }
-  }
+    ) {}
 
   // get projects all
   getProjects(): Observable<any> {
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.get(this.url, { headers })
+    return this.http.get(this.url)
   }
 
   // retrive su progetto singolo
   getUpdateProject(): Observable<any> {
 
     let url = `${this.url}/${this.currentProject}`;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
+  
 
-    return this.http.get(url, { headers })
+    return this.http.get(url)
   }
 
   //patch progetto
   updateProject(form: any, projId: number,userIds:any): Observable<any> {
 
-    const headers = {
- 
-      'Authorization': `Bearer ${this.token}`
-    }
+    
 
     let body = {
       'name': form.name,
@@ -82,35 +62,26 @@ export class ProjectService {
     }
 
    
-    return this.http.patch(`${this.url}/${projId}`, body, { headers })
+    return this.http.patch(`${this.url}/${projId}`, body)
   }
 
   // post upload image
-  uploadImagePost(file:any){
+  uploadImagePost(file: any): Observable<any>{
 
     let url = environment.apiURL + '/uploadImage'
 
     const fd = new FormData()
     fd.append('image',file,file.name)
-    const headers = {
-      
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.post(`${url}`, fd, { headers })
+    
+    return this.http.post(`${url}`, fd)
 
   }
 
 
   // delete project
-  deleteProject(id: number) {
+  deleteProject(id: number): Observable<any> {
 
-
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.delete(`${this.url}/${id}`, { headers })
-
+    return this.http.delete(`${this.url}/${id}`)
   }
 
 
@@ -119,11 +90,6 @@ export class ProjectService {
     
     let todayDate = new Date().toISOString().slice(0, 10);
     
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-
     let body = {
       'name': form.name,
       'status': form.status ? form.status : 0 ,
@@ -138,10 +104,7 @@ export class ProjectService {
        body['logo_path'] = form.logo.message;
     }
 
-   
-    
-    
-    return this.http.post(this.url, body, { headers })
+    return this.http.post(this.url, body)
   }
 
   warningBar(message:string) {

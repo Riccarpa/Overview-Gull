@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 
 export interface IMenuItem {
     id?: string;
@@ -46,21 +47,16 @@ export class NavigationService {
     };
     selectedItem: IMenuItem;
     
-    constructor() {
-        const user = JSON.parse(localStorage.getItem('user'))
-        if (user) {
-            
-            this.menuItems = new BehaviorSubject<IMenuItem[]>(this.publishNavigationChange(user.role));
-            // navigation component has subscribed to this Observable
-            this.menuItems$ = this.menuItems.asObservable();
-        }
+    constructor(private interc:ReqInterceptInterceptor) {
+       
+        
      
     }
 
-
+    user:number
     menu: IMenuItem[] = []
-    menuItems:any
-    menuItems$:any
+    menuItems = new BehaviorSubject<IMenuItem[]>(this.menu);
+    menuItems$ = this.menuItems.asObservable();
 
     defaultMenu: IMenuItem[] = [
         
@@ -126,17 +122,31 @@ export class NavigationService {
    
     // You can customize this method to supply different menu for
     // different user type.
+    // publishNavigationChange(role: number) {
+    //   switch (role) {
+    //     case 2:
+    //         return this.pmMenu
+    //     case 0:
+    //         return this.userMenu
+       
+    //     default:
+    //         return  this.defaultMenu
+    //   }
+
+
+    // }
+
+
     publishNavigationChange(role: number) {
       switch (role) {
         case 2:
-            return this.pmMenu
+          this.menuItems.next(this.pmMenu);
+          break;
         case 0:
-            return this.userMenu
-       
+          this.menuItems.next(this.userMenu);
+          break;
         default:
-            return  this.defaultMenu
+          this.menuItems.next(this.defaultMenu);
       }
-
-
     }
 }

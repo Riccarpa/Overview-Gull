@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
 import { Client } from 'src/app/models/client.model';
 import { environment } from 'src/environments/environment';
 import { ProjectService } from '../project/project.service';
@@ -10,16 +9,8 @@ import { ProjectService } from '../project/project.service';
 })
 export class ClientService {
 
-  constructor(private http: HttpClient,private projectService:ProjectService) {
-    // this.token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'))
- 
-    this.token = user.token
-
-    
-    
-    
-  }
+  user:any//user dal login
+  constructor(private http: HttpClient,private projectService:ProjectService) {}
 
   clientsList: Client[];
   token: any;
@@ -32,11 +23,8 @@ export class ClientService {
   getClients(): Observable<any> {
     const url = this.url;
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    })
-    return this.http.get(url, { headers: headers });
+    
+    return this.http.get(url);
   }
 
   // aggiungi nuovo cliente
@@ -53,23 +41,17 @@ export class ClientService {
       body['logo_path'] = logo;
     }
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
+   
 
-    return this.http.post(url, body, { headers: headers });
+    return this.http.post(url, body);
   }
 
   // retrieve cliente
   getClient(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    })
-    return this.http.get(url, { headers: headers });
+   
+    return this.http.get(url);
   }
 
   // modifica cliente
@@ -86,24 +68,18 @@ export class ClientService {
       body['logo_path'] = logo;
     }
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
+    
 
-    return this.http.patch(url, body, { headers: headers });
+    return this.http.patch(url, body);
   }
 
   // cancella cliente
   deleteClient(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
+    
 
-    return this.http.delete(url, { headers: headers });
+    return this.http.delete(url);
   }
 
   // aggiorna immagine
@@ -112,9 +88,7 @@ export class ClientService {
 
     const formData = new FormData()
     formData.append('image', image, image.name);
-    const headers = {
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.post(url, formData, { headers: headers });
+   
+    return this.http.post(url, formData);
   }
 }

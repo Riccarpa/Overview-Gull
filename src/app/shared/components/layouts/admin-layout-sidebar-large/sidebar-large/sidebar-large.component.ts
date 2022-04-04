@@ -9,6 +9,7 @@ import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 
 import { filter } from 'rxjs/operators';
 import { Utils } from '../../../../utils';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 
 @Component({
   selector: 'app-sidebar-large',
@@ -21,9 +22,11 @@ export class SidebarLargeComponent implements OnInit {
   @ViewChildren(PerfectScrollbarDirective) psContainers:QueryList<PerfectScrollbarDirective>;
   psContainerSecSidebar: PerfectScrollbarDirective;
 
-  constructor(public router: Router, public navService: NavigationService) {
-    const user = JSON.parse(localStorage.getItem('user'))
-    this.user = user
+  constructor(public router: Router, public navService: NavigationService,private interc:ReqInterceptInterceptor) {
+  
+    this.user = this.interc.takeRole()
+    console.log(this.user,'log sidebar');
+    
   }
 
   user:any
@@ -39,6 +42,7 @@ export class SidebarLargeComponent implements OnInit {
         }
       });
 
+      this.navService.publishNavigationChange(this.user.role)
     this.navService.menuItems$.subscribe(items => {
       this.nav = items;
       this.setActiveFlag();

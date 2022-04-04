@@ -20,13 +20,13 @@
         
         <div *ngIf="currentUser" ngbDropdown [placement]="'bottom-right'"
             class="user col align-self-end d-flex align-items-center">
-            <p class="m-0 mr-2" >{{currentUser.data.name}}</p>
-            <img src="{{currentUser.data.picture}}" id="userDropdown" ngbDropdownToggle alt="">
+            <p class="m-0 mr-2" >{{currentUser.name}}</p>
+            <img src="{{currentUser.picture}}" id="userDropdown" ngbDropdownToggle alt="">
             
             <div ngbDropdownMenu aria-labelledby="userDropdown" class="header-account-dropdown">
                 <div class="dropdown-header">
                     <i class="i-Lock-User mr-1"></i> 
-                    {{currentUser.data.name}} 
+                    {{currentUser.name}} 
                 </div>
                 
                 <button class="dropdown-item" (click)="signout()">Sign out</button>

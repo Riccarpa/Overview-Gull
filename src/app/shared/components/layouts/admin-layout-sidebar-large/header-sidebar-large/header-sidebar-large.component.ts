@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { environment } from 'src/environments/environment';
 import { ProjectService } from 'src/app/services/project/project.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 
 
 @Component({
@@ -23,23 +24,25 @@ export class HeaderSidebarLargeComponent implements OnInit {
     private auth: AuthService,
     private route: Router,
     private userService: UserService,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private interc: ReqInterceptInterceptor
   ) {
 
-    console.log('costruttore header sidebar')
-    const user = JSON.parse(localStorage.getItem('user'))
-    this.projectService.currentUser = user
+    
+    const user = this.interc.takeRole()
+    console.log(user,'log header sidebar');
+    
     if (user) {
 
       this.userService.retrieveUser(user.id).subscribe(
 
         (res) => {
 
-          this.currentUser = res
-          if (this.currentUser.data.picture && this.currentUser.data.picture.includes('.png')) {
-            this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.png?r=${this.projectService.randomNumber()}`
+          this.currentUser = res.data
+          if (this.currentUser.picture && this.currentUser.picture.includes('.png')) {
+            this.currentUser.picture = `${environment.apiURL2}/images/users/${this.currentUser.id}.png?r=${this.projectService.randomNumber()}`
           } else {
-            this.currentUser.data.picture = `${environment.apiURL2}/images/users/${this.currentUser.data.id}.jpg?r=${this.projectService.randomNumber()}`
+            this.currentUser.picture = `${environment.apiURL2}/images/users/${this.currentUser.id}.jpg?r=${this.projectService.randomNumber()}`
           }
           this.role = user.role
         }

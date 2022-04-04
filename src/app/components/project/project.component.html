@@ -1,6 +1,5 @@
-<div *ngIf="role !== 0" class="d-flex justify-content-between w-100 mb-4">
+<div *ngIf="role != 0" class="d-flex justify-content-between w-100 mb-4">
   <h2 class="">Projects</h2>
-
   <div *ngIf="client && idClient" class="col-lg-3 card-profile-1 d-flex justify-content-start align-items-center">
     <div class="avatar box-shadow-2  m-0 mr-2">
       <img *ngIf="client.logo == null" src="assets/images/stock.jpg" alt="">
@@ -144,7 +143,7 @@
 <section *ngIf="role == 1" class="d-flex align-items-stretch flex-wrap">
 
   <!-- card project -->
-  <div *ngFor="let proj of projects | filterProject: idClient " class="col-lg-6 col-md-12 mb-4">
+  <div *ngFor="let proj of projects  | filterProject: idClient" class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100">
 
@@ -286,15 +285,15 @@
 <div class="card user-profile mt-5 mb-4 col-12">
   <!-- immagine user -->
   <div *ngIf="userRetrive" class="user-info">
-    <img class="profile-picture avatar-lg mb-2" src="{{url}}{{userRetrive.data.picture}}" alt="">
-    <p class="m-0 text-24">{{userRetrive.data.name}}</p>
+    <img class="profile-picture avatar-lg mb-2" src="{{url}}{{userRetrive.picture}}" alt="">
+    <p class="m-0 text-24">{{userRetrive.name}}</p>
   </div>
 
   <!-- body dei tab con i progetti -->
   <div class="card-body nav-center col-12">
     <ul ngbNav #nav="ngbNav" class="nav-tabs col-12 ">
       <li *ngFor="let proj of userProjects; let i = index" ngbNavItem title="{{proj.name}}">
-        <a ngbNavLink [ngClass]="{'nav-link active': i==0}">{{proj.name}}</a>
+        <a ngbNavLink>{{proj.name}}{{proj.id}}</a>
         <ng-template ngbNavContent>
          
          
@@ -317,7 +316,7 @@
                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
 
                    <div class="card-title m-0">{{proj.client_details.name}}</div>
-
+                
                  </div>
 
                  <div class="row">

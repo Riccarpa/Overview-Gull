@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ProjectService } from '../project/project.service';
 import { Router } from '@angular/router';
@@ -11,55 +10,33 @@ import { Router } from '@angular/router';
 })
 export class UserService {
 
-  constructor(private http: HttpClient,private projectService:ProjectService,private router:Router) {
-    // this.token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'))
-
-    this.token = user.token
- 
-    this.router.navigate(['login'])
-
-      
-    
-
-  }
+  user:any//user dal login
+  constructor(private http: HttpClient,private projectService:ProjectService,private router:Router) {}
   
     token:any
     url = `${environment.apiURL}/users` 
   url2 = `${environment.apiURL}/user` 
     
     getUsers():Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
+   
     
-    return this.http.get(this.url,{headers: headers});
+    return this.http.get(this.url);
   }
-// get progetti collaboratore
+// get progetti collaboratore(sezione users di postman)
   getUserProject(): Observable<any> {
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-    return this.http.get(`${this.url2}/projects`, { headers })
+   
+    return this.http.get(`${this.url2}/projects`)
 
   }
 
-  retrieveUser(id:any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
-    return this.http.get(`${this.url}/${id}`,{headers: headers});
+  retrieveUser(id: any): Observable<any>{
+   
+    return this.http.get(`${this.url}/${id}`);
   }
 
   addUser(form:any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
+   
     let body = {
      "name":form.name,
      "surname":form.surname,
@@ -73,13 +50,10 @@ export class UserService {
       body['picture_data'] = form.picture_data;
        
     }
-    return this.http.post(this.url, body,{headers: headers});
+    return this.http.post(this.url, body);
   }
   updateUser(form:any,id:any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
+   
     let body = {
       "name":form.name,
       "surname":form.surname,
@@ -94,25 +68,19 @@ export class UserService {
        body['picture_data'] = form.picture_data;
      }
 
-     return this.http.patch(`${this.url}/${id}`, body,{headers: headers});
+     return this.http.patch(`${this.url}/${id}`, body);
   }
   updateImage(picture:any,id:any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
+    
     let body = {
       "picture_data" : picture
      };
-     return this.http.patch(`${this.url}/${id}`, body,{headers: headers});
+     return this.http.patch(`${this.url}/${id}`, body);
 
   }
   deleteUser(id:any){
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
-    return this.http.delete(`${this.url}/${id}`,{headers: headers});
+   
+    return this.http.delete(`${this.url}/${id}`);
   }
 
   

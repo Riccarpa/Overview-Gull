@@ -9,6 +9,7 @@ import { Client } from 'src/app/models/client.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
 import { ClientService } from 'src/app/services/client/client.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { environment } from 'src/environments/environment';
@@ -42,6 +43,7 @@ export class UpdateProjectComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService,
     private modalService: NgbModal,
+    private interc: ReqInterceptInterceptor
    
   ) {
     this.cropperSettings = new CropperSettings();
@@ -225,10 +227,7 @@ export class UpdateProjectComponent implements OnInit {
   }
 
   visibleModal(){
-    this.modal_progress = false
-    this.modal_revenue = false
-    this.modal_client_id = false
-    this.modal_user_ids = false
+  
   }
 
   back(){
@@ -238,16 +237,19 @@ export class UpdateProjectComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.role = this.service.role
+    this.role = this.interc.takeRole().role //prendo il ruolo dall'interceptor 
+
+
     if (!this.service.currentProject) {
-      this.service.currentProject = this.active.snapshot.paramMap.get('id')
+      this.service.currentProject = this.active.snapshot.paramMap.get('id') // assegno id nel service per la retrive
     }
 
     //retrive del progetto singolo
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
-
+      console.log(this.project,'project ');
+      
 
       
       if (this.project.logo) {
@@ -272,15 +274,16 @@ export class UpdateProjectComponent implements OnInit {
       //calcolo del numero di utenti associati al progetto
       this.associateUser = this.project.user_ids.length
 
-      if(this.service.role == 1){
+      if(this.interc.takeRole().role == 1){
 
-        if (res.data.client_id) {
+        if (this.project.client_id) {
   
           //get cliente associato al progetto tramite id
-          let idClient = res.data.client_id
-          this.clientService.getClient(idClient).subscribe((res) => {
-  
+          let idClient = this.project.client_id
+          this.clientService.getClient(idClient).subscribe((res) => { //retrive client 
+
             this.associateClient = res.data
+           console.log(this.associateClient,'associate client');
            
           })
         }
@@ -293,7 +296,7 @@ export class UpdateProjectComponent implements OnInit {
     })
 
     
-    if (this.service.role == 1) {
+    if (this.interc.takeRole().role == 1) {
 
       if (this.users.length == 0) {
         // get Users

@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './shared/inmemory-db/inmemory-db.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { ClientComponent } from './components/client/client.component';
 import { ProjectComponent } from './components/project/project.component';
@@ -24,6 +24,7 @@ import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
 import { CommonModule } from '@angular/common';
+import { ReqInterceptInterceptor } from './services/interceptors/req-intercept.interceptor';
 
 
 
@@ -62,7 +63,9 @@ import { CommonModule } from '@angular/common';
   
    
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor,multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,6 +12,7 @@ import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { environment } from 'src/environments/environment';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -20,7 +21,7 @@ import { ProjectService } from 'src/app/services/project/project.service';
 export class UserComponent implements OnInit {
 
   constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService,private clientService:ClientService,private pService:ProjectService) { this.cropperSettings = new CropperSettings();
+    private toastr: ToastrService,private clientService:ClientService,private pService:ProjectService,private interc:ReqInterceptInterceptor) { this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
@@ -49,11 +50,11 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const user = JSON.parse(localStorage.getItem('user'))
-    this.user = user
-    this.role = user.role
+   
+    this.user = this.interc.takeRole()
+    this.role = this.user.role
 
-    if (this.pService.role == 1) {
+    if (this.role == 1) {
       
       this.retrieveUsers();
       this.searchControl.valueChanges
