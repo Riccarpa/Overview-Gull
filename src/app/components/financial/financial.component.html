@@ -1,1 +1,14 @@
-<!-- <div *ngFor=""></div> -->
+<div *ngIf="days">
+  <div class="mb-2">
+    <button (click)="prevMonth()" [disabled]="month == 1 ? true : null">
+      prev
+    </button>
+    <button [disabled]="month == 12 ? true : null" (click)="nextMonth()">
+      next
+    </button>
+  </div>
+
+  <div *ngFor="let day of days">
+    <span>{{ day.date }}</span>
+  </div>
+</div>

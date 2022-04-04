@@ -19,6 +19,7 @@ export class FinancialComponent implements OnInit {
   month:any
   year:any
   currMonthLog:any
+  days:any
 
   ngOnInit(): void {
     this.month=new Date().getMonth() +1
@@ -36,7 +37,7 @@ export class FinancialComponent implements OnInit {
 
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
-      console.log('monthlyLog',this.monthlyLogs)
+      console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
     })
 
@@ -44,18 +45,48 @@ export class FinancialComponent implements OnInit {
     
   }
   
+  
   getCurrMonthLog(){
     if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
       this.currMonthLog =  this.monthlyLogs[this.year][this.month]
       console.log('CurrMonth',this.currMonthLog)
+      this.days =  this.monthlyLogs[this.year][this.month].daily_logs_array
+      console.log(this.days)
     }else{
-      
-      let date = `${this.year.toString()}-0${this.month.toString()} `
-      console.log(parseInt(this.id))
+      if(this.month<10){
+        var date = `${this.year.toString()}-0${this.month.toString()} `
+      }else{
+        var date = `${this.year.toString()}-${this.month.toString()} `
+      }
       this.fService.createMonthlyLog(parseInt(this.id),date).subscribe((res)=>{
         this.currMonthLog = res.data;
+        this.days =  res.data.daily_logs_array
+       
       })
     }
+
+  }
+  
+
+  prevMonth(){
+    this.month =this.month-1
+    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+      this.monthlyLogs = res.data;
+      console.log('monthlyLogs',this.monthlyLogs)
+      console.log(this.month)
+
+      this.getCurrMonthLog();
+    })
+    
+  }
+  nextMonth(){
+    this.month= this.month+1
+    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+      this.monthlyLogs = res.data;
+      console.log('monthlyLogs',this.monthlyLogs)
+      console.log(this.month)
+      this.getCurrMonthLog();
+    })
 
   }
 
