@@ -1,4 +1,4 @@
-<div *ngIf="days" class="card">
+<div *ngIf="monthlyLogs" class="card">
   <div class="table-head p-4 d-flex align-items-center">
     <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
     <div class="month m-2">
@@ -7,7 +7,7 @@
     <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
   </div>
 
-  <div class="table-body p-4">
+  <div *ngIf="days" class="table-body p-4">
     <div class="table-body-head d-flex align-items-center">
       <span class="flex-grow-1">Date</span>
       <span class="flex-grow-1">Select activity</span>
@@ -41,4 +41,6 @@
       <hr />
     </div>
   </div>
+  <div class="loader-bubble loader-bubble-primary m-5"></div>
 </div>
+<div *ngIf="!monthlyLogs" class="loader-bubble loader-bubble-primary m-5"></div>

@@ -34,12 +34,12 @@ export class FinancialComponent implements OnInit {
 
     this.aService.getActivities().subscribe((res:any)=>{
       this.activities = res.data;
-      // console.log('activities',this.activities)
+      console.log('activities',this.activities)
     })
 
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
-      // console.log('monthlyLogs',this.monthlyLogs)
+      console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
     })
 
@@ -73,6 +73,7 @@ export class FinancialComponent implements OnInit {
   
 
   prevMonth(){
+    this.days = null
     if(this.month<=1){
       this.month=12
       this.year = this.year -1
@@ -88,6 +89,8 @@ export class FinancialComponent implements OnInit {
     
   }
   nextMonth(){
+    this.days = null
+
     if(this.month>=12){
       this.month=1
       this.year= this.year +1
