@@ -137,4 +137,42 @@ export class SprintComponent implements OnInit {
         });
     }
   }
+
+  // cancella lo sprint selezionato
+  deleteSprint(id: any, content: any) {
+    this.confirm(id, content);
+  }
+
+  // richiama la modale per eliminare lo sprint
+  confirm(id: any, content: any) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+      .result.then(() => {
+        let sprints: Sprint[];
+        let sprint: Sprint;
+        this.sprintService.getSprints().subscribe((res) => {
+          sprints = res.data;
+          for (let i = 0; i < sprints.length; i++) {
+            if (sprints[i].id == id) {
+              sprint = sprints[i];
+            }
+          }
+
+          if (sprint.task_ids.length) {
+            this.projectService.errorBar('Lo sprint non deve contenere task!');
+            this.modalService.dismissAll();
+          } else {
+            this.sprintService.deleteSprint(id).subscribe(() => {
+              this.projectService.successBar('Sprint eliminato!');
+              this.modalService.dismissAll();
+              this.projectService.getUpdateProject().subscribe((res) => {
+                this.currentSprintsIds = res.data.sprint_ids;
+                this.getSprints();
+              });
+            });
+          }
+        });
+      }, () => {
+        console.log('annullato');
+      });
+  }
 }

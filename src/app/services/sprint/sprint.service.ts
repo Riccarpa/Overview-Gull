@@ -76,4 +76,16 @@ export class SprintService {
 
     return this.http.patch(url, body, { headers: headers });
   }
+
+  // cancella sprint
+  deleteSprint(id: any): Observable<any> {
+    const url = `${this.url}/${id}`;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+    });
+
+    return this.http.delete(url, { headers: headers });
+  }
 }
