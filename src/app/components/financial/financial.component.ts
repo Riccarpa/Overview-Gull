@@ -29,7 +29,7 @@ export class FinancialComponent implements OnInit {
 
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-      // console.log('user',this.user)
+
     })
 
     this.aService.getActivities().subscribe((res:any)=>{
@@ -53,9 +53,9 @@ export class FinancialComponent implements OnInit {
 
     if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
       this.currMonthLog =  this.monthlyLogs[this.year][this.month]
-      // console.log('CurrMonth',this.currMonthLog)
+      console.log('currMonthLogs',this.currMonthLog)
       this.days =  this.monthlyLogs[this.year][this.month].daily_logs_array
-      // console.log(this.days)
+      console.log('dailyLogs',this.days)
     }else{
       if(this.month<10){
         var date = `${this.year.toString()}-0${this.month.toString()} `
