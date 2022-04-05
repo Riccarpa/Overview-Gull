@@ -228,6 +228,10 @@ export class UpdateProjectComponent implements OnInit {
 
   visibleModal(){
   
+    this.modal_progress = false
+    this.modal_revenue = false
+    this.modal_client_id = false
+    this.modal_user_ids = false
   }
 
   back(){

@@ -24,7 +24,7 @@
 <div class="row" *ngIf="project && role == 1">
 
 
-  <div (click)="openCreateModal(modalConfirm)" id="debug" class=" col-lg-3 col-md-6 col-sm-6">
+  <div (click)="modal_client_id = true;openCreateModal(modalConfirm)" id="debug" class=" col-lg-3 col-md-6 col-sm-6">
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
       <div class="card-body text-left">
         <i class="i-Business-Man"></i>
@@ -82,7 +82,7 @@
 
 <!-- sezione form -->
 
-<div class="col-md-12 p-0" *ngIf="role == 1">
+<div *ngIf="role == 1" class="col-md-12 p-0" >
   <div class="card mb-4">
     <div class="card-body">
       <div class="card-title mb-3 d-flex justify-content-between">
@@ -239,6 +239,7 @@
         </ng-template>
 
         <!-- modale per cards -->
+        
         <ng-template class="m-0" id="modal" #modalConfirm let-modal>
           <div class="modal-header">
             <h4 class="modal-title" id="modal-title">Modifica </h4>
@@ -247,13 +248,13 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-
+        
           <div class="modal-body ">
             <div class="col-md-12">
               <div class="card mb-4">
                 <div class="card-body">
                   <div>
-
+        
                     <div *ngIf="modal_client_id" class="col-md-12 form-group mb-3">
                       <label for="picker1">client</label>
                       <select class="form-control" formControlName="client_id" name="client_id">
@@ -261,12 +262,12 @@
                         <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
                       </select>
                     </div>
-
-                    <div *ngIf="modal_progress" class="col-md-12 form-group mb-3">
+        
+                    <div *ngIf="modal_progress" class="col-md-12 form-group mb-3"> 
                       <label for="picker1">Progress</label>
                       <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
                     </div>
-
+        
                     <div *ngIf="modal_user_ids">
                       <div ngbDropdown class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
                         <button ngbDropdownToggle href="#"
@@ -274,11 +275,11 @@
                           Collaboratori</button>
                         <div ngbDropdownMenu perfectScrollbar>
                           <div class=" m-0">
-
+        
                             <div class="col-md-12 col-lg-12 p-2">
                               <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
-
-
+        
+        
                               <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
                                 <div *ngFor="let u of users "
                                   class="col-md-5 col-sm-12 col-lg-6 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
@@ -298,7 +299,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> 
                 </div>
               </div>
             </div>
@@ -314,7 +315,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- project manager card -->
 
