@@ -23,6 +23,12 @@ export class TaskComponent implements OnInit {
     this.currentTasksIds = this.sprint.task_ids;
     this.getTasks();
 
+    // filtro checkbox
+    this.searchControl.valueChanges
+      .subscribe(value => {
+        this.filerData(value);
+      });
+
     // recupera tutti gli utenti e filtra solo i collaboratori del progetto
     this.userService.getUsers().subscribe((res) => {
       this.users = res.data;
@@ -47,6 +53,8 @@ export class TaskComponent implements OnInit {
   titleModal: string;
   collaborators: User[];
   task: Task;
+  searchControl: FormControl = new FormControl();
+  filteredTasks: Task[];
 
   taskForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -68,6 +76,7 @@ export class TaskComponent implements OnInit {
           return false;
         }
       });
+      this.filteredTasks = this.currentTasks;
     });
   }
 
@@ -211,6 +220,22 @@ export class TaskComponent implements OnInit {
             this.getTasks();
           });
         });
+    }
+  }
+
+  // filtra i task, rimuovendo i task completati, in base al valore della checkbox (true/false) 
+  filerData(val: boolean) {
+    if (!val) {
+      return this.filteredTasks = this.currentTasks;
+    } else {
+      const rows = this.currentTasks.filter((task) => {
+        if (task.status == 2) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+      this.filteredTasks = rows;
     }
   }
 

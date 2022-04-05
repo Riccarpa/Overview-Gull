@@ -1,4 +1,9 @@
-<div class="mb-3 d-flex justify-content-end w-100">
+<div class="mb-3 d-flex justify-content-between w-100">
+    <label class="switch switch-success mr-3">
+        <span>Filtra completati</span>
+        <input type="checkbox" [formControl]="searchControl">
+        <span class="slider"></span>
+    </label>
     <button class="btn btn-success px-3 m-3" (click)="openModalAddTask(modalBasic)">Crea Nuovo Task</button>
 </div>
 
@@ -6,8 +11,8 @@
 <div class="row mb-5">
     <div class="col-md-12">
         <div class="card o-hidden">
-            <ngx-datatable style="height: auto; box-shadow: none" class="material fullscreen" [columnMode]="'force'"
-                [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="currentTasks">
+            <ngx-datatable style="min-height: 300px; box-shadow: none" class="material fullscreen"
+                [columnMode]="'force'" [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="filteredTasks">
                 <ngx-datatable-column name="name" [width]="200">
                     <ng-template ngx-datatable-header-template>Task name</ng-template>
                     <ng-template ngx-datatable-cell-template let-row="row">
