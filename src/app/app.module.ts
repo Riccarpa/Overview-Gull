@@ -25,6 +25,7 @@ import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
 import { CommonModule } from '@angular/common';
 import { ReqInterceptInterceptor } from './services/interceptors/req-intercept.interceptor';
+import { RoleDirective } from './directives/rolesDirective/role.directive';
 
 
 
@@ -43,6 +44,7 @@ import { ReqInterceptInterceptor } from './services/interceptors/req-intercept.i
     FilterUsersPipe,
     FilterProjectPipe,
     HomeUserComponent,
+    RoleDirective,
 
  
   ],

@@ -1,4 +1,4 @@
-<div *ngIf="role != 0" class="d-flex justify-content-between w-100 mb-4">
+<div *appRole="role == 1" class="d-flex justify-content-between w-100 mb-4">
   <h2 class="">Projects</h2>
   <div *ngIf="client && idClient" class="col-lg-3 card-profile-1 d-flex justify-content-start align-items-center">
     <div class="avatar box-shadow-2  m-0 mr-2">
@@ -9,7 +9,7 @@
     <h2>{{client.name}}</h2>
   </div>
 
-  <div *ngIf="role == 1">
+  <div *appRole="role == 1">
     <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">Aggiungi Progetto</button>
 
     <!-- modale di creazione -->
@@ -140,7 +140,7 @@
 
 </div>
 <!-- main container -->
-<section *ngIf="role == 1" class="d-flex align-items-stretch flex-wrap">
+<section *appRole="role == 1" class="d-flex align-items-stretch flex-wrap">
 
   <!-- card project -->
   <div *ngFor="let proj of projects  | filterProject: idClient" class="col-lg-6 col-md-12 mb-4">
@@ -204,7 +204,9 @@
 </section>
 
 <!-- visualizzazione project manager -->
-<section *ngIf="role == 2" class="d-flex align-items-stretch flex-wrap">
+
+
+<section *appRole="role === 2" id="PM" class="d-flex align-items-stretch flex-wrap">
 
   <div *ngFor="let proj of projects" class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
@@ -279,93 +281,97 @@
 </section>
 
 
+
 <!-- visualizzazione collaboratore -->
-<section *ngIf="role == 0" class="d-flex align-items-stretch flex-wrap col-12">
 
-<div class="card user-profile mt-5 mb-4 col-12">
-  <!-- immagine user -->
-  <div *ngIf="userRetrive" class="user-info">
-    <img class="profile-picture avatar-lg mb-2" src="{{url}}{{userRetrive.picture}}" alt="">
-    <p class="m-0 text-24">{{userRetrive.name}}</p>
+
+<section *appRole="role === 0" id="collab" class="d-flex align-items-stretch flex-wrap col-12">
+
+  <div class="card user-profile mt-5 mb-4 col-12">
+    <!-- immagine user -->
+    <div *ngIf="userRetrive" class="user-info">
+      <img class="profile-picture avatar-lg mb-2" src="{{url}}{{userRetrive.picture}}" alt="">
+      <p class="m-0 text-24">{{userRetrive.name}}</p>
+    </div>
+
+    <!-- body dei tab con i progetti -->
+    <div class="card-body nav-center col-12">
+      <ul ngbNav #nav="ngbNav" class="nav-tabs col-12 ">
+        <li *ngFor="let proj of userProjects; let i = index" ngbNavItem title="{{proj.name}}">
+          <a ngbNavLink>{{proj.name}}{{proj.id}}</a>
+          <ng-template ngbNavContent>
+
+
+            <div class="col-lg-12 col-md-12 mb-4">
+              <div class="card mb-4 h-100">
+                <div class="card-body h-100">
+
+                  <!-- header card -->
+                  <div class=" d-flex justify-content-start align-items-center mb-2">
+
+
+                    <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+                    <img *ngIf="proj.logo === null" src="assets/images/project.png"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+
+                    <div class="card-title m-0 mr-5">{{proj.name}}</div>
+
+                    <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
+
+                    <div class="card-title m-0">{{proj.client_details.name}}</div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <td>Client</td>
+                            <td class="font-weight-bold">
+                              <p>{{proj.client_details.name}}</p>
+                            </td>
+                          </tr>
+                          <tr [ngSwitch]="proj.status">
+                            <td>Status</td>
+                            <td *ngSwitchCase="0" class="text-danger font-weight-bold">pending</td>
+                            <td *ngSwitchCase="1" class="text-danger font-weight-bold">open</td>
+                            <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
+                          </tr>
+
+                          <tr>
+                            <td>collaboratori</td>
+                            <td class="text-warning font-weight-bold ">
+                              <ul *ngIf="proj.user_details" class="overflow p-0">
+                                <li *ngFor="let user of proj.user_details">
+                                  <p>
+                                    {{user.name}} {{user.surname}}
+                                  </p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
+                      <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true"
+                        style="height: 200px;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav"></div>
+    </div>
   </div>
-
-  <!-- body dei tab con i progetti -->
-  <div class="card-body nav-center col-12">
-    <ul ngbNav #nav="ngbNav" class="nav-tabs col-12 ">
-      <li *ngFor="let proj of userProjects; let i = index" ngbNavItem title="{{proj.name}}">
-        <a ngbNavLink>{{proj.name}}{{proj.id}}</a>
-        <ng-template ngbNavContent>
-         
-         
-           <div class="col-lg-12 col-md-12 mb-4">
-             <div class="card mb-4 h-100">
-               <div class="card-body h-100">
-
-                 <!-- header card -->
-                 <div class=" d-flex justify-content-start align-items-center mb-2">
-
-
-                   <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
-                     class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
-                   <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                     class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
-
-                   <div class="card-title m-0 mr-5">{{proj.name}}</div>
-
-                   <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-                     class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
-
-                   <div class="card-title m-0">{{proj.client_details.name}}</div>
-                
-                 </div>
-
-                 <div class="row">
-                   <div class="col-md-6">
-                     <table class="table">
-                       <tbody>
-                         <tr>
-                           <td>Client</td>
-                           <td class="font-weight-bold">
-                             <p>{{proj.client_details.name}}</p>
-                           </td>
-                         </tr>
-                         <tr [ngSwitch]="proj.status">
-                           <td>Status</td>
-                           <td *ngSwitchCase="0" class="text-danger font-weight-bold">pending</td>
-                           <td *ngSwitchCase="1" class="text-danger font-weight-bold">open</td>
-                           <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
-                         </tr>
-
-                         <tr>
-                           <td>collaboratori</td>
-                           <td class="text-warning font-weight-bold ">
-                             <ul *ngIf="proj.user_details" class="overflow p-0">
-                               <li *ngFor="let user of proj.user_details">
-                                 <p>
-                                   {{user.name}} {{user.surname}}
-                                 </p>
-                               </li>
-                             </ul>
-                           </td>
-                         </tr>
-                       </tbody>
-                     </table>
-                   </div>
-                   <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
-                     <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true" style="height: 200px;">
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
-          
-        </ng-template>
-      </li>
-    </ul>
-    <div [ngbNavOutlet]="nav"></div>
-  </div>
-</div>
 
 
 </section>
