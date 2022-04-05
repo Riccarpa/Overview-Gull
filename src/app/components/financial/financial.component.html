@@ -1,46 +1,66 @@
 <div *ngIf="monthlyLogs" class="card">
-  <div class="table-head p-4 d-flex align-items-center">
-    <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
-    <div class="month m-2">
-      <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+  <div class="table-head p-4 d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
+      <div class="month m-2">
+        <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+      </div>
+      <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
     </div>
-    <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
+    <button type="button" class="btn btn-primary m-1">Save</button>
   </div>
 
   <div *ngIf="days" class="table-body p-4">
     <div class="table-body-head d-flex align-items-center">
-      <span class="flex-grow-1">Date</span>
-      <span class="flex-grow-1">Select activity</span>
-      <span class="flex-grow-1">Hours</span>
+      <span class="col">Date</span>
+      <span class="col">Select activity</span>
+      <span class="col">Hours</span>
+      <span class="col">SmartWorking</span>
     </div>
     <hr />
 
     <div *ngFor="let day of days">
+      <!-- date -->
       <div class="d-flex align-items-center">
-        <span class="flex-grow-1"
+        <span class="col"
           ><strong>{{ day.date | date: "d EEEE" }}</strong></span
         >
-        <div class="flex-grow-1" *ngIf="day.activity_days_array[0]">
-          <span
-            class="d-block"
+        <!-- select activity -->
+        <div class="col" *ngIf="day.activity_days_array[0]">
+          <select
             *ngFor="let activity of day.activity_days_array"
+            class="form-control mb-2"
           >
-            {{ activity.activity_name }}
-          </span>
+            <option selected>{{ activity.activity_name }}</option>
+            <option *ngFor="let activity of activities" [value]="activity.id">
+              {{ activity.name }}
+            </option>
+          </select>
         </div>
-
-        <div class="flex-grow-1" *ngIf="day.activity_days_array[0]">
-          <span
-            class="d-block"
+        <!-- hours -->
+        <div class="col" *ngIf="day.activity_days_array[0]">
+          <input
+            type="number"
+            name="hours_spent"
+            id="hours_spent"
+            min="0"
+            max="8"
+            value="{{ activity.hours_spent }}"
+            class="form-control mb-2 w-50"
             *ngFor="let activity of day.activity_days_array"
-          >
-            {{ activity.hours_spent }}
-          </span>
+          />
+        </div>
+        <!-- smartworking -->
+        <div class="col mb-3" *ngIf="day.activity_days_array[0]">
+          <label class="checkbox checkbox-primary">
+            <input type="checkbox" [checked]="day.smartworking == 1" />
+            <span class="checkmark"></span>
+          </label>
         </div>
       </div>
       <hr />
     </div>
   </div>
-  <div class="loader-bubble loader-bubble-primary m-5"></div>
+  <div *ngIf="!days" class="loader-bubble loader-bubble-primary m-5"></div>
 </div>
 <div *ngIf="!monthlyLogs" class="loader-bubble loader-bubble-primary m-5"></div>
