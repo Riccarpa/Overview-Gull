@@ -26,9 +26,10 @@
       </div>
       <!-- create new activities -->
       <div *ngFor="let activityForm of activitiesArray.controls; let i = index">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
           <!-- activity input -->
           <select class="form-control mb-2">
+            <option>Seleziona attività</option>
             <option *ngFor="let activity of activities" [value]="activity.id">
               {{ activity.name }}
             </option>
@@ -43,6 +44,11 @@
             max="8"
             class="form-control mb-2 ml-2 w-50"
           />
+
+          <i
+            class="i-Close-Window ml-2 mb-2 text-danger"
+            (click)="deleteActivity(i)"
+          ></i>
         </div>
       </div>
       <button

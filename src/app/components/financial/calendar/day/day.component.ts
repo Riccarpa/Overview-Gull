@@ -35,6 +35,9 @@ export class DayComponent implements OnInit {
       this.activitiesArray.push(activityForm);
     console.log(this.activitiesArray.controls)
   }
+  deleteActivity(i){
+    this.activitiesArray.removeAt(i)
+  }
 
 
 
