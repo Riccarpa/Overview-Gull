@@ -1,5 +1,5 @@
 <!-- header page -->
-<div *ngIf="project && clients && users">
+<div *ngIf="project ">
   <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center ">
       <div (click)="openModalImg(modalCropper)" class="avatar box-shadow-2 m-0 mr-2">
@@ -21,7 +21,7 @@
 
 <!-- sezione card  -->
 
-<div *appRole="role === 1 && project" class="row">
+<div *ngIf="project"  class="row">
 
 
   <div (click)="modal_client_id = true;openCreateModal(modalConfirm)" id="debug" class=" col-lg-3 col-md-6 col-sm-6">
@@ -82,7 +82,7 @@
 
 <!-- sezione form -->
 
-<div *appRole="role === 1" class="col-md-12 p-0">
+<div class="col-md-12 p-0">
   <div class="card mb-4">
     <div class="card-body">
       <div class="card-title mb-3 d-flex justify-content-between">
@@ -103,7 +103,10 @@
           <!-- input name -->
           <div class="col-md-6 form-group mb-3 position-relative">
             <label for="name">project</label>
-            <input minlength="3" maxlength="40" type="text" class="form-control" name="name" formControlName="name">
+            <input *ngIf="role === 1" minlength="3" maxlength="40" type="text" class="form-control" name="name"
+              formControlName="name">
+            <input *ngIf="role === 2" disabled minlength="3" maxlength="40" type="text" class="form-control" name="name"
+              formControlName="name">
             <div *ngIf="projectForm.get('name').invalid &&  projectForm.get('name').touched"
               class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
               role="alert">
@@ -116,10 +119,11 @@
           <!-- clienti -->
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">client</label>
-            <select class="form-control" formControlName="client_id" name="client_id">
+            <select *ngIf="role === 1" class="form-control" formControlName="client_id" name="client_id">
               <option value="" disabled>clienti</option>
               <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
             </select>
+            <input *ngIf="role ===2" disabled type="text" class="form-control" value="{{associateClient ? associateClient.name : '' }}">
           </div>
 
           <!-- revenue -->
@@ -131,33 +135,39 @@
           <!-- progress -->
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">progress</label>
-            <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
+            <input *ngIf="role === 1" type="number" min="0" class="form-control" formControlName="progress"
+              name="progress">
+              <input *ngIf="role ===2" disabled type="number" min="0" class="form-control" formControlName="progress" name="progress">
           </div>
 
           <!-- end-date -->
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">end date</label>
-            <input type="date" class="form-control" formControlName="end_date">
+            <input *ngIf="role === 1" type="date" class="form-control" formControlName="end_date">
+             <input *ngIf="role ===2" disabled type="date" class="form-control" formControlName="end_date">
           </div>
 
           <!-- start-date -->
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">start date</label>
-            <input type="date" class="form-control" formControlName="start_date">
+            <input *ngIf="role === 1" type="date" class="form-control" formControlName="start_date">
+            <input *ngIf="role ===2" disabled type="date" class="form-control" formControlName="start_date">
           </div>
 
           <!-- status -->
           <div class="col-md-6 form-group mb-3">
             <label for="status">status</label>
-            <select class="form-control" type="number" name="status" formControlName="status" placeholder="status">
+            <select *ngIf="role === 1" class="form-control" type="number" name="status" formControlName="status"
+              placeholder="status">
               <option [value]="0">pending</option>
               <option [value]="1">open</option>
               <option [value]="2">close</option>
             </select>
+             <input *ngIf="role ===2" disabled type="text" class="form-control" formControlName="progress">
           </div>
 
           <!-- collaboratori -->
-          <div ngbDropdown class="mega-menu col-lg-6 col-md-6 align-items-center mt-2 p-3">
+          <div *ngIf="role === 1" ngbDropdown class="mega-menu col-lg-6 col-md-6 align-items-center mt-2 p-3">
             <button ngbDropdownToggle href="#"
               class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control ">Associa
               Collaboratori</button>
@@ -190,6 +200,14 @@
               </div>
             </div>
           </div>
+           <div class="d-flex  align-items-center py-2 mb-1 col-lg-6" *ngIf="role === 2">
+
+             <div class="ml-1 btn btn-primary btn-rounded d-flex  align-items-center py-2 mb-1 collabs"
+               *ngFor="let u of arrayUsersIds">
+               <p class="m-0">
+                 {{u.name}} {{u.surname}}
+               </p>
+             </div>
         </div>
 
 
@@ -207,12 +225,17 @@
 
           <div class="col-lg-6 p-0 row flex-row-reverse">
 
-            <div class="ml-1 btn btn-primary btn-rounded d-flex p-1 align-items-center pl-2 mb-1"
-              *ngFor="let u of arrayUsersIds">
-              <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
-                {{user.name}}
-              </p>
-              <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
+            <div class="d-flex flex-wrap p-1 align-items-center " *ngIf="role ===1">
+              <div  class="ml-1 btn btn-primary btn-rounded d-flex p-1 align-items-center pl-2 mb-1"
+                *ngFor="let u of arrayUsersIds">
+                <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
+                  {{user.name}}
+                </p>
+                <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
+              </div>
+
+            </div>
+           
             </div>
 
 
@@ -231,75 +254,72 @@
           <div class="modal-body">
             <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings"></img-cropper>
             <br>
-
+        
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-rounded btn-outline-dark"
               (click)="saveImg();modal.close()">Save</button>
           </div>
         </ng-template>
-
-
-      </form>
-    </div>
-  </div>
-</div>
-
-
-<!-- modale per cards -->
-<ng-template class="m-0" id="modal" #modalConfirm let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Modifica </h4>
-    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-      (click)="modal.dismiss('Cross click');visibleModal()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <form [formGroup]="projectForm">
-
-
-    <div class="modal-body ">
-      <div class="col-md-12">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div>
-
-              <div *ngIf="modal_client_id" class="col-md-12 form-group mb-3">
-                <label for="picker1">client</label>
-                <select class="form-control" formControlName="client_id" name="client_id">
-                  <option value="" selected disabled hidden>clienti</option>
-                  <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
-                </select>
-              </div>
-
-              <div *ngIf="modal_progress" class="col-md-12 form-group mb-3">
-                <label for="picker1">Progress</label>
-                <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
-              </div>
-
-              <div *ngIf="modal_user_ids">
-                <div ngbDropdown class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
-                  <button ngbDropdownToggle href="#"
-                    class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control  ">Associa
-                    Collaboratori</button>
-                  <div ngbDropdownMenu perfectScrollbar>
-                    <div class=" m-0">
-
-                      <div class="col-md-12 col-lg-12 p-2">
-                        <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
-
-
-                        <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
-                          <div *ngFor="let u of users "
-                            class="col-md-5 col-sm-12 col-lg-6 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
-                            <div class="">
-                              <label for="picker1 text-24">{{u.name}}-{{u.surname}}</label>
-                              <input type="number" min="0" #percent name="percent" class="form-control"
-                                placeholder="percent">
-                            </div>
-                            <div>
-                              <i (click)="addUserToProject({id:u.id,cost:u.cost,percent:percent.value})"
-                                class="text-success ml-1 mr-4  i-Add text-24"></i>
+        
+        <!-- modale per cards -->
+        <ng-template class="m-0" id="modal" #modalConfirm let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-title">Modifica </h4>
+            <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+              (click)="modal.dismiss('Cross click');visibleModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form [formGroup]="projectForm">
+        
+        
+            <div class="modal-body ">
+              <div class="col-md-12">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <div>
+        
+                      <div *ngIf="modal_client_id" class="col-md-12 form-group mb-3">
+                        <label for="picker1">client</label>
+                        <select class="form-control" formControlName="client_id" name="client_id">
+                          <option value="" selected disabled hidden>clienti</option>
+                          <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+                        </select>
+                      </div>
+        
+                      <div *ngIf="modal_progress" class="col-md-12 form-group mb-3">
+                        <label for="picker1">Progress</label>
+                        <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
+                      </div>
+        
+                      <div *ngIf="modal_user_ids">
+                        <div ngbDropdown class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
+                          <button ngbDropdownToggle href="#"
+                            class="btn form-group  col-12 border text-muted dropdown-toggle d-block form-control  ">Associa
+                            Collaboratori</button>
+                          <div ngbDropdownMenu perfectScrollbar>
+                            <div class=" m-0">
+        
+                              <div class="col-md-12 col-lg-12 p-2">
+                                <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
+        
+        
+                                <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
+                                  <div *ngFor="let u of users "
+                                    class="col-md-5 col-sm-12 col-lg-6 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
+                                    <div class="">
+                                      <label for="picker1 text-24">{{u.name}}-{{u.surname}}</label>
+                                      <input type="number" min="0" #percent name="percent" class="form-control"
+                                        placeholder="percent">
+                                    </div>
+                                    <div>
+                                      <i (click)="addUserToProject({id:u.id,cost:u.cost,percent:percent.value})"
+                                        class="text-success ml-1 mr-4  i-Add text-24"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -309,163 +329,15 @@
                 </div>
               </div>
             </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary btn-rounded"
+              (click)="visibleModal();modal.dismiss('cancel')">Cancel</button>
+            <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
+              (click)="visibleModal();updateProject();modal.close()">Ok</btn-loading>
           </div>
-        </div>
-      </div>
-    </div>
-  </form>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary btn-rounded"
-      (click)="visibleModal();modal.dismiss('cancel')">Cancel</button>
-    <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
-      (click)="visibleModal();updateProject();modal.close()">Ok</btn-loading>
-  </div>
-</ng-template>
-
-<!-- project manager card -->
-<div *appRole="role === 2 && project" class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
-  <div class="card-body text-center d-flex flex-row align-items-center ">
-    <div class="avatar box-shadow-2 m-0 mr-2">
-      <img *ngIf="project.logo == null" src="assets/images/project.png" alt="">
-      <img *ngIf="project.logo !== null" src="{{url}}{{project.logo}}" alt="">
-    </div>
-    <h2>{{project.name}}</h2>
-  </div>
-
-  <div *ngIf="associateClient" class="card-body text-center d-flex flex-row align-items-center ">
-    <div class="avatar box-shadow-2 m-0 mr-2">
-      <img *ngIf="associateClient.logo" src="{{url}}{{associateClient.logo}}" alt="">
-      <img else src="assets/images/stock.jpg" alt="">
-    </div>
-    <h2>{{associateClient.name}} </h2>
-  </div>
-</div>
-
-<!-- project manager -->
-<div class="row" *appRole="role === 2 && project">
-
-
-  <div class=" col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
-      <div class="card-body text-left">
-        <i class="i-Business-Man"></i>
-        <div class=" content text-left ">
-          <p class=" text-center mt-2 mb-0">Client</p>
-          <p *ngIf="associateClient" class="text-primary  text-left text-18 line-height-1 mb-2">{{associateClient.name}}
-          </p>
-          <p *ngIf="!associateClient" class="text-primary  text-left text-18 line-height-1 mb-2">nessuno</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
-      <div class="card-body text-center">
-        <i class="i-Money-2"></i>
-        <div class="content">
-          <p class="text-muted mt-2 mb-0">Revenue</p>
-          <p class="text-primary text-20 line-height-1 mb-2">{{project.revenue}}$</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
-      <div class="card-body text-center">
-        <i class="i-Loading"></i>
-        <div class="content">
-          <p class="text-muted mt-2 mb-0">Progress</p>
-          <p *ngIf="project.progress" class="text-primary text-20 line-height-1 mb-2">{{project.progress}}%</p>
-          <p *ngIf="project.progress == 0 || project.progress == null " class="text-primary text-20 line-height-1 mb-2">
-            0%</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
-      <div class="card-body text-center">
-        <i class="i-Business-Mens"></i>
-        <div class="content">
-          <p class="text-muted mt-2 mb-0">Users</p>
-          <p *ngIf="associateUser" class="text-primary text-20 line-height-1 mb-2">{{associateUser}}</p>
-          <p *ngIf="associateUser == 0" class="text-primary text-20 line-height-1 mb-2">0</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- project manager -->
-<div class="col-md-12 p-0" *appRole="role === 2">
-  <div class="card mb-4">
-    <div class="card-body">
-
-      <form [formGroup]="projectForm">
-        <div class="row flex-row-reverse">
-
-          <!-- input name -->
-          <div class="col-md-6 form-group mb-3 position-relative">
-            <label for="name">project</label>
-            <input disabled minlength="3" maxlength="40" type="text" class="form-control" name="name"
-              formControlName="name">
-          </div>
-
-          <!-- clienti -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="picker1">client</label>
-            <input disabled type="text" class="form-control" value="{{associateClient ? associateClient.name : '' }}">
-          </div>
-
-          <!-- revenue -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="revenue">revenue</label>
-            <input disabled min="0" class="form-control" type="number" name="revenue" formControlName="revenue">
-          </div>
-          <!-- progress -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="picker1">progress</label>
-            <input disabled type="number" min="0" class="form-control" formControlName="progress" name="progress">
-
-          </div>
-
-          <!-- end-date -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="picker1">end date</label>
-            <input disabled type="date" class="form-control" formControlName="end_date">
-          </div>
-
-          <!-- start-date -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="picker1">start date</label>
-            <input disabled type="date" class="form-control" formControlName="start_date">
-          </div>
-
-          <!-- status -->
-          <div class="col-md-6 form-group mb-3">
-            <label for="status">status</label>
-            <select disabled class="form-control" type="number" name="status" formControlName="status"
-              placeholder="status">
-              <option [value]="0">pending</option>
-              <option [value]="1">open</option>
-              <option [value]="2">close</option>
-            </select>
-          </div>
-
-          <!-- collaboratori -->
-          <div class="col-lg-6 col-md-6 p-0 row flex-row">
-
-            <div class="ml-1 btn btn-primary btn-rounded d-flex  align-items-center py-2 mb-1 collabs"
-              *ngFor="let u of arrayUsersIds">
-              <p class="m-0">
-                {{u.name}} {{u.surname}}
-              </p>
-            </div>
-          </div>
-        </div>
+        </ng-template>
+        
       </form>
     </div>
   </div>

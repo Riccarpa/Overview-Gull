@@ -216,14 +216,18 @@ export class UpdateProjectComponent implements OnInit {
 
   // modale cards
   openCreateModal(content: any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
-      .result.then((result) => {
-        this.confirmResut = `Closed with: ${result}`;
-        this.visibleModal()
-      }, (reason) => {
-        this.confirmResut = `Dismissed with: ${reason}`;
-        this.visibleModal()
-      });
+
+    if (this.role ===1) {
+      
+      this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+        .result.then((result) => {
+          this.confirmResut = `Closed with: ${result}`;
+          this.visibleModal()
+        }, (reason) => {
+          this.confirmResut = `Dismissed with: ${reason}`;
+          this.visibleModal()
+        });
+    }
   }
 
   visibleModal(){
