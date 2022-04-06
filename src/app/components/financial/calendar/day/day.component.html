@@ -26,29 +26,30 @@
       </div>
       <!-- create new activities -->
       <div *ngFor="let activityForm of activitiesArray.controls; let i = index">
-        <div class="d-flex align-items-center">
-          <!-- activity input -->
-          <select class="form-control mb-2">
-            <option>Seleziona attività</option>
-            <option *ngFor="let activity of activities" [value]="activity.id">
-              {{ activity.name }}
-            </option>
-          </select>
-          <!-- hours input -->
-
-          <input
-            type="number"
-            name="hours_spent"
-            id="hours_spent"
-            min="0"
-            max="8"
-            class="form-control mb-2 ml-2 w-50"
-          />
-
-          <i
-            class="i-Close-Window ml-2 mb-2 text-danger"
-            (click)="deleteActivity(i)"
-          ></i>
+        <div [formGroup]="activityForm">
+          <div class="d-flex align-items-center">
+            <!-- activity input -->
+            <select formControlName="activity_id" class="form-control mb-2">
+              <option>Seleziona attività</option>
+              <option *ngFor="let activity of activities" [value]="activity.id">
+                {{ activity.name }}
+              </option>
+            </select>
+            <!-- hours input -->
+            <input
+              formControlName="hours_spent"
+              type="number"
+              name="hours_spent"
+              id="hours_spent"
+              min="0"
+              max="8"
+              class="form-control mb-2 ml-2 w-50"
+            />
+            <i
+              class="i-Close-Window ml-2 mb-2 text-danger"
+              (click)="deleteActivity(i)"
+            ></i>
+          </div>
         </div>
       </div>
       <button
@@ -64,7 +65,11 @@
   <!-- smartworking -->
   <div class="col mb-3 justify-content-center d-flex">
     <label class="checkbox checkbox-primary">
-      <input type="checkbox" [checked]="day.smartworking == 1" />
+      <input
+        (change)="smartAssign($event)"
+        type="checkbox"
+        [checked]="day.smartworking == 1"
+      />
       <span class="checkmark"></span>
     </label>
   </div>
@@ -75,7 +80,7 @@
       btnClass="btn-{{ btn.name }}  btn-sm "
       [loading]="btn.loading"
       loadingText="Saving..."
-      (click)="showLoading(btn)"
+      (click)="saveActivity(btn)"
     >
       Save
     </btn-loading>

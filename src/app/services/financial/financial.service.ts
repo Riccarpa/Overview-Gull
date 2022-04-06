@@ -39,4 +39,18 @@ export class FinancialService {
     return this.http.post(`${this.url}/monthlyLogs`, body,{headers: headers});
   }
 
+  patchActivities(id,arr): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    })
+    let body ={
+      "daily_logs": [arr]
+    }
+
+    return this.http.patch(`${this.url}/monthlyLogs/${id}`, body,{headers: headers});
+  }
+
+ 
+
 }

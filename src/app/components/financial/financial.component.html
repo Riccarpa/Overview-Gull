@@ -21,7 +21,8 @@
     <app-day
       [activities]="activities"
       [day]="day"
-      *ngFor="let day of days"
+      *ngFor="let day of days; let j = index"
+      [date]="j + 1"
     ></app-day>
   </div>
   <div *ngIf="!days" class="loader-bubble loader-bubble-primary m-5"></div>
