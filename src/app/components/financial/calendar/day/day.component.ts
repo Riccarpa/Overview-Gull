@@ -14,5 +14,17 @@ export class DayComponent implements OnInit {
   ngOnInit(): void {
     
   }
+  loadingButtons = [
+    {
+      name: 'secondary',
+      loading: false,
+    }
+  ]
+  showLoading(btn) {
+    btn.loading = true;
+    setTimeout(() => {
+      btn.loading = false;
+    }, 3000);
+  }
 
 }

@@ -1,2 +1,51 @@
-<p>{{ day.date }}</p>
-<p>{{ activities[0].id }}</p>
+<!-- date -->
+<div class="d-flex align-items-center">
+  <span class="col"
+    ><strong>{{ day.date | date: "d EEEE" }}</strong></span
+  >
+  <!-- select activity -->
+  <div class="col">
+    <select
+      *ngFor="let activity of day.activity_days_array"
+      class="form-control mb-2"
+    >
+      <option selected>{{ activity.activity_name }}</option>
+      <option *ngFor="let activity of activities" [value]="activity.id">
+        {{ activity.name }}
+      </option>
+    </select>
+  </div>
+  <!-- hours -->
+  <div class="col">
+    <input
+      type="number"
+      name="hours_spent"
+      id="hours_spent"
+      min="0"
+      max="8"
+      value="{{ activity.hours_spent }}"
+      class="form-control mb-2 w-50"
+      *ngFor="let activity of day.activity_days_array"
+    />
+  </div>
+  <!-- smartworking -->
+  <div class="col mb-3">
+    <label class="checkbox checkbox-secondary">
+      <input type="checkbox" [checked]="day.smartworking == 1" />
+      <span class="checkmark"></span>
+    </label>
+  </div>
+  <!-- button -->
+  <div class="col">
+    <btn-loading
+      *ngFor="let btn of loadingButtons"
+      btnClass="btn-{{ btn.name }} btn-rounded btn-sm "
+      [loading]="btn.loading"
+      loadingText="Saving..."
+      (click)="showLoading(btn)"
+    >
+      Save
+    </btn-loading>
+  </div>
+</div>
+<hr />
