@@ -22,6 +22,7 @@ import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
 import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { FinancialComponent } from './components/financial/financial.component';
+import { DayComponent } from './components/financial/calendar/day/day.component';
 
 
 
@@ -39,6 +40,7 @@ import { FinancialComponent } from './components/financial/financial.component';
     FilterClientPipe,
     FilterUsersPipe,
     FinancialComponent,
+    DayComponent,
  
   ],
   imports: [
