@@ -17,6 +17,7 @@ export class TaskService {
   url = environment.apiURL + '/tasks';
   currentTask: any;
 
+  // recupera tutti i task
   getTasks(): Observable<any> {
     const url = this.url;
 
@@ -27,6 +28,7 @@ export class TaskService {
     return this.http.get(url, { headers: headers });
   }
 
+  // aggiunge task
   addTask(name: string, assignee_id: number, status: number, start_date: Date, end_date: Date, effort: number, sprintId: number): Observable<any> {
     const url = this.url;
 
@@ -48,6 +50,7 @@ export class TaskService {
     return this.http.post(url, body, { headers: headers });
   }
 
+  // cancella task
   deleteTask(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
 

@@ -17,6 +17,7 @@ export class SprintService {
   url = environment.apiURL + '/sprints';
   currentSprint: any;
 
+  // recupera tutti gli sprint
   getSprints(): Observable<any> {
     const url = this.url;
 
@@ -27,6 +28,7 @@ export class SprintService {
     return this.http.get(url, { headers: headers });
   }
 
+  // retrive sprint
   getSprint(id: any): Observable<any> {
     let url = `${this.url}/${id}`;
     const headers = {
@@ -37,6 +39,7 @@ export class SprintService {
     return this.http.get(url, { headers });
   }
 
+  // aggiunge sprint
   addSprint(name: string, start_date: Date, end_date: Date, effort_days: number, revenue: number, projectId: number): Observable<any> {
     const url = this.url;
 
