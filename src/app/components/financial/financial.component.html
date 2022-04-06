@@ -18,6 +18,11 @@
       <span class="col">SmartWorking</span>
     </div>
     <hr />
+    <app-day
+      [activities]="activities"
+      [day]="day"
+      *ngFor="let day of days"
+    ></app-day>
   </div>
   <div *ngIf="!days" class="loader-bubble loader-bubble-primary m-5"></div>
 </div>
