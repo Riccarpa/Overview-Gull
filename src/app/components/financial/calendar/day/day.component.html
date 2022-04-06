@@ -36,10 +36,10 @@
     </label>
   </div>
   <!-- button -->
-  <div class="col">
+  <div class="col mb-1">
     <btn-loading
       *ngFor="let btn of loadingButtons"
-      btnClass="btn-{{ btn.name }} btn-rounded btn-sm "
+      btnClass="btn-{{ btn.name }}  btn-sm "
       [loading]="btn.loading"
       loadingText="Saving..."
       (click)="showLoading(btn)"
