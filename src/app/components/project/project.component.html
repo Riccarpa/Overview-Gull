@@ -1,14 +1,6 @@
 <div *appRole="role == 1" class="d-flex justify-content-between w-100 mb-4">
   <h2 class="">Projects</h2>
-  <div *ngIf="client && idClient" class="col-lg-3 card-profile-1 d-flex justify-content-start align-items-center">
-    <div class="avatar box-shadow-2  m-0 mr-2">
-      <img *ngIf="client.logo == null" src="assets/images/stock.jpg" alt="">
-      <img src="{{url}}{{client.logo}}" alt="">
-    </div>
-
-    <h2>{{client.name}}</h2>
-  </div>
-
+  
   <div *appRole="role == 1">
     <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">Aggiungi Progetto</button>
 
@@ -168,7 +160,11 @@
                 <tr>
                   <td>Client</td>
                   <td class="font-weight-bold">
-                    <p *ngFor="let c of clients | filterClient: proj.client_id" class="m-0">{{c.name}}</p>
+                    <p *ngFor="let c of clients | filterClient: proj.client_id" class="m-0 d-inline mr-2">{{c.name}}</p>
+                     <span>
+                       <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
+                         class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
+                     </span>
                   </td>
                 </tr>
                 <tr [ngSwitch]="proj.status">
@@ -222,11 +218,8 @@
             class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
 
           <div class="card-title m-0 mr-5">{{proj.name}}</div>
+ 
 
-          <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
-
-          <div class="card-title m-0">{{proj.client_details.name}}</div>
 
         </div>
 
@@ -241,7 +234,11 @@
                 <tr>
                   <td>Client</td>
                   <td class="font-weight-bold">
-                    <p>{{proj.client_details.name}}</p>
+                    <p class="d-inline mr-2">{{proj.client_details.name}}</p>
+                    <span>
+                      <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
+                        class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
+                      </span>
                   </td>
                 </tr>
                 <tr [ngSwitch]="proj.status">
