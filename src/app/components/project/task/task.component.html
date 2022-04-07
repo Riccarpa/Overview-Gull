@@ -39,12 +39,12 @@
                 <ngx-datatable-column [width]="300">
                     <ng-template ngx-datatable-header-template>Task Status</ng-template>
                     <ng-template ngx-datatable-cell-template let-row="row">
-                        {{getStatus(row.status)}}
-                        {{getDate(row.status, (row.start_date | date:'dd-MM-yyyy'), (row.end_date |
-                        date:'dd-MM-yyyy'))}}
                         <span class="rounded-circle d-inline-block"
                             [ngClass]="{'red': row.status == 0, 'green' : row.status == 2, 'orange' : row.status == 1 }"
                             style="height: 10px; width: 10px;"></span>
+                        {{getStatus(row.status)}}
+                        {{getDate(row.status, (row.start_date | date:'dd-MM-yyyy'), (row.end_date |
+                        date:'dd-MM-yyyy'))}}
                     </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column [width]="100">

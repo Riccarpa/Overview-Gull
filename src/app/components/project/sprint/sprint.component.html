@@ -52,16 +52,16 @@
                         placeholder="Inserisci effort" formControlName="effort_days">
                 </div>
                 <div class="col-md-12 form-group mb-3">
-                    <label for="revenue">Ricavi</label>
+                    <label for="revenue">Revenue</label>
                     <input type="number" class="form-control" id="revenue" name="revenue" formControlName="revenue">
                 </div>
             </div>
         </form>
     </div>
-    <div class="modal-footer">
-        <button *ngIf="titleModal == 'Aggiungi Sprint'" type="button" class="btn btn-outline-dark btn-rounded"
+    <div class="modal-footer d-flex justify-content-between">
+        <button *ngIf="titleModal == 'Aggiungi Sprint'" type="button" class="btn btn-outline-primary btn-rounded"
             (click)="addSprint()">Salva</button>
-        <button *ngIf="titleModal == 'Modifica Sprint'" type="button" class="btn btn-outline-dark btn-rounded"
+        <button *ngIf="titleModal == 'Modifica Sprint'" type="button" class="btn btn-outline-primary btn-rounded"
             (click)="editSprint()">Salva</button>
         <button *ngIf="titleModal == 'Modifica Sprint'" class="btn btn-outline-danger btn-rounded"
             (click)="deleteSprint(sprint.id, modalConfirm)">Elimina</button>
