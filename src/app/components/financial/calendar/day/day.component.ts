@@ -24,27 +24,10 @@ export class DayComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-
-    let oldActivities = [];
-    for (let i = 0; i < this.day.activity_days_array.length; i++) {
-      let e = this.day.activity_days_array[i];
-      let obj = {
-        "hours_spent":e.hours_spent,
-        "activity_type": 'generic',
-        "activity_id":e.activity_id 
-      }
-      oldActivities.push(obj)
-      
-    }
-    
-    this.patchArr = [{
-      "day": this.date,
-      "smartworking":this.smartWorking | this.day.smartworking,
-      "activity_days_array":oldActivities
-    }]
-    this.OldActivities = oldActivities
+   this.retrieveOldActivities()
   }
 
+  // acrivities Form Array
   activitiesForm=this.fb.group({
     activitiesArray:this.fb.array([])
   })
@@ -58,13 +41,12 @@ export class DayComponent implements OnInit {
         activity_type:['generic']
       })
       this.activitiesArray.push(activityForm);
-      
-
-    
   }
   deleteActivity(i){
     this.activitiesArray.removeAt(i)
   }
+
+  // catch smartWorking value
   smartAssign(e){
    if(e.target.checked==true){
      this.smartWorking = 1
@@ -73,40 +55,46 @@ export class DayComponent implements OnInit {
    }
   }
 
+  // patch activity
   saveActivity(btn){
     btn.loading = true;
-    // setTimeout(() => {
-    //   btn.loading = false;
-    // }, 3000);
-
     for (let i = 0; i < this.activitiesArray.value.length; i++) {
       const element = this.activitiesArray.value[i];
       element.activity_id = parseInt(element.activity_id)
     }
-     console.log(this.activitiesArray.value)
-     console.log(this.OldActivities)
-
-
      this.patchArr = {
       "day": this.date,
       "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
       "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
-    }
-    
-    
-    
+    }  
     this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
       console.log(res)
       btn.loading = false;
     })
     
+  }
 
 
-    
-    console.log(this.patchArr)
+// prepare patch array with old activities
+  retrieveOldActivities(){
+    let oldActivities = [];
+    for (let i = 0; i < this.day.activity_days_array.length; i++) {
+      let e = this.day.activity_days_array[i];
+      let obj = {
+        "hours_spent":e.hours_spent,
+        "activity_type": 'generic',
+        "activity_id":e.activity_id 
+      }
+      oldActivities.push(obj)
+      
+    }
+    this.patchArr = [{
+      "day": this.date,
+      "smartworking":this.smartWorking | this.day.smartworking,
+      "activity_days_array":oldActivities
+    }]
 
-
-
+    this.OldActivities = oldActivities
   }
 
 

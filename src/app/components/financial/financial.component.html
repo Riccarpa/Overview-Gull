@@ -25,6 +25,9 @@
       [date]="j + 1"
     ></app-day>
   </div>
-  <div *ngIf="!days" class="loader-bubble loader-bubble-primary m-5"></div>
 </div>
-<div *ngIf="!monthlyLogs" class="loader-bubble loader-bubble-primary m-5"></div>
+
+<div
+  *ngIf="!monthlyLogs"
+  class="position-absolute loader-bubble loader-bubble-primary"
+></div>

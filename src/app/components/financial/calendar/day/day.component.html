@@ -27,7 +27,7 @@
       <!-- create new activities -->
       <div *ngFor="let activityForm of activitiesArray.controls; let i = index">
         <div [formGroup]="activityForm">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center position-relative">
             <!-- activity input -->
             <select formControlName="activity_id" class="form-control mb-2">
               <option>Seleziona attività</option>
@@ -46,7 +46,7 @@
               class="form-control mb-2 ml-2 w-50"
             />
             <i
-              class="i-Close-Window ml-2 mb-2 text-danger"
+              class="i-Close-Window ml-2 mb-2 text-danger position-absolute position-absolute top-50 translate-middle"
               (click)="deleteActivity(i)"
             ></i>
           </div>
