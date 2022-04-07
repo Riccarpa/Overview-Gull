@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+
+.ngx-datatable.material .empty-row {
+    margin-top: 100px;
+    text-align: center;
+}
