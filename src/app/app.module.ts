@@ -28,6 +28,8 @@ import { ReqInterceptInterceptor } from './services/interceptors/req-intercept.i
 import { RoleDirective } from './directives/rolesDirective/role.directive';
 import { SprintComponent } from './components/project/sprint/sprint.component';
 import { TaskComponent } from './components/project/task/task.component';
+import { FinancialComponent } from './components/financial/financial.component';
+import { DayComponent } from './components/financial/calendar/day/day.component';
 
 
 
@@ -49,7 +51,8 @@ import { TaskComponent } from './components/project/task/task.component';
     RoleDirective,
     SprintComponent,
     TaskComponent,
-
+    FinancialComponent,
+    DayComponent
   ],
   imports: [
     BrowserModule,

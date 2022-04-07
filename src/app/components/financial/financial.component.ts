@@ -29,7 +29,7 @@ export class FinancialComponent implements OnInit {
 
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-
+      
     })
 
     this.aService.getActivities().subscribe((res:any)=>{
