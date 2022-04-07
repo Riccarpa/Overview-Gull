@@ -8,7 +8,7 @@ import { UserComponent } from './components/user/user.component';
 import { UpdateUserComponent } from './components/user/update-user/update-user.component';
 import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/admin-layout-sidebar-large/admin-layout-sidebar-large.component';
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
-
+import { FinancialComponent } from './components/financial/financial.component';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home',component:AdminLayoutSidebarLargeComponent,children:[
@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'project', component: ProjectComponent },
     { path: 'updateProject/:id', component: UpdateProjectComponent },
     { path: 'homeUser/:id', component: HomeUserComponent },
-
+    { path: 'financial/:id', component: FinancialComponent },
   ] },
   
   { path: 'login', component: LoginComponent },

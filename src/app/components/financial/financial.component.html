@@ -1,0 +1,33 @@
+<div *ngIf="monthlyLogs" class="card">
+  <div class="table-head p-4 d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
+      <div class="month m-2">
+        <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+      </div>
+      <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
+    </div>
+    <!-- <button type="button" class="btn btn-primary m-1">Save</button> -->
+  </div>
+
+  <div *ngIf="days" class="table-body p-4">
+    <div class="table-body-head d-flex align-items-center">
+      <span class="col">Date</span>
+      <span class="col">Activity and Hours</span>
+      <span class="col text-center">SmartWorking</span>
+      <span class="col">Actions</span>
+    </div>
+    <hr />
+    <app-day
+      [activities]="activities"
+      [day]="day"
+      *ngFor="let day of days; let j = index"
+      [date]="j + 1"
+    ></app-day>
+  </div>
+</div>
+
+<div
+  *ngIf="!monthlyLogs"
+  class="position-absolute loader-bubble loader-bubble-primary"
+></div>

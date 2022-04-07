@@ -7,6 +7,6 @@ export class Sprint {
     start_date: Date
     end_date: Date
     effort_days: number | null
-    revenue: null
+    revenue: number | null
     task_ids: number[]
 }

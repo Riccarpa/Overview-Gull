@@ -10,7 +10,7 @@ export class Task {
     status: number
     closing_date: Date
     sprint_id: number
-    effort: null
+    effort: number | null
     priority: null
     start_date: Date
     end_date: Date

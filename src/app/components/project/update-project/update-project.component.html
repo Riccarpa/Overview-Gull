@@ -21,7 +21,7 @@
 
 <!-- sezione card  -->
 
-<div *ngIf="project"  class="row">
+<div *ngIf="project" class="row">
 
 
   <div (click)="modal_client_id = true;openCreateModal(modalConfirm)" id="debug" class=" col-lg-3 col-md-6 col-sm-6">
@@ -123,7 +123,8 @@
               <option value="" disabled>clienti</option>
               <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
             </select>
-            <input *ngIf="role ===2" disabled type="text" class="form-control" value="{{associateClient ? associateClient.name : '' }}">
+            <input *ngIf="role ===2" disabled type="text" class="form-control"
+              value="{{associateClient ? associateClient.name : '' }}">
           </div>
 
           <!-- revenue -->
@@ -137,14 +138,15 @@
             <label for="picker1">progress</label>
             <input *ngIf="role === 1" type="number" min="0" class="form-control" formControlName="progress"
               name="progress">
-              <input *ngIf="role ===2" disabled type="number" min="0" class="form-control" formControlName="progress" name="progress">
+            <input *ngIf="role ===2" disabled type="number" min="0" class="form-control" formControlName="progress"
+              name="progress">
           </div>
 
           <!-- end-date -->
           <div class="col-md-6 form-group mb-3">
             <label for="picker1">end date</label>
             <input *ngIf="role === 1" type="date" class="form-control" formControlName="end_date">
-             <input *ngIf="role ===2" disabled type="date" class="form-control" formControlName="end_date">
+            <input *ngIf="role ===2" disabled type="date" class="form-control" formControlName="end_date">
           </div>
 
           <!-- start-date -->
@@ -163,7 +165,7 @@
               <option [value]="1">open</option>
               <option [value]="2">close</option>
             </select>
-             <input *ngIf="role ===2" disabled type="text" class="form-control" formControlName="progress">
+            <input *ngIf="role ===2" disabled type="text" class="form-control" formControlName="progress">
           </div>
 
           <!-- collaboratori -->
@@ -200,42 +202,43 @@
               </div>
             </div>
           </div>
-           <div class="d-flex  align-items-center py-2 mb-1 col-lg-6" *ngIf="role === 2">
+          <div class="d-flex  align-items-center py-2 mb-1 col-lg-6" *ngIf="role === 2">
 
-             <div class="ml-1 btn btn-primary btn-rounded d-flex  align-items-center py-2 mb-1 collabs"
-               *ngFor="let u of arrayUsersIds">
-               <p class="m-0">
-                 {{u.name}} {{u.surname}}
-               </p>
-             </div>
-        </div>
-
-
-        <!-- button update-delete -->
-        <div class="col-lg-12 d-flex align-items-center mt-3">
-          <div class="col-lg-6 p-0 ">
-            <btn-loading (click)="updateProject()" btnClass=" btn-primary btn-rounded" [loading]="loadingUpdate">update
-              project</btn-loading>
-            <btn-loading (click)="delProject(project.id)" [loading]="loadingDelete"
-              btnClass="btn-danger btn-rounded m-4 ">
-              delete
-            </btn-loading>
-            <btn-loading btnClass="btn-primary btn-rounded" (click)="back()">Back</btn-loading>
+            <div class="ml-1 btn btn-primary btn-rounded d-flex  align-items-center py-2 mb-1 collabs"
+              *ngFor="let u of arrayUsersIds">
+              <p class="m-0">
+                {{u.name}} {{u.surname}}
+              </p>
+            </div>
           </div>
 
-          <div class="col-lg-6 p-0 row flex-row-reverse">
 
-            <div class="d-flex flex-wrap p-1 align-items-center " *ngIf="role ===1">
-              <div  class="ml-1 btn btn-primary btn-rounded d-flex p-1 align-items-center pl-2 mb-1"
-                *ngFor="let u of arrayUsersIds">
-                <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
-                  {{user.name}}
-                </p>
-                <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
+          <!-- button update-delete -->
+          <div class="col-lg-12 d-flex align-items-center mt-3">
+            <div class="col-lg-6 p-0 ">
+              <btn-loading (click)="updateProject()" btnClass=" btn-primary btn-rounded" [loading]="loadingUpdate">
+                update
+                project</btn-loading>
+              <btn-loading (click)="delProject(project.id)" [loading]="loadingDelete"
+                btnClass="btn-danger btn-rounded m-4 ">
+                delete
+              </btn-loading>
+              <btn-loading btnClass="btn-primary btn-rounded" (click)="back()">Back</btn-loading>
+            </div>
+
+            <div class="col-lg-6 p-0 row flex-row-reverse">
+
+              <div class="d-flex flex-wrap p-1 align-items-center " *ngIf="role ===1">
+                <div class="ml-1 btn btn-primary btn-rounded d-flex p-1 align-items-center pl-2 mb-1"
+                  *ngFor="let u of arrayUsersIds">
+                  <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
+                    {{user.name}}
+                  </p>
+                  <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
+                </div>
+
               </div>
 
-            </div>
-           
             </div>
 
 
@@ -254,14 +257,14 @@
           <div class="modal-body">
             <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings"></img-cropper>
             <br>
-        
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-rounded btn-outline-dark"
               (click)="saveImg();modal.close()">Save</button>
           </div>
         </ng-template>
-        
+
         <!-- modale per cards -->
         <ng-template class="m-0" id="modal" #modalConfirm let-modal>
           <div class="modal-header">
@@ -272,14 +275,14 @@
             </button>
           </div>
           <form [formGroup]="projectForm">
-        
-        
+
+
             <div class="modal-body ">
               <div class="col-md-12">
                 <div class="card mb-4">
                   <div class="card-body">
                     <div>
-        
+
                       <div *ngIf="modal_client_id" class="col-md-12 form-group mb-3">
                         <label for="picker1">client</label>
                         <select class="form-control" formControlName="client_id" name="client_id">
@@ -287,12 +290,12 @@
                           <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
                         </select>
                       </div>
-        
+
                       <div *ngIf="modal_progress" class="col-md-12 form-group mb-3">
                         <label for="picker1">Progress</label>
                         <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
                       </div>
-        
+
                       <div *ngIf="modal_user_ids">
                         <div ngbDropdown class="mega-menu col-lg-12 col-md-12 col-12 align-items-center mt-2 p-3">
                           <button ngbDropdownToggle href="#"
@@ -300,11 +303,11 @@
                             Collaboratori</button>
                           <div ngbDropdownMenu perfectScrollbar>
                             <div class=" m-0">
-        
+
                               <div class="col-md-12 col-lg-12 p-2">
                                 <p class="text-primary text--cap border-bottom-primary d-inline-block">Collaboratori</p>
-        
-        
+
+
                                 <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
                                   <div *ngFor="let u of users "
                                     class="col-md-5 col-sm-12 col-lg-6 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
@@ -337,8 +340,12 @@
               (click)="visibleModal();updateProject();modal.close()">Ok</btn-loading>
           </div>
         </ng-template>
-        
+
       </form>
     </div>
   </div>
+</div>
+
+<div *ngIf="project">
+  <app-sprint [project]="project"></app-sprint>
 </div>

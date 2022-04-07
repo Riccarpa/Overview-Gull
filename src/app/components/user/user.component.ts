@@ -78,9 +78,9 @@ export class UserComponent implements OnInit {
         console.log(this.users[i].role);
         
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
-          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.pService.randomNumber()}`
         }else{
-          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.randomNumber()}`
+          this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.pService.randomNumber()}`
         }
       }
     },(error)=>{
@@ -168,11 +168,10 @@ export class UserComponent implements OnInit {
     this.filteredUsers = rows;
   }
 
-  randomNumber(){
-    let num = Math.floor(Math.random()*100000)
-    return num.toString()
-  }
-
+ 
+ goToFinancial(id:any){
+   this.route.navigate([`home/financial/${id}`])
+ }
   
 
 }

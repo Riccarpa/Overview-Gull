@@ -18,7 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
-import { ImageCropperComponent, ImageCropperModule} from 'ngx-img-cropper';
+import { ImageCropperComponent, ImageCropperModule } from 'ngx-img-cropper';
 import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
@@ -26,6 +26,10 @@ import { HomeUserComponent } from './components/user/homeUser/home-user/home-use
 import { CommonModule } from '@angular/common';
 import { ReqInterceptInterceptor } from './services/interceptors/req-intercept.interceptor';
 import { RoleDirective } from './directives/rolesDirective/role.directive';
+import { SprintComponent } from './components/project/sprint/sprint.component';
+import { TaskComponent } from './components/project/task/task.component';
+import { FinancialComponent } from './components/financial/financial.component';
+import { DayComponent } from './components/financial/calendar/day/day.component';
 
 
 
@@ -45,8 +49,10 @@ import { RoleDirective } from './directives/rolesDirective/role.directive';
     FilterProjectPipe,
     HomeUserComponent,
     RoleDirective,
-
- 
+    SprintComponent,
+    TaskComponent,
+    FinancialComponent,
+    DayComponent
   ],
   imports: [
     BrowserModule,
@@ -62,11 +68,11 @@ import { RoleDirective } from './directives/rolesDirective/role.directive';
     NgbModule,
     ImageCropperModule,
     CommonModule,
-  
-   
+
+
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor,multi:true}
+    { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

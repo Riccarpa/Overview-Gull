@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-end w-100 mb-4">
+    <button class="btn btn-success px-3 m-3" (click)="openModalAddSprint(modalBasic)">Crea Nuovo Sprint</button>
+</div>
+
+<!-- lista sprint -->
+<div class="row">
+    <div class="col-12" *ngFor="let sprint of currentSprints">
+        <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+            <div class="card-body">
+                <div class="card-title mb-3 d-flex justify-content-start w-100">
+                    <h4>Sprint name: {{sprint.name}}</h4>
+                    <button class="btn bg-transparent ml-2 p-0" (click)="openModalEditSprint(sprint.id, modalBasic)">
+                        <i class="text-20 i-File-Edit"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" *ngIf="sprint">
+                <app-task [sprint]="sprint" [collaboratorsIds]="project.user_ids" class="w-100"></app-task>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modale aggiunta/modifica sprint -->
+<ng-template #modalBasic let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="sprintForm">
+            <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                    <label for="name">Nome sprint</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
+                        formControlName="name">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="start_date">Data inizio</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date"
+                        formControlName="start_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="end_date">Data fine</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="effort_days">Effort</label>
+                    <input type="number" class="form-control" id="effort_days" name="effort_days"
+                        placeholder="Inserisci effort" formControlName="effort_days">
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label for="revenue">Revenue</label>
+                    <input type="number" class="form-control" id="revenue" name="revenue" formControlName="revenue">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button *ngIf="titleModal == 'Aggiungi Sprint'" type="button" class="btn btn-outline-primary btn-rounded"
+            (click)="addSprint()">Salva</button>
+        <button *ngIf="titleModal == 'Modifica Sprint'" type="button" class="btn btn-outline-primary btn-rounded"
+            (click)="editSprint()">Salva</button>
+        <button *ngIf="titleModal == 'Modifica Sprint'" class="btn btn-outline-danger btn-rounded"
+            (click)="deleteSprint(sprint.id, modalConfirm)">Elimina</button>
+    </div>
+</ng-template>
+
+<!-- modale cancella sprint -->
+<ng-template #modalConfirm let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Cancella Sprint</h4>
+        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p><strong>Sei sicuro di eliminare lo sprint?</strong></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-rounded"
+            (click)="modal.dismiss('cancel')">Annulla</button>
+        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
+    </div>
+</ng-template>

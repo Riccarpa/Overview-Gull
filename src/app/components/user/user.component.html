@@ -1,4 +1,5 @@
 <!-- Title -->
+
 <div class="title row mb-4">
   <h2 class="col-md-4">Users</h2>
   <!-- serch on data-table -->
@@ -225,8 +226,16 @@
               class="btn btn-sm btn-outline-primary m-1"
             >
               Edit
-            </button></ng-template
-          >
+            </button>
+
+            <button
+              type="button"
+              (click)="goToFinancial(row.id)"
+              class="btn btn-sm btn-outline-primary m-1"
+            >
+              financial
+            </button>
+          </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
     </div>
