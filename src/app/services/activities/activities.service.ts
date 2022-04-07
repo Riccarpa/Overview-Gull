@@ -18,10 +18,7 @@ export class ActivitiesService {
 
 
    getActivities():Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
-    return this.http.get(this.url,{headers: headers});
+    
+    return this.http.get(this.url);
 }
 }

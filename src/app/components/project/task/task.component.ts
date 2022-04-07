@@ -8,6 +8,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { SprintService } from 'src/app/services/sprint/sprint.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
+import { SprintComponent } from '../sprint/sprint.component';
 
 @Component({
   selector: 'app-task',
@@ -16,19 +18,28 @@ import { SprintService } from 'src/app/services/sprint/sprint.service';
 })
 export class TaskComponent implements OnInit {
 
-  constructor(private taskService: TaskService, private userService: UserService, private modalService: NgbModal, private projectService: ProjectService, private sprintService: SprintService) { }
+  constructor(public sprintComponent: SprintComponent,private inter:ReqInterceptInterceptor,private taskService: TaskService, private userService: UserService, private modalService: NgbModal, private projectService: ProjectService, private sprintService: SprintService) { }
 
   ngOnInit(): void {
-    // recupera tutti i task dello sprint
-    this.currentTasksIds = this.sprint.task_ids;
-    this.getTasks();
 
-    // filtro checkbox
+    this.role = this.inter.takeRole().role
+    // recupera tutti i task dello sprint
+
+    if (this.role !== 1) {
+      console.log(this.sprint);
+      this.filteredTasks = this.sprint.tasks
+      
+    }else{
+
+      this.currentTasksIds = this.sprint.task_ids;
+      this.getTasks();
+      
+      // filtro checkbox
     this.searchControl.valueChanges
-      .subscribe(value => {
+    .subscribe(value => {
         this.filerData(value);
       });
-
+      
     // recupera tutti gli utenti e filtra solo i collaboratori del progetto
     this.userService.getUsers().subscribe((res) => {
       this.users = res.data;
@@ -40,11 +51,14 @@ export class TaskComponent implements OnInit {
         }
       });
     });
-
+    
   }
+}
 
-  @Input() sprint: Sprint;
+  @Input() sprint: any;
   @Input() collaboratorsIds: number[];
+
+  role:number
 
   allTasks: Task[];
   currentTasksIds: number[];
@@ -55,6 +69,7 @@ export class TaskComponent implements OnInit {
   task: Task;
   searchControl: FormControl = new FormControl();
   filteredTasks: Task[];
+
 
   taskForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -169,10 +184,17 @@ export class TaskComponent implements OnInit {
       .result.then(() => {
         this.taskService.deleteTask(id).subscribe(() => {
           this.projectService.successBar('Task eliminato');
-          this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
-            this.currentTasksIds = res.data.task_ids;
-            this.getTasks();
-          });
+          if (this.role !== 1){
+            // resfresh page dopo delete
+            this.sprintComponent.ngOnInit()
+            
+          }else{
+
+            this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
+              this.currentTasksIds = res.data.task_ids;
+              this.getTasks();
+            });
+          }
           this.modalService.dismissAll();
         });
       }, () => {
@@ -184,18 +206,25 @@ export class TaskComponent implements OnInit {
   openModalEditTask(id: any, content: any) {
     this.taskService.currentTask = id;
     this.titleModal = "Modifica Task";
-    this.taskService.getTask(id).subscribe((res) => {
-      this.task = res.data;
 
-      this.taskForm.setValue({
-        name: this.task.name,
-        assignee_id: this.task.assignee_id,
-        status: this.task.status,
-        start_date: this.task.start_date,
-        end_date: this.task.end_date,
-        effort: this.task.effort,
-      });
-    })
+    if (this.role !== 1){
+
+      // valorizzare il form in maniera diversa dalla chiamata
+    }else{
+
+      this.taskService.getTask(id).subscribe((res) => {
+        this.task = res.data;
+  
+        this.taskForm.setValue({
+          name: this.task.name,
+          assignee_id: this.task.assignee_id,
+          status: this.task.status,
+          start_date: this.task.start_date,
+          end_date: this.task.end_date,
+          effort: this.task.effort,
+        });
+      })
+    }
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
@@ -215,10 +244,18 @@ export class TaskComponent implements OnInit {
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Task modificato con successo!');
-          this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
-            this.currentTasksIds = res.data.task_ids;
-            this.getTasks();
-          });
+
+          if (this.role !== 1){
+
+            this.sprintComponent.ngOnInit()
+          }else{
+  
+            this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
+              this.currentTasksIds = res.data.task_ids;
+              this.getTasks();
+            });
+            
+          }
         });
     }
   }

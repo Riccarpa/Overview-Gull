@@ -28,6 +28,13 @@ export class SprintService {
     return this.http.get(url, { headers: headers });
   }
 
+  getUserSprint(id:number): Observable<any>{
+
+    const url = environment.apiURL + `/projects/${id}/sprints`
+    return this.http.get(url);
+  
+  }
+
   // retrive sprint
   getSprint(id: any): Observable<any> {
     let url = `${this.url}/${id}`;

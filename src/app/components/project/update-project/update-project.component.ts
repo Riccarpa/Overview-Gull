@@ -256,7 +256,7 @@ export class UpdateProjectComponent implements OnInit {
     this.service.getUpdateProject().subscribe((res) => {
 
       this.project = res.data
-      console.log(this.project,'project ');
+
       
 
       
@@ -291,8 +291,7 @@ export class UpdateProjectComponent implements OnInit {
           this.clientService.getClient(idClient).subscribe((res) => { //retrive client 
 
             this.associateClient = res.data
-           console.log(this.associateClient,'associate client');
-           
+          
           })
         }
       }else{

@@ -70,8 +70,6 @@ export class ProjectService {
 
     let url = environment.apiURL + '/uploadImage'
 
-   
-
     const fd = new FormData()
     fd.append('image',file,file.name)
     

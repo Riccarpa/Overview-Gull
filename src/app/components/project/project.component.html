@@ -295,7 +295,15 @@
     <div class="card-body nav-center col-12">
       <ul ngbNav #nav="ngbNav" class="nav-tabs col-12 ">
         <li *ngFor="let proj of userProjects; let i = index" ngbNavItem title="{{proj.name}}">
-          <a ngbNavLink>{{proj.name}}{{proj.id}}</a>
+          <a ngbNavLink>
+              <div *ngIf="proj" class="d-flex">
+                <h2>{{proj.name}}</h2>
+                <img *ngIf="proj.logo" class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                  src="{{url}}{{proj.logo}}" alt="">
+                 <img *ngIf="proj.logo === null" src="assets/images/project.png"
+                   class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+              </div>
+          </a>
           <ng-template ngbNavContent>
 
 

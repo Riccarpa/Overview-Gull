@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { el } from 'date-fns/locale';
 import { ActivitiesService } from 'src/app/services/activities/activities.service';
 import { FinancialService } from 'src/app/services/financial/financial.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) { }
+  constructor(private inter:ReqInterceptInterceptor,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) { }
   id = this.route.snapshot.paramMap.get('id');
   user:any
   activities:any
@@ -37,11 +38,22 @@ export class FinancialComponent implements OnInit {
       console.log('activities',this.activities)
     })
 
-    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
-      this.monthlyLogs = res.data;
-      console.log('monthlyLogs',this.monthlyLogs)
-      this.getCurrMonthLog();
-    })
+    if (this.inter.takeRole().role !== 1) {
+
+      this.fService.getUserMonthlyLogs().subscribe((res) => {
+        this.monthlyLogs = res.data;
+        
+        this.getCurrMonthLog();
+      })
+    }else{
+
+      this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+        this.monthlyLogs = res.data;
+        console.log('monthlyLogs',this.monthlyLogs)
+        this.getCurrMonthLog();
+      })
+    }
+
 
     
     

@@ -25,8 +25,7 @@ export class SidebarLargeComponent implements OnInit {
   constructor(public router: Router, public navService: NavigationService,private interc:ReqInterceptInterceptor) {
   
     this.user = this.interc.takeRole()
-    console.log(this.user,'log sidebar');
-    
+ 
   }
 
   user:any

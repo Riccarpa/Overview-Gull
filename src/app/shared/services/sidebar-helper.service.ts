@@ -28,7 +28,7 @@ export class SidebarHelperService {
    * @param id
    * @returns {any}
    */
-  getSidenav(id): SidebarDirective {   console.log(this.sidenavInstances);
+  getSidenav(id): SidebarDirective {  
       return this.sidenavInstances[id];
   }
 }

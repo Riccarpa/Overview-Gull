@@ -59,7 +59,7 @@ export class ProjectComponent implements OnInit {
 
   }
 
-  projects: Project[] = []
+  projects: any[] = []
   clients: Client[] = []
   users: User[] = []
   userProjects: any
@@ -87,9 +87,10 @@ export class ProjectComponent implements OnInit {
 
     this.service.getProjects().subscribe((res) => {
 
-      this.projects = res.data
-      console.log(this.projects);
+      this.projects = res.data as any[]
 
+      
+      
 
       this.service.project = res.data
       for (let i = 0; i < this.projects.length; i++) {
@@ -253,7 +254,7 @@ export class ProjectComponent implements OnInit {
           if (this.client.logo) {
 
             this.client.logo = `${this.client.logo}?r=${this.service.randomNumber()}`
-            console.log(this.client);
+          
           }
 
 
@@ -276,7 +277,7 @@ export class ProjectComponent implements OnInit {
             if (res) {
 
               this.userRetrive = res.data
-              console.log(this.userRetrive,'log nel on init project to collab');
+          
               
             }
           }
