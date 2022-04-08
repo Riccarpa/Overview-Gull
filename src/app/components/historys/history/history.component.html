@@ -1,0 +1,80 @@
+
+ <div class="card-body card nav-center mb-4 col-12">
+     <ul ngbNav #nav="ngbNav"
+         class="nav-tabs col-12 d-flex align-items-center   px-4
+         border-bottom border-secondary ">
+         <li class="mr-auto">
+            <h2>History Logs</h2>
+        </li>
+         <li ngbNavItem title="today" >
+             <a ngbNavLink>
+                 <div >
+                     <h2>Today</h2>
+                 </div>
+             </a>
+             <ng-template ngbNavContent >
+
+                <div class=" d-flex justify-content-center">
+
+                    <ul class="border-left border-secondary h-100 position-relative">
+    
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque. lo</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                        <li>
+                            <div class="disc mt-2"></div>
+                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        </li>
+                    </ul>
+                </div>
+             
+             </ng-template>
+         </li>
+          <li ngbNavItem title="month">
+              <a ngbNavLink>
+                  <div class="">
+                      <h2>Month</h2>
+                  </div>
+              </a>
+              <ng-template ngbNavContent>
+
+
+
+              </ng-template>
+          </li>
+     </ul>
+     <div [ngbNavOutlet]="nav"></div>
+ </div>

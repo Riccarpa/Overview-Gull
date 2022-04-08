@@ -82,11 +82,75 @@ export class UpdateProjectComponent implements OnInit {
     }
   )
 
+  ngOnInit(): void {
+
+    this.role = this.interc.takeRole().role //prendo il ruolo dall'interceptor 
+    if (!this.idProject) {
+      this.idProject = parseInt(this.active.snapshot.paramMap.get('id'))
+    }
+
+    //retrive del progetto singolo
+    this.service.getProject(this.idProject).subscribe((res) => {
+      this.project = res.data
+
+      if (this.project.logo) {
+        this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
+      }
+      
+      this.projectForm = new FormGroup({
+
+        name: new FormControl(this.project.name, Validators.required),
+        status: new FormControl(this.project.status),
+        start_date: new FormControl(this.project.start_date),
+        end_date: new FormControl(this.project.end_date),
+        progress: new FormControl(this.project.progress),
+        revenue: new FormControl(this.project.revenue),
+        client_id: new FormControl(this.project.client_id),
+        user_ids: new FormControl(this.project.user_ids),
+        logo: new FormControl(this.project.logo)
+
+      })
+
+      this.associateUser = this.project.user_ids.length //calcolo del numero di utenti associati al progetto
+      this.associateClient = this.project.client_details //cliente progetto
+
+      if (this.interc.takeRole().role !== 1) { // se !admin
+        this.arrayUsersIds = this.project.user_details
+      }
+       
+    })
 
 
+    if (this.interc.takeRole().role == 1) { //se admin
+      if (this.users.length == 0) {
+        // get Users
+        this.userService.getUsers().subscribe((res) => {
 
-  delProject(id: number) {
+          this.users = res.data
 
+          for (let j = 0; j < this.users.length; j++) {
+            let u = this.users[j];
+
+            for (let i = 0; i < this.project.user_ids.length; i++) {
+              let e = this.project.user_ids[i];
+              if (e === u.id) {
+
+                this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+              }
+            }
+          }
+        })
+      }
+      if (this.clients === undefined) {
+        // get Clients
+        this.clientService.getClients().subscribe((res) => {
+          this.clients = res.data
+        })
+      }
+    }
+  }
+
+  delProject(id: number) { // delete proj ADMIN
     this.service.deleteProject(id).subscribe(res => {
 
       this.loadingDelete = true;
@@ -98,7 +162,7 @@ export class UpdateProjectComponent implements OnInit {
     })
   }
 
-  updateProject() {
+  updateProject() { // update ADMIN
 
     let start = Date.parse(this.projectForm.value.start_date)
     let end = Date.parse(this.projectForm.value.end_date)
@@ -111,11 +175,8 @@ export class UpdateProjectComponent implements OnInit {
     }else if(!diff){
       this.service.warningBar('La Data di fine progetto é precedente alla data di creazione')
     }else{
-
       let updatedProj = this.projectForm.value
-      
         this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
-          
           this.loadingUpdate = true;
           setTimeout(() => {
             this.loadingUpdate = false;
@@ -123,12 +184,8 @@ export class UpdateProjectComponent implements OnInit {
             this.ngOnInit()
           }, 2000);
         })
-        
     }
-    
   }
-
-  
 
   // take file
   uploadImg(event: any) {
@@ -137,50 +194,43 @@ export class UpdateProjectComponent implements OnInit {
 
   // post miltipart
   saveImg() {
-
     this.service.uploadImagePost(this.imageSelect).subscribe(
-
       (res) => {
-
         this.projectForm.value.logo = JSON.parse(JSON.stringify(res))
         if (res) {
           this.data = this.projectForm.value.logo.message
           this.updateProject()
-          
         }
-
       })
   }
 
   // cropper img
   openModalImg(modal) {
-    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then((result) => {
-      }, (reason) => {
-      });
+    if (this.role === 1){
+      this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+        .result.then((result) => {
+        }, (reason) => {
+        });
+    }
   }
 
   // dissocia user dal progetto
   removeUserToProject(id: number) {
-
     for (let i = 0; i < this.arrayUsersIds.length; i++) {
       const e = this.arrayUsersIds[i];
       if (e.id === id) {// se trova doppione elimina 
-
         this.arrayUsersIds.splice(i, 1)
         this.service.warningBar('user rimosso con successo, Ricordati di fare Update per salvare le modifiche')
         break
       }
-
     }
-
   }
 
+  // associa user al peogetto
   addUserToProject(user: any) {
 
-    let int = parseInt(user.percent)//parso
-    user.percent = int//valorizzo
-
+    let int = parseInt(user.percent)//parse della percentuale
+    user.percent = int //valorizzo
 
     if (this.arrayUsersIds.length == 0) {
       this.arrayUsersIds.push(user)
@@ -205,20 +255,14 @@ export class UpdateProjectComponent implements OnInit {
             this.service.successBar('modifica effettuata con successo.')
             break
           }
-
-
         }
       }
-
-
     }
   }
 
   // modale cards
   openCreateModal(content: any) {
-
     if (this.role ===1) {
-      
       this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
         .result.then((result) => {
           this.confirmResut = `Closed with: ${result}`;
@@ -230,8 +274,8 @@ export class UpdateProjectComponent implements OnInit {
     }
   }
 
-  visibleModal(){
-  
+  // imposta su false alla chiusura della modale (update tramite card)
+  visibleModal(){ 
     this.modal_progress = false
     this.modal_revenue = false
     this.modal_client_id = false
@@ -240,103 +284,5 @@ export class UpdateProjectComponent implements OnInit {
 
   back(){
    this.route.navigate(['home/project'])
-  }
-
-
-  ngOnInit(): void {
-
-    this.role = this.interc.takeRole().role //prendo il ruolo dall'interceptor 
-
-
-    if (!this.service.currentProject) {
-      this.service.currentProject = this.active.snapshot.paramMap.get('id') // assegno id nel service per la retrive
-    }
-
-    //retrive del progetto singolo
-    this.service.getUpdateProject().subscribe((res) => {
-
-      this.project = res.data
-
-      
-
-      
-      if (this.project.logo) {
-        this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
-      }
-
-
-      this.projectForm = new FormGroup({
-
-        name: new FormControl(this.project.name,Validators.required),
-        status: new FormControl(this.project.status),
-        start_date: new FormControl(this.project.start_date),
-        end_date: new FormControl(this.project.end_date),
-        progress: new FormControl(this.project.progress),
-        revenue: new FormControl(this.project.revenue),
-        client_id: new FormControl(this.project.client_id),
-        user_ids: new FormControl(this.project.user_ids),
-        logo: new FormControl(this.project.logo)
-
-      })
-
-      //calcolo del numero di utenti associati al progetto
-      this.associateUser = this.project.user_ids.length
-
-      if(this.interc.takeRole().role == 1){
-
-        if (this.project.client_id) {
-  
-          //get cliente associato al progetto tramite id
-          let idClient = this.project.client_id
-          this.clientService.getClient(idClient).subscribe((res) => { //retrive client 
-
-            this.associateClient = res.data
-          
-          })
-        }
-      }else{
-        this.arrayUsersIds = this.project.user_details
-        this.associateClient = res.data.client_details
-      }
-
-
-    })
-
-    
-    if (this.interc.takeRole().role == 1) {
-
-      if (this.users.length == 0) {
-        // get Users
-        this.userService.getUsers().subscribe((res) => {
-    
-          this.users = res.data
-    
-          for (let j = 0; j < this.users.length; j++) {
-            let u = this.users[j];
-    
-            for (let i = 0; i < this.project.user_ids.length; i++) {
-              let e = this.project.user_ids[i];
-              if (e === u.id) {
-    
-                this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
-              }
-            }
-          }
-    
-        })
-        
-      }
-      
-      
-      if (this.clients === undefined) {
-        // get Clients
-        this.clientService.getClients().subscribe((res) => {
-    
-          this.clients = res.data
-        })
-        
-      }
-
-    }
   }
 }

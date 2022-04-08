@@ -13,7 +13,11 @@ import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-inter
 })
 export class SprintComponent implements OnInit {
 
-  constructor(private inter:ReqInterceptInterceptor,private sprintService: SprintService, private modalService: NgbModal, private projectService: ProjectService) { }
+  constructor(
+    private inter:ReqInterceptInterceptor,
+    private sprintService: SprintService, 
+    private modalService: NgbModal, 
+    private projectService: ProjectService) { }
 
   ngOnInit(): void {
     // recupera tutti gli sprint del progetto
@@ -108,7 +112,7 @@ export class SprintComponent implements OnInit {
             revenue: '',
           });
 
-          this.projectService.getUpdateProject().subscribe((res) => {
+          this.projectService.getProject(this.project.id).subscribe((res) => {
             this.currentSprintsIds = res.data.sprint_ids;
             if (this.inter.takeRole().role !== 1){
               this.getUserSprint()
@@ -156,7 +160,7 @@ export class SprintComponent implements OnInit {
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Sprint modificato con successo!');
-          this.projectService.getUpdateProject().subscribe((res) => {
+          this.projectService.getProject(this.project.id).subscribe((res) => {
             this.currentSprintsIds = res.data.sprint_ids;
             if (this.inter.takeRole().role !== 1){
               this.getUserSprint()
@@ -198,7 +202,7 @@ export class SprintComponent implements OnInit {
           this.sprintService.deleteSprint(id).subscribe(() => {
             this.projectService.successBar('Sprint eliminato!');
             this.modalService.dismissAll();
-            this.projectService.getUpdateProject().subscribe((res) => {
+            this.projectService.getProject(this.project.id).subscribe((res) => {
               this.currentSprintsIds = res.data.sprint_ids;
               this.getUserSprint();
             });
@@ -228,7 +232,7 @@ export class SprintComponent implements OnInit {
               this.sprintService.deleteSprint(id).subscribe(() => {
                 this.projectService.successBar('Sprint eliminato!');
                 this.modalService.dismissAll();
-              this.projectService.getUpdateProject().subscribe((res) => {
+              this.projectService.getProject(this.project.id).subscribe((res) => {
                   this.currentSprintsIds = res.data.sprint_ids;
                   this.getSprints();
                 });

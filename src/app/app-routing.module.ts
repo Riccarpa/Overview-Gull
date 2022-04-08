@@ -9,6 +9,7 @@ import { UpdateUserComponent } from './components/user/update-user/update-user.c
 import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/admin-layout-sidebar-large/admin-layout-sidebar-large.component';
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
 import { FinancialComponent } from './components/financial/financial.component';
+import { HistoryComponent } from './components/historys/history/history.component';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home',component:AdminLayoutSidebarLargeComponent,children:[
@@ -22,6 +23,7 @@ const routes: Routes = [
   ] },
   
   { path: 'login', component: LoginComponent },
+  { path: 'history', component: HistoryComponent },
 ];
 
 @NgModule({

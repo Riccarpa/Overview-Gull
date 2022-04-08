@@ -17,7 +17,6 @@ export class ProjectService {
   currentUser:any //utente loggato
   url = environment.apiURL + '/projects'
   updatedProject: any
-  currentProject: any // id progetto singolo corrente
   project: Project[]
   clients: Client[]
   users: User[]
@@ -29,20 +28,10 @@ export class ProjectService {
 
   // get projects all
   getProjects(): Observable<any> {
-
     return this.http.get(this.url)
   }
 
   // retrive su progetto singolo
-  getUpdateProject(): Observable<any> {
-
-    let url = `${this.url}/${this.currentProject}`;
-  
-
-    return this.http.get(url)
-  }
-
-  // take project PM
   getProject(id:number): Observable<any> {
 
     let url = `${this.url}/${id}`;
@@ -115,6 +104,17 @@ export class ProjectService {
 
     return this.http.post(this.url, body)
   }
+
+
+  // get history
+  getHistory(id: number): Observable<any> {
+
+    let url = `${this.url}/${id}/history`;
+
+
+    return this.http.get(url)
+  }
+
 
   warningBar(message:string) {
     this.toastr.warning(message, 'Warning', { timeOut: 2000, closeButton: true, progressBar: true });
