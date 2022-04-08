@@ -14,33 +14,24 @@ import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-inter
 export class SprintComponent implements OnInit {
 
   constructor(
-    private inter:ReqInterceptInterceptor,
-    private sprintService: SprintService, 
-    private modalService: NgbModal, 
+    private inter: ReqInterceptInterceptor,
+    private sprintService: SprintService,
+    private modalService: NgbModal,
     private projectService: ProjectService) { }
 
   ngOnInit(): void {
     // recupera tutti gli sprint del progetto
     this.currentSprintsIds = this.project.sprint_ids;
-    this.role = this.inter.takeRole().role
-    if (this.inter.takeRole().role !== 1) {
-      this.getUserSprint()
-    }else{
-
-      this.getSprints();
-    }
-
+    this.getUserSprint();
   }
 
-  @Input() project: Project;
-
-  role:number
+  @Input() project: Project;//projectpassato dal componente updateProject
 
   allSprints: Sprint[];
   currentSprintsIds: number[];
   currentSprints: Sprint[];
   titleModal: string;
-  sprint: Sprint;
+  sprint: any;
 
   sprintForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -50,30 +41,11 @@ export class SprintComponent implements OnInit {
     revenue: new FormControl(''),
   });
 
-  // recupera tutti i sprint e li filtra per progetto
-  getSprints() {
-    this.sprintService.getSprints().subscribe((res) => {
-      this.allSprints = res.data;
-      this.currentSprints = this.allSprints.filter((sprint) => {
-        if (this.currentSprintsIds.includes(sprint.id)) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    });
-  }
-
-  // get sprint utente no admin
-  getUserSprint(){
-
-      this.sprintService.getUserSprint(this.project.id).subscribe((res)=>{
-
-        this.currentSprints = res.data
-        
-      })
-      
-      
+  // get project's sprints + tasks 
+  getUserSprint() {
+    this.sprintService.getUserSprint(this.project.id).subscribe((res) => {
+      this.currentSprints = res.data
+    })
   }
 
   // apre la modale per aggiungere un nuovo sprint
@@ -111,16 +83,7 @@ export class SprintComponent implements OnInit {
             effort_days: '',
             revenue: '',
           });
-
-          this.projectService.getProject(this.project.id).subscribe((res) => {
-            this.currentSprintsIds = res.data.sprint_ids;
-            if (this.inter.takeRole().role !== 1){
-              this.getUserSprint()
-            }else{
-
-              this.getSprints();
-            }
-          });
+          this.getUserSprint()
           this.projectService.successBar('Sprint aggiunto con successo!');
         });
     }
@@ -128,9 +91,9 @@ export class SprintComponent implements OnInit {
 
   // richiama la modale per modificare lo sprint
   openModalEditSprint(id: any, content: any) {
-    this.sprintService.currentSprint = id;
+
     this.titleModal = "Modifica Sprint";
-    this.sprintService.getSprint(id).subscribe((res) => {
+    this.sprintService.getUserSprint(id).subscribe((res) => {
       this.sprint = res.data;
 
       this.sprintForm.setValue({
@@ -156,93 +119,36 @@ export class SprintComponent implements OnInit {
       this.projectService.warningBar('Tutti i campi sono obbligatori');
     } else {
       const sprint = this.sprintForm.value;
-      this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue)
+      this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue, this.sprint.id)
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Sprint modificato con successo!');
-          this.projectService.getProject(this.project.id).subscribe((res) => {
-            this.currentSprintsIds = res.data.sprint_ids;
-            if (this.inter.takeRole().role !== 1){
-              this.getUserSprint()
-            }else{
-
-              this.getSprints();
-            }
-          });
+          this.getUserSprint()
         });
     }
   }
 
-  // cancella lo sprint selezionato
+  // richiama la modale per eliminare lo sprint
   deleteSprint(id: any, content: any) {
     this.confirm(id, content);
   }
-
-  // richiama la modale per eliminare lo sprint
+  
+  // cancella lo sprint selezionato
   confirm(id: any, content: any) {
 
-    if (this.inter.takeRole().role !== 1) {
-      this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
 
-        this.getUserSprint()
-        let sprint:any
-        for (let i = 0; i < this.currentSprints.length; i++) {
-          const e = this.currentSprints[i];
-          
-          if (e.id === id) {
-            sprint = e
-          }
-        }
-
-        if (sprint.tasks.length) {
+        if (this.sprint.tasks.length) {
           this.projectService.errorBar('Lo sprint non deve contenere task!');
           this.modalService.dismissAll();
         } else {
           this.sprintService.deleteSprint(id).subscribe(() => {
             this.projectService.successBar('Sprint eliminato!');
             this.modalService.dismissAll();
-            this.projectService.getProject(this.project.id).subscribe((res) => {
-              this.currentSprintsIds = res.data.sprint_ids;
-              this.getUserSprint();
-            });
+            this.getUserSprint();
           });
         }
       })
-
-
-    } else {
-      
-      this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
-        .result.then(() => {
-          let sprints: Sprint[];
-          let sprint: Sprint;
-          this.sprintService.getSprints().subscribe((res) => {
-            sprints = res.data;
-            for (let i = 0; i < sprints.length; i++) {
-              if (sprints[i].id == id) {
-                sprint = sprints[i];
-              }
-            }
-  
-            if (sprint.task_ids.length) {
-              this.projectService.errorBar('Lo sprint non deve contenere task!');
-              this.modalService.dismissAll();
-            } else {
-              this.sprintService.deleteSprint(id).subscribe(() => {
-                this.projectService.successBar('Sprint eliminato!');
-                this.modalService.dismissAll();
-              this.projectService.getProject(this.project.id).subscribe((res) => {
-                  this.currentSprintsIds = res.data.sprint_ids;
-                  this.getSprints();
-                });
-              });
-            }
-          });
-        }, () => {
-          console.log('annullato');
-        });
-      
-    }
   }
 }

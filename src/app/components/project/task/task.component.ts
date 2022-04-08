@@ -18,80 +18,31 @@ import { SprintComponent } from '../sprint/sprint.component';
 })
 export class TaskComponent implements OnInit {
 
-  constructor(public sprintComponent: SprintComponent, private inter: ReqInterceptInterceptor, private taskService: TaskService, private userService: UserService, private modalService: NgbModal, private projectService: ProjectService, private sprintService: SprintService) { }
+  constructor(
+    public sprintComponent: SprintComponent, 
+    private taskService: TaskService, 
+    private userService: UserService, 
+    private modalService: NgbModal, 
+    private projectService: ProjectService, 
+    private sprintService: SprintService) { }
 
   ngOnInit(): void {
 
-    this.role = this.inter.takeRole().role
-    // recupera tutti i task dello sprint
-    const idProject = this.sprint.project_id
-
-    if (this.role !== 1) {
-
-      this.filteredTasks = this.sprint.tasks
-
-
-
-      this.projectService.getProject(idProject).subscribe((res) => {
-
-        if (res) {
-
-          this.collaborators = res.data.user_details
-
-
-        }
-
-
-      })
-
-
-      // filtro checkbox
-      this.searchControl.valueChanges
-        .subscribe(value => {
-          this.filerData(value);
-        });
-
-
-    } else {
-
-      this.currentTasksIds = this.sprint.task_ids;
-      this.getTasks();
-
-      // filtro checkbox
-      this.searchControl.valueChanges
-        .subscribe(value => {
-          this.filerData(value);
-        });
-
-      // recupera tutti gli utenti e filtra solo i collaboratori del progetto
-      this.userService.getUsers().subscribe((res) => {
-        this.users = res.data;
-        this.collaborators = this.users.filter((user) => {
-          if (this.collaboratorsIds.includes(user.id)) {
-            return true;
-          } else {
-            return false;
-          }
-        });
+    this.filteredTasks = this.sprint.tasks
+    // filtro checkbox
+    this.searchControl.valueChanges
+      .subscribe(value => {
+        this.filerData(value);
       });
-
-    }
   }
 
   @Input() sprint: any;
-  @Input() collaboratorsIds: number[];
-
-  role: number
-
-  allTasks: Task[];
-  currentTasksIds: number[];
-  currentTasks: Task[];
-  users: User[];
+  @Input() collaborators: any[];
+  @Input() tasks: any[]
+ 
+  filteredTasks:any
   titleModal: string;
-  collaborators: User[];
-  task: Task;
   searchControl: FormControl = new FormControl();
-  filteredTasks: Task[];
 
 
   taskForm = new FormGroup({
@@ -103,39 +54,14 @@ export class TaskComponent implements OnInit {
     effort: new FormControl(''),
   });
 
-  // recupera tutti i task e li filtra per sprint
-  getTasks() {
-    this.taskService.getTasks().subscribe((res) => {
-      this.allTasks = res.data;
-      this.currentTasks = this.allTasks.filter((task) => {
-        if (this.currentTasksIds.includes(task.id)) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      this.filteredTasks = this.currentTasks;
-    });
-  }
 
   // visualizza nell'html nome e cognome dell'assegnatario del task
   getAssignee(id: number) {
 
-    if (this.role !== 1) { // se non admin
-
-      for (let j = 0; j < this.collaborators?.length; j++) {
-        const user = this.collaborators[j];
-        if (user.id === id) {
-          return user.name + ' ' + user.surname;
-        }
-      }
-
-    } else {
-
-      for (let i = 0; i < this.users?.length; i++) {
-        if (this.users[i].id == id) {
-          return this.users[i].name + ' ' + this.users[i].surname;
-        }
+    for (let j = 0; j < this.collaborators?.length; j++) {
+      const user = this.collaborators[j];
+      if (user.id === id) {
+        return user.name + ' ' + user.surname;
       }
     }
     return '-';
@@ -165,7 +91,7 @@ export class TaskComponent implements OnInit {
 
   // apre la modale per aggiungere un nuovo task
   openModalAddTask(content: any) {
-    console.log(this.sprint);
+
     this.titleModal = "Aggiungi Task";
     this.taskForm.setValue({
       name: '',
@@ -187,7 +113,6 @@ export class TaskComponent implements OnInit {
   // aggiunge un nuovo task allo sprint
   addTask() {
 
-
     if (this.taskForm.status == 'INVALID') {
       this.projectService.warningBar('Tutti i campi sono obbligatori');
     } else {
@@ -203,19 +128,8 @@ export class TaskComponent implements OnInit {
             end_date: '',
             effort: '',
           });
-
-          if (this.role !== 1) {
-            // resfresh page dopo delete
-            this.sprintComponent.ngOnInit()
-
-          } else {
-
-            this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
-              this.currentTasksIds = res.data.task_ids;
-              this.getTasks();
-            });
-          }
           this.projectService.successBar('Task aggiunto con successo!');
+          this.sprintComponent.ngOnInit()
         });
     }
   }
@@ -231,17 +145,9 @@ export class TaskComponent implements OnInit {
       .result.then(() => {
         this.taskService.deleteTask(id).subscribe(() => {
           this.projectService.successBar('Task eliminato');
-          if (this.role !== 1) {
+
             // resfresh page dopo delete
             this.sprintComponent.ngOnInit()
-
-          } else {
-
-            this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
-              this.currentTasksIds = res.data.task_ids;
-              this.getTasks();
-            });
-          }
           this.modalService.dismissAll();
         });
       }, () => {
@@ -253,14 +159,12 @@ export class TaskComponent implements OnInit {
   openModalEditTask(id: any, content: any, sprints: any) {
     this.taskService.currentTask = id;
     this.titleModal = "Modifica Task";
+    console.log(this.tasks);
 
-    if (this.role !== 1) {
-
-      for (let i = 0; i < sprints.length; i++) {
-        let task = sprints[i]; //task singolo
+      for (let i = 0; i < this.tasks.length; i++) {
+        let task = this.tasks[i]; //task singolo
 
         if (task.id === id) {
-
           this.taskForm.setValue({
             name: task.name,
             assignee_id: task.assignee_id,
@@ -271,23 +175,6 @@ export class TaskComponent implements OnInit {
           });
         }
       }
-
-    } else {
-
-      this.taskService.getTask(id).subscribe((res) => {
-        this.task = res.data;
-
-        this.taskForm.setValue({
-          name: this.task.name,
-          assignee_id: this.task.assignee_id,
-          status: this.task.status,
-          start_date: this.task.start_date,
-          end_date: this.task.end_date,
-          effort: this.task.effort,
-        });
-      })
-    }
-
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         console.log('ok');
@@ -306,18 +193,7 @@ export class TaskComponent implements OnInit {
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Task modificato con successo!');
-
-          if (this.role !== 1) {
-
             this.sprintComponent.ngOnInit()
-          } else {
-
-            this.sprintService.getSprint(this.sprint.id).subscribe((res) => {
-              this.currentTasksIds = res.data.task_ids;
-              this.getTasks();
-            });
-
-          }
         });
     }
   }
@@ -325,39 +201,21 @@ export class TaskComponent implements OnInit {
   // filtra i task, rimuovendo i task completati, in base al valore della checkbox (true/false) 
   filerData(val: boolean) {
     if (!val) {
-
-      if (this.role !== 1) {
-        return this.filteredTasks = this.sprint.tasks
-      } else {
-        return this.filteredTasks = this.currentTasks;
-      }
+      
+      return this.filteredTasks = this.sprint.tasks
     } else {
+      const rows = this.sprint.tasks.filter((task:any) => {
 
-      if (this.role !== 1) {
-
-        const rows = this.filteredTasks.filter((task) => {
-
-          if (task.status == 2) {
-            return false;
-          } else {
-            return true;
-          }
-        })
-        this.filteredTasks = rows;
-
-      } else {
-
-        const rows = this.currentTasks.filter((task) => {
-          if (task.status == 2) {
-            return false;
-          } else {
-            return true;
-          }
-        });
-        this.filteredTasks = rows;
-      }
-
+        if (task.status == 2) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      this.filteredTasks = rows;
     }
   }
 
 }
+
+

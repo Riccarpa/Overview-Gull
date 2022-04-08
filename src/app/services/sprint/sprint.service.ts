@@ -15,39 +15,14 @@ export class SprintService {
 
   token: any;
   url = environment.apiURL + '/sprints';
-  currentSprint: any;
 
-  // recupera tutti gli sprint
-  getSprints(): Observable<any> {
-    const url = this.url;
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    })
-    return this.http.get(url, { headers: headers });
-  }
-
-  // ritorna array di sprints progetto
+  // ritorna array di sprints progetto + task incorporati
   getUserSprint(id:number): Observable<any>{
 
     const url = environment.apiURL + `/projects/${id}/sprints`
     return this.http.get(url);
   
-  }
-
-
-  
-
-  // retrive sprint
-  getSprint(id: any): Observable<any> {
-    let url = `${this.url}/${id}`;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    }
-
-    return this.http.get(url, { headers });
   }
 
   // aggiunge sprint
@@ -72,8 +47,8 @@ export class SprintService {
   }
 
   // modifica sprint
-  updateSprint(name: string, start_date: Date, end_date: Date, effort_days: number, revenue: number): Observable<any> {
-    const url = `${this.url}/${this.currentSprint}`;
+  updateSprint(name: string, start_date: Date, end_date: Date, effort_days: number, revenue: number,id:number): Observable<any> {
+    const url = `${this.url}/${id}`;
 
     let body = {
       "name": name,
