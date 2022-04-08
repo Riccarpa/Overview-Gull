@@ -30,6 +30,7 @@ import { SprintComponent } from './components/project/sprint/sprint.component';
 import { TaskComponent } from './components/project/task/task.component';
 import { FinancialComponent } from './components/financial/financial.component';
 import { DayComponent } from './components/financial/calendar/day/day.component';
+import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
 
 
 
@@ -52,7 +53,8 @@ import { DayComponent } from './components/financial/calendar/day/day.component'
     SprintComponent,
     TaskComponent,
     FinancialComponent,
-    DayComponent
+    DayComponent,
+    ShowFinancialComponent
   ],
   imports: [
     BrowserModule,
