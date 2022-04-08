@@ -13,25 +13,19 @@ export class UserService {
   user:any//user dal login
   constructor(private http: HttpClient,private projectService:ProjectService,private router:Router) {}
   
-    token:any
     url = `${environment.apiURL}/users` 
   url2 = `${environment.apiURL}/user` 
     
     getUsers():Observable<any>{
    
-    
     return this.http.get(this.url);
   }
 // get progetti collaboratore(sezione users di postman)
   getUserProject(): Observable<any> {
-
-   
     return this.http.get(`${this.url2}/projects`)
-
   }
 
   retrieveUser(id: any): Observable<any>{
-   
     return this.http.get(`${this.url}/${id}`);
   }
 
@@ -67,7 +61,6 @@ export class UserService {
      if (form.picture_data) {
        body['picture_data'] = form.picture_data;
      }
-
      return this.http.patch(`${this.url}/${id}`, body);
   }
   updateImage(picture:any,id:any){
@@ -76,12 +69,8 @@ export class UserService {
       "picture_data" : picture
      };
      return this.http.patch(`${this.url}/${id}`, body);
-
   }
   deleteUser(id:any){
-   
     return this.http.delete(`${this.url}/${id}`);
   }
-
-  
 }

@@ -93,8 +93,14 @@ export class SprintComponent implements OnInit {
   openModalEditSprint(id: any, content: any) {
 
     this.titleModal = "Modifica Sprint";
-    this.sprintService.getUserSprint(id).subscribe((res) => {
-      this.sprint = res.data;
+    
+     
+      for (let i = 0; i < this.currentSprints.length; i++) {
+        let currentSprint = this.currentSprints[i];
+        if (currentSprint.id === id) {
+          this.sprint = currentSprint
+        }
+      }
 
       this.sprintForm.setValue({
         name: this.sprint.name,
@@ -103,7 +109,7 @@ export class SprintComponent implements OnInit {
         effort_days: this.sprint.effort_days,
         revenue: this.sprint.revenue,
       });
-    })
+    
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {

@@ -8,21 +8,15 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class SprintService {
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-  }
-
-  token: any;
   url = environment.apiURL + '/sprints';
-
 
   // ritorna array di sprints progetto + task incorporati
   getUserSprint(id:number): Observable<any>{
 
     const url = environment.apiURL + `/projects/${id}/sprints`
     return this.http.get(url);
-  
   }
 
   // aggiunge sprint
@@ -33,17 +27,11 @@ export class SprintService {
       "name": name,
       "start_date": start_date,
       "end_date": end_date,
-      "effort_days": effort_days,
-      "revenue": revenue,
+      "effort_days": effort_days | 0.1,
+      "revenue": revenue | 0.1,
       "project_id": projectId,
     };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.post(url, body, { headers: headers });
+    return this.http.post(url, body);
   }
 
   // modifica sprint
@@ -54,27 +42,15 @@ export class SprintService {
       "name": name,
       "start_date": start_date,
       "end_date": end_date,
-      "effort_days": effort_days,
-      "revenue": revenue,
+      "effort_days": effort_days | 0.1,
+      "revenue": revenue | 0.1,
     };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.patch(url, body, { headers: headers });
+    return this.http.patch(url, body);
   }
 
   // cancella sprint
   deleteSprint(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.delete(url, { headers: headers });
+    return this.http.delete(url);
   }
 }

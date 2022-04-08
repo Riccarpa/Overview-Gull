@@ -10,44 +10,31 @@ import { environment } from 'src/environments/environment';
 })
 export class FinancialService {
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-  }
-  
-    token:any
-    url = `${environment.apiURL}` 
-    
-    
-    getMonthlyLogs(id:any):Observable<any>{
-   
+  constructor(private http: HttpClient) { }
+
+
+  url = `${environment.apiURL}`
+
+  getMonthlyLogs(id: any): Observable<any> {
     return this.http.get(`${this.url}/users/${id}/monthlyLogs`);
   }
 
-  getUserMonthlyLogs(): Observable<any>{
-
+  getUserMonthlyLogs(): Observable<any> {
     return this.http.get(`${this.url}/user/monthlyLogs`);
   }
-  
 
-  createMonthlyLog(id:any,date:any): Observable<any> {
-   
+  createMonthlyLog(id: any, date: any): Observable<any> {
     let body = {
-     "user_id":id,
-     "month":date
+      "user_id": id,
+      "month": date
     };
-
     return this.http.post(`${this.url}/monthlyLogs`, body);
   }
 
-  patchActivities(id,arr): Observable<any> {
-    
-    let body ={
+  patchActivities(id, arr): Observable<any> {
+    let body = {
       "daily_logs": [arr]
     }
-
     return this.http.patch(`${this.url}/monthlyLogs/${id}`, body);
   }
-
- 
-
 }

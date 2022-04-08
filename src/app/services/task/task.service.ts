@@ -9,11 +9,9 @@ import { environment } from 'src/environments/environment';
 })
 export class TaskService {
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-  }
+  constructor(private http: HttpClient) { }
 
-  token: any;
+
   url = environment.apiURL + '/tasks';
   currentTask: any;
 
@@ -35,7 +33,6 @@ export class TaskService {
   // cancella task
   deleteTask(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
     return this.http.delete(url);
   }
 
