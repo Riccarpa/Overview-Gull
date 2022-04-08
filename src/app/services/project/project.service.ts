@@ -42,6 +42,15 @@ export class ProjectService {
     return this.http.get(url)
   }
 
+  // take project PM
+  getProject(id:number): Observable<any> {
+
+    let url = `${this.url}/${id}`;
+
+
+    return this.http.get(url)
+  }
+
   //patch progetto
   updateProject(form: any, projId: number,userIds:any): Observable<any> {
 
