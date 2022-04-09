@@ -1,80 +1,71 @@
-
- <div class="card-body card nav-center mb-4 col-12">
-     <ul ngbNav #nav="ngbNav"
-         class="nav-tabs col-12 d-flex align-items-center   px-4
+<div class="card-body card nav-center mb-4 col-12">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs col-12 d-flex align-items-center   px-4
          border-bottom border-secondary ">
-         <li class="mr-auto">
+        <li class="mr-auto">
             <h2>History Logs</h2>
         </li>
-         <li ngbNavItem title="today" >
-             <a ngbNavLink>
-                 <div >
-                     <h2>Today</h2>
-                 </div>
-             </a>
-             <ng-template ngbNavContent >
+        <!-- lista giornaliera -->
+        <li ngbNavItem title="today">
+            <a ngbNavLink>
+                <div>
+                    <h2>Today</h2>
+                </div>
+            </a>
+            <ng-template ngbNavContent>
 
-                <div class=" d-flex justify-content-center">
+                <div class=" d-flex justify-content-center cardHistory">
 
-                    <ul class="border-left border-secondary h-100 position-relative">
-    
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque. lo</span>
+                    <ul *ngIf="dataToday" class="">
+                        <li *ngIf="dataToday.length" class="d-flex justify-content-between align-items-center">
+                            <span class="text-24">EVENTO</span>
+                            <span class="text-24">DATA</span>
                         </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
-                        </li>
-                        <li>
-                            <div class="disc mt-2"></div>
-                            <span class="text-20">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, itaque.</span>
+                        <li *ngFor="let event of dataToday"
+                            class="py-2 px-4 d-flex align-items-center justify-content-between border-left border-secondary position-relative ">
+                            <div [ngClass]="{
+                                'bg-success':event.filterData.event== 'created',
+                                'bg-danger':event.filterData.event== 'deleted',
+                                'bg-warning':event.filterData.event== 'updated'
+                            }" class="disc"></div>
+                            <span class="text-20 mr-2">
+                                {{event.filterData.event}} Task {{event.name}} : </span>
+                            <span class="text-20"> {{ event.created_at | date  : "dd.MM.y" }} </span>
                         </li>
                     </ul>
                 </div>
-             
-             </ng-template>
-         </li>
-          <li ngbNavItem title="month">
-              <a ngbNavLink>
-                  <div class="">
-                      <h2>Month</h2>
-                  </div>
-              </a>
-              <ng-template ngbNavContent>
+            </ng-template>
+        </li>
+        <!-- lista mensile -->
+        <li ngbNavItem title="month">
+            <a ngbNavLink>
+                <div class="">
+                    <h2>Month</h2>
+                </div>
+            </a>
+            <ng-template ngbNavContent>
 
+                <div class=" d-flex justify-content-center cardHistory">
 
+                    <ul *ngIf="dataMonth" class="">
 
-              </ng-template>
-          </li>
-     </ul>
-     <div [ngbNavOutlet]="nav"></div>
- </div>
+                        <li *ngIf="dataMonth.length"
+                            class="d-flex justify-content-between align-items-center mb-4 px-4">
+                            <span class="text-24">EVENTO</span>
+                            <span class="text-24">DATA</span>
+                        </li>
+                        <li *ngFor="let event of dataMonth"
+                            class="py-2 px-4 d-flex align-items-center justify-content-between border-left border-secondary position-relative ">
+                            <div [ngClass]="{'bg-success':event.filterData.event== 'created','bg-danger':event.filterData.event== 'deleted','bg-warning':event.filterData.event== 'updated'}"
+                                class="disc"></div>
+
+                            <span class="text-20 mr-2">
+                                {{event.filterData.event}} Task {{event.name}} : </span>
+                            <span class="text-20"> {{ event.created_at | date  : "dd.MM.y" }} </span>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+</div>

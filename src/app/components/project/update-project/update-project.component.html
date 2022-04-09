@@ -206,11 +206,14 @@
                 btnClass="btn-danger btn-rounded m-4 ">
                 delete
               </btn-loading>
-
+              <label class="switch switch-success mr-3">
+                <span>History</span>
+                <input type="checkbox" [formControl]="historyCheck" >
+                <span class="slider"></span>
+              </label>
             </div>
 
             <div class="col-lg-6 p-0 row flex-row-reverse">
-
               <div class="d-flex flex-wrap p-1 align-items-center " *ngIf="role ===1">
                 <div class="ml-1 btn btn-primary btn-rounded d-flex p-1 align-items-center pl-2 mb-1"
                   *ngFor="let u of arrayUsersIds">
@@ -324,9 +327,9 @@
   </div>
 </div>
 
-<!-- <div *appRole="role === 1">
-  <app-history [projectId]=""></app-history>
-</div> -->
+<div *appRole="role === 1 && historyCheck.value">
+  <app-history [projectTasks]="project.tasks" [projectId]="project.id"></app-history>
+</div>
 
 <div *ngIf="project">
   <app-sprint [project]="project"></app-sprint>

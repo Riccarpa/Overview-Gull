@@ -66,7 +66,7 @@ export class UpdateProjectComponent implements OnInit {
 
   imageSelect: File //file img
   confirmResut:any
-
+  historyCheck:FormControl = new FormControl()
 
   projectForm = new FormGroup(
     {
