@@ -12,26 +12,43 @@
                 </div>
             </a>
             <ng-template ngbNavContent>
-
                 <div class=" d-flex justify-content-center cardHistory">
+                  <ul *ngIf="dataToday" class="w-80">
 
-                    <ul *ngIf="dataToday" class="">
-                        <li *ngIf="dataToday.length" class="d-flex justify-content-between align-items-center">
-                            <span class="text-24">EVENTO</span>
-                            <span class="text-24">DATA</span>
-                        </li>
-                        <li *ngFor="let event of dataToday"
-                            class="py-2 px-4 d-flex align-items-center justify-content-between border-left border-secondary position-relative ">
-                            <div [ngClass]="{
-                                'bg-success':event.filterData.event== 'created',
-                                'bg-danger':event.filterData.event== 'deleted',
-                                'bg-warning':event.filterData.event== 'updated'
-                            }" class="disc"></div>
-                            <span class="text-20 mr-2">
-                                {{event.filterData.event}} Task {{event.name}} : </span>
-                            <span class="text-20"> {{ event.created_at | date  : "dd.MM.y" }} </span>
-                        </li>
-                    </ul>
+                      <li *ngIf="dataToday.length"
+                          class="d-flex justify-content-between w-100 align-items-center mb-4 px-4">
+                          <span class="text-22 w-33">EVENTO</span>
+                          <span class="text-22 w-33">DATA </span>
+                          <span class="text-22 w-33">AGGIORNAMENTO</span>
+                      </li>
+                      <li *ngFor="let event of dataToday"
+                          class="py-2 px-4 d-flex align-items-center w-100 justify-content-between border-left border-secondary position-relative ">
+                          <div [ngClass]="{'bg-success':event.filterData.event== 'created','bg-danger':event.filterData.event== 'deleted','bg-warning':event.filterData.event== 'updated'}"
+                              class="disc"></div>
+                          <div class="w-50  d-flex align-items-center justify-content-between">
+                              <span class="text-20 mr-2">
+                                  {{event.filterData.event}} Task {{event.name}} : </span>
+                              <span class="text-20 "> {{ event.created_at | date  : "dd.MM.y" }} </span>
+                          </div>
+                          <div class="w-50 text-right">
+                              <span
+                                  *ngIf="getDiffDate(event.created_at).diffMonth > 0">{{ getDiffDate(event.created_at).diffMonth}}
+                                  Mesi</span>
+                              <span
+                                  *ngIf="getDiffDate(event.created_at).days > 0 && getDiffDate(event.created_at).diffMonth <= 0 || getDiffDate(event.created_at).days > 0 ">
+                                  {{ getDiffDate(event.created_at).days}} Giorni -
+                              </span>
+                              <span
+                                  *ngIf="getDiffDate(event.created_at).hours > 0">{{ getDiffDate(event.created_at).hours}}
+                                  Ore - </span>
+                              <span
+                                  *ngIf="getDiffDate(event.created_at).minutes > 0">{{ getDiffDate(event.created_at).minutes}}
+                                  Minuti </span>
+                              <span> Fa </span>
+                          </div>
+
+                      </li>
+                  </ul>
                 </div>
             </ng-template>
         </li>
@@ -46,21 +63,40 @@
 
                 <div class=" d-flex justify-content-center cardHistory">
 
-                    <ul *ngIf="dataMonth" class="">
+                    <ul *ngIf="dataMonth" class="w-80">
 
                         <li *ngIf="dataMonth.length"
-                            class="d-flex justify-content-between align-items-center mb-4 px-4">
-                            <span class="text-24">EVENTO</span>
-                            <span class="text-24">DATA</span>
+                            class="d-flex justify-content-between w-100 align-items-center mb-4 px-4">
+                            <span class="text-22 w-33">EVENTO</span>
+                            <span class="text-22 w-33">DATA </span>
+                            <span class="text-22 w-33">AGGIORNAMENTO</span>
                         </li>
                         <li *ngFor="let event of dataMonth"
-                            class="py-2 px-4 d-flex align-items-center justify-content-between border-left border-secondary position-relative ">
+                            class="py-2 px-4 d-flex align-items-center w-100 justify-content-between border-left border-secondary position-relative ">
                             <div [ngClass]="{'bg-success':event.filterData.event== 'created','bg-danger':event.filterData.event== 'deleted','bg-warning':event.filterData.event== 'updated'}"
                                 class="disc"></div>
+                            <div class="w-50  d-flex align-items-center justify-content-between">
+                                <span class="text-20 mr-2">
+                                    {{event.filterData.event}} Task {{event.name}} : </span>
+                                <span class="text-20 "> {{ event.created_at | date  : "dd.MM.y" }} </span>
+                            </div>
+                            <div class="w-50 text-right">
+                                <span
+                                    *ngIf="getDiffDate(event.created_at).diffMonth > 0">{{ getDiffDate(event.created_at).diffMonth}}
+                                    Mesi</span>
+                                <span
+                                    *ngIf="getDiffDate(event.created_at).days > 0 && getDiffDate(event.created_at).diffMonth <= 0 || getDiffDate(event.created_at).days > 0 ">
+                                    {{ getDiffDate(event.created_at).days}} Giorni -
+                                </span>
+                                <span
+                                    *ngIf="getDiffDate(event.created_at).hours > 0">{{ getDiffDate(event.created_at).hours}}
+                                    Ore - </span>
+                                <span
+                                    *ngIf="getDiffDate(event.created_at).minutes > 0">{{ getDiffDate(event.created_at).minutes}}
+                                    Minuti </span>
+                                <span> Fa </span>
+                            </div>
 
-                            <span class="text-20 mr-2">
-                                {{event.filterData.event}} Task {{event.name}} : </span>
-                            <span class="text-20"> {{ event.created_at | date  : "dd.MM.y" }} </span>
                         </li>
                     </ul>
                 </div>
