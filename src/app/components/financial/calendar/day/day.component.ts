@@ -1,5 +1,6 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { FinancialService } from 'src/app/services/financial/financial.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { FinancialService } from 'src/app/services/financial/financial.service';
 })
 export class DayComponent implements OnInit {
 
-  constructor(private fb:FormBuilder,private fService:FinancialService) { }
+  constructor(private fb:FormBuilder,private fService:FinancialService,private toastr:ToastrService) { }
   @Input() date : any
   @Input() day : any
   @Input() activities :any
@@ -62,14 +63,22 @@ export class DayComponent implements OnInit {
       const element = this.activitiesArray.value[i];
       element.activity_id = parseInt(element.activity_id)
     }
+
+
      this.patchArr = {
       "day": this.date,
       "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
       "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
     }  
+
+
     this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
       console.log(res)
       btn.loading = false;
+      this.toastr.success('Activity saved succefully')
+    },(error)=>{
+      btn.loading = false;
+      this.toastr.error(error.error.message);
     })
     
   }
@@ -97,9 +106,38 @@ export class DayComponent implements OnInit {
     this.OldActivities = oldActivities
   }
 
+// detect changes and set new values for oldActivities 
 
+onSelectChange(select,j){
+  
+  for (let i = 0; i < this.OldActivities.length; i++) {
+    const element = this.OldActivities[i];
+    if(i==j){
+      element.activity_id = select
+    }
+  }
+  
+}
+onInputChange(input,j){
+ 
+  for (let i = 0; i < this.OldActivities.length; i++) {
+    const element = this.OldActivities[i];
+    if(i==j){
+      element.hours_spent = input
+    }
+  }
+}
 
+// deleteOldActivity(j){
 
+//   for (let i = 0; i < this.OldActivities.length; i++) {
+//     const element = this.OldActivities[i];
+//     if(i==j){
+//      this.OldActivities.splice(i, 1)
+//     }
+//   }
+  
+// }
 
 
 

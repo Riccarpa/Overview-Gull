@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { el } from 'date-fns/locale';
+import { ToastrService } from 'ngx-toastr';
 import { ActivitiesService } from 'src/app/services/activities/activities.service';
 import { FinancialService } from 'src/app/services/financial/financial.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -12,7 +13,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) { }
+  constructor(private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) { }
   id = this.route.snapshot.paramMap.get('id');
   user:any
   activities:any
@@ -29,22 +30,25 @@ export class FinancialComponent implements OnInit {
 
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-      
+    },(error)=>{
+      this.toastr.error(error.error.message);
     })
 
     this.aService.getActivities().subscribe((res:any)=>{
       this.activities = res.data;
       console.log('activities',this.activities)
+    },(error)=>{
+      this.toastr.error(error.error.message);
     })
 
     this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
       this.monthlyLogs = res.data;
       console.log('monthlyLogs',this.monthlyLogs)
       this.getCurrMonthLog();
+    },(error)=>{
+      this.toastr.error(error.error.message);
     })
 
-    
-    
   }
   
   

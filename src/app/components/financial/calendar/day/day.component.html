@@ -6,8 +6,14 @@
   <div class="col" [formGroup]="activitiesForm">
     <div formArrayName="activitiesArray">
       <!--show old activities -->
-      <div *ngFor="let activity of day.activity_days_array" class="d-flex">
-        <select class="form-control mb-2">
+      <div
+        *ngFor="let activity of day.activity_days_array; let j = index"
+        class="d-flex position-relative align-items-center"
+      >
+        <select
+          (change)="onSelectChange($event.target.value, j)"
+          class="form-control mb-2"
+        >
           <option selected>{{ activity.activity_name }}</option>
           <option *ngFor="let activity of activities" [value]="activity.id">
             {{ activity.name }}
@@ -15,6 +21,7 @@
         </select>
 
         <input
+          (input)="onInputChange($event.target.value, j)"
           type="number"
           name="hours_spent"
           id="hours_spent"
@@ -23,6 +30,10 @@
           value="{{ activity.hours_spent }}"
           class="form-control mb-2 ml-2 w-50"
         />
+        <!-- <i
+          class="i-Close-Window ml-2 mb-2 text-danger position-absolute top-50 translate-middle"
+          (click)="deleteOldActivity(j)"
+        ></i> -->
       </div>
       <!-- create new activities -->
       <div *ngFor="let activityForm of activitiesArray.controls; let i = index">
@@ -46,7 +57,7 @@
               class="form-control mb-2 ml-2 w-50"
             />
             <i
-              class="i-Close-Window ml-2 mb-2 text-danger position-absolute position-absolute top-50 translate-middle"
+              class="i-Close-Window ml-2 mb-2 text-danger position-absolute top-50 translate-middle"
               (click)="deleteActivity(i)"
             ></i>
           </div>
