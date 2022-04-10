@@ -30,10 +30,10 @@
           value="{{ activity.hours_spent }}"
           class="form-control mb-2 ml-2 w-50"
         />
-        <!-- <i
+        <i
           class="i-Close-Window ml-2 mb-2 text-danger position-absolute top-50 translate-middle"
           (click)="deleteOldActivity(j)"
-        ></i> -->
+        ></i>
       </div>
       <!-- create new activities -->
       <div *ngFor="let activityForm of activitiesArray.controls; let i = index">
