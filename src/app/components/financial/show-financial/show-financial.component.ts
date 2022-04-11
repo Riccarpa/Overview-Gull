@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class ShowFinancialComponent implements OnInit {
 
-  constructor(private financialService: FinancialService, private userService: UserService, private route: ActivatedRoute, private aService: ActivitiesService) { }
+  constructor(private financialService: FinancialService, private userService: UserService, private route: ActivatedRoute, private activitiesService: ActivitiesService) { }
 
   ngOnInit(): void {
     this.month = new Date().getMonth() + 1;
@@ -21,67 +21,64 @@ export class ShowFinancialComponent implements OnInit {
       this.user = res.data;
     })
 
-    this.aService.getActivities().subscribe((res: any) => {
+    this.activitiesService.getActivities().subscribe((res: any) => {
       this.activities = res.data;
     })
 
     this.financialService.getMonthlyLogs(this.id).subscribe((res) => {
       this.monthlyLogs = res.data;
-      console.log('monthlyLogs', this.monthlyLogs)
-      this.getCurrMonthLog();
+      this.getCurrentMonthLog();
     })
+    console.log(typeof this.month)
+    console.log(typeof this.year)
   }
 
   id = this.route.snapshot.paramMap.get('id');
-  user: any
-  activities: any
-  monthlyLogs: any
-  month: any
-  year: any
-  currMonthLog: any
-  days: any
-  monthAndYear: any
+  user: any;
+  activities: any;
+  monthlyLogs: any;
+  month: any;
+  year: any;
+  currentMonthLog: any;
+  days: any;
 
-  getCurrMonthLog() {
+  getCurrentMonthLog() {
     if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
-      this.currMonthLog = this.monthlyLogs[this.year][this.month]
-      console.log('currMonthLogs', this.currMonthLog)
-      this.days = this.monthlyLogs[this.year][this.month].daily_logs_array
-      console.log('dailyLogs', this.days)
+      this.currentMonthLog = this.monthlyLogs[this.year][this.month];
+      console.log('currMonthLogs', this.currentMonthLog);
+      this.days = this.monthlyLogs[this.year][this.month].daily_logs_array;
+      console.log('dailyLogs', this.days);
     } else {
-      if (this.month < 10) {
-        var date = `${this.year.toString()}-0${this.month.toString()} `
-      } else {
-        var date = `${this.year.toString()}-${this.month.toString()} `
-      }
-      this.financialService.createMonthlyLog(parseInt(this.id), date).subscribe((res) => {
-        this.currMonthLog = res.data;
-        this.days = res.data.daily_logs_array
-      })
+      this.currentMonthLog = null;
+      this.days = null;
     }
   }
 
   prevMonth() {
-    this.days = null
-    if (this.month <= 1) {
-      this.month = 12
-      this.year = this.year - 1
+    this.days = null;
+    if (this.month == 1) {
+      this.month = 12;
+      this.year = this.year - 1;
     } else {
-      this.month = this.month - 1
+      this.month = this.month - 1;
     }
-    this.getCurrMonthLog();
+    this.getCurrentMonthLog();
   }
 
   nextMonth() {
-    this.days = null
-
-    if (this.month >= 12) {
-      this.month = 1
-      this.year = this.year + 1
+    this.days = null;
+    if (this.month == 12) {
+      this.month = 1;
+      this.year = this.year + 1;
     } else {
-      this.month = this.month + 1
+      this.month = this.month + 1;
     }
-    this.getCurrMonthLog();
+    this.getCurrentMonthLog();
+  }
+
+  getMonthName() {
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return month[this.month - 1];
   }
 
 }

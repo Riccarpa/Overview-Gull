@@ -3,7 +3,8 @@
         <div class="d-flex align-items-center">
             <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
             <div class="month m-2">
-                <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+                <strong *ngIf="currentMonthLog">{{ currentMonthLog.month | date: "MMMM yyyy" }}</strong>
+                <strong *ngIf="!currentMonthLog"> {{getMonthName()}} {{year}}</strong>
             </div>
             <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
         </div>
@@ -16,25 +17,28 @@
             <span class="col-3 text-center">SmartWorking</span>
         </div>
         <hr />
-        <div *ngFor="let day of days">
-            <div class="d-flex align-items-center">
-                <span class="col-3"><strong>{{ day.date | date: "d EEEE" }}</strong></span>
+        <div *ngIf="!days" class="text-center">No data to display</div>
+        <div *ngIf="days">
+            <div *ngFor="let day of days">
+                <div class="d-flex align-items-center">
+                    <span class="col-3"><strong>{{ day.date | date: "d EEEE" }}</strong></span>
 
-                <!-- activities and hours -->
-                <div class="col-6 text-center">
-                    <ul class="list-group">
-                        <li class="list-group-item border-0" *ngFor="let activity of day.activity_days_array">
-                            {{activity.activity_name}}: {{activity.hours_spent}}
-                        </li>
-                    </ul>
-                </div>
+                    <!-- activities and hours -->
+                    <div class="col-6 text-center">
+                        <ul class="list-group">
+                            <li class="list-group-item border-0" *ngFor="let activity of day.activity_days_array">
+                                {{activity.activity_name}}: {{activity.hours_spent}}
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- smartworking -->
-                <div class="col-3 text-center">
-                    <span class="checkmark">{{day.smartworking == 1 ? 'Si' : 'No'}}</span>
+                    <!-- smartworking -->
+                    <div class="col-3 text-center">
+                        <span class="checkmark">{{day.smartworking == 1 ? 'Si' : 'No'}}</span>
+                    </div>
                 </div>
+                <hr />
             </div>
-            <hr />
         </div>
     </div>
 </div>
