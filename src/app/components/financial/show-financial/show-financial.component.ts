@@ -29,8 +29,6 @@ export class ShowFinancialComponent implements OnInit {
       this.monthlyLogs = res.data;
       this.getCurrentMonthLog();
     })
-    console.log(typeof this.month)
-    console.log(typeof this.year)
   }
 
   id = this.route.snapshot.paramMap.get('id');
@@ -45,9 +43,7 @@ export class ShowFinancialComponent implements OnInit {
   getCurrentMonthLog() {
     if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
       this.currentMonthLog = this.monthlyLogs[this.year][this.month];
-      console.log('currMonthLogs', this.currentMonthLog);
       this.days = this.monthlyLogs[this.year][this.month].daily_logs_array;
-      console.log('dailyLogs', this.days);
     } else {
       this.currentMonthLog = null;
       this.days = null;
