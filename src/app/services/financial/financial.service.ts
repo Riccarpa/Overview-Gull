@@ -12,7 +12,7 @@ export class FinancialService {
 
   constructor(private http: HttpClient) { }
 
-
+  private subject = new Subject<any>();
   url = `${environment.apiURL}`
 
   getMonthlyLogs(id: any): Observable<any> {
