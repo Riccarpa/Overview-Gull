@@ -235,6 +235,14 @@
             >
               financial
             </button>
+
+            <button
+              type="button"
+              (click)="goToShowFinancial(row.id)"
+              class="btn btn-sm btn-outline-primary m-1"
+            >
+              show financial
+            </button>
           </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>

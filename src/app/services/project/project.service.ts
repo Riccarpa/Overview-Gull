@@ -17,7 +17,6 @@ export class ProjectService {
   currentUser:any //utente loggato
   url = environment.apiURL + '/projects'
   updatedProject: any
-  currentProject: any // id progetto singolo corrente
   project: Project[]
   clients: Client[]
   users: User[]
@@ -29,15 +28,14 @@ export class ProjectService {
 
   // get projects all
   getProjects(): Observable<any> {
-
     return this.http.get(this.url)
   }
 
   // retrive su progetto singolo
-  getUpdateProject(): Observable<any> {
+  getProject(id:number): Observable<any> {
 
-    let url = `${this.url}/${this.currentProject}`;
-  
+    let url = `${this.url}/${id}`;
+
 
     return this.http.get(url)
   }
@@ -69,8 +67,6 @@ export class ProjectService {
   uploadImagePost(file: any): Observable<any>{
 
     let url = environment.apiURL + '/uploadImage'
-
-   
 
     const fd = new FormData()
     fd.append('image',file,file.name)
@@ -108,6 +104,17 @@ export class ProjectService {
 
     return this.http.post(this.url, body)
   }
+
+
+  // get history
+  getHistory(id: number): Observable<any> {
+
+    let url = `${this.url}/${id}/history`;
+
+
+    return this.http.get(url)
+  }
+
 
   warningBar(message:string) {
     this.toastr.warning(message, 'Warning', { timeOut: 2000, closeButton: true, progressBar: true });

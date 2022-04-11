@@ -9,29 +9,15 @@ import { environment } from 'src/environments/environment';
 })
 export class TaskService {
 
-  constructor(private http: HttpClient) {
-    this.token = localStorage.getItem('token');
-  }
+  constructor(private http: HttpClient) { }
 
-  token: any;
+
   url = environment.apiURL + '/tasks';
   currentTask: any;
-
-  // recupera tutti i task
-  getTasks(): Observable<any> {
-    const url = this.url;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    })
-    return this.http.get(url, { headers: headers });
-  }
 
   // aggiunge task
   addTask(name: string, assignee_id: number, status: number, start_date: Date, end_date: Date, effort: number, sprintId: number): Observable<any> {
     const url = this.url;
-
     let body = {
       "name": name,
       "assignee_id": assignee_id,
@@ -41,36 +27,19 @@ export class TaskService {
       "effort": effort,
       "sprint_id": sprintId,
     };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.post(url, body, { headers: headers });
+    return this.http.post(url, body);
   }
 
   // cancella task
   deleteTask(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.delete(url, { headers: headers });
+    return this.http.delete(url);
   }
 
   // retrieve task
   getTask(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    })
-    return this.http.get(url, { headers: headers });
+    return this.http.get(url);
   }
 
   // modifica task
@@ -85,12 +54,6 @@ export class TaskService {
       "end_date": end_date,
       "effort": effort,
     };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`,
-    });
-
-    return this.http.patch(url, body, { headers: headers });
+    return this.http.patch(url, body);
   }
 }

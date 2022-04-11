@@ -5,6 +5,7 @@ import { SprintService } from 'src/app/services/sprint/sprint.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectService } from 'src/app/services/project/project.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 @Component({
   selector: 'app-sprint',
   templateUrl: './sprint.component.html',
@@ -12,22 +13,25 @@ import { ProjectService } from 'src/app/services/project/project.service';
 })
 export class SprintComponent implements OnInit {
 
-  constructor(private sprintService: SprintService, private modalService: NgbModal, private projectService: ProjectService) { }
+  constructor(
+    private inter: ReqInterceptInterceptor,
+    private sprintService: SprintService,
+    private modalService: NgbModal,
+    private projectService: ProjectService) { }
 
   ngOnInit(): void {
     // recupera tutti gli sprint del progetto
     this.currentSprintsIds = this.project.sprint_ids;
-    this.getSprints();
-
+    this.getUserSprint();
   }
 
-  @Input() project: Project;
+  @Input() project: Project;//projectpassato dal componente updateProject
 
   allSprints: Sprint[];
   currentSprintsIds: number[];
   currentSprints: Sprint[];
   titleModal: string;
-  sprint: Sprint;
+  sprint: any;
 
   sprintForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -37,18 +41,11 @@ export class SprintComponent implements OnInit {
     revenue: new FormControl(''),
   });
 
-  // recupera tutti i sprint e li filtra per progetto
-  getSprints() {
-    this.sprintService.getSprints().subscribe((res) => {
-      this.allSprints = res.data;
-      this.currentSprints = this.allSprints.filter((sprint) => {
-        if (this.currentSprintsIds.includes(sprint.id)) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    });
+  // get project's sprints + tasks 
+  getUserSprint() {
+    this.sprintService.getUserSprint(this.project.id).subscribe((res) => {
+      this.currentSprints = res.data
+    })
   }
 
   // apre la modale per aggiungere un nuovo sprint
@@ -86,11 +83,7 @@ export class SprintComponent implements OnInit {
             effort_days: '',
             revenue: '',
           });
-
-          this.projectService.getUpdateProject().subscribe((res) => {
-            this.currentSprintsIds = res.data.sprint_ids;
-            this.getSprints();
-          });
+          this.getUserSprint()
           this.projectService.successBar('Sprint aggiunto con successo!');
         });
     }
@@ -98,10 +91,16 @@ export class SprintComponent implements OnInit {
 
   // richiama la modale per modificare lo sprint
   openModalEditSprint(id: any, content: any) {
-    this.sprintService.currentSprint = id;
+
     this.titleModal = "Modifica Sprint";
-    this.sprintService.getSprint(id).subscribe((res) => {
-      this.sprint = res.data;
+    
+     
+      for (let i = 0; i < this.currentSprints.length; i++) {
+        let currentSprint = this.currentSprints[i];
+        if (currentSprint.id === id) {
+          this.sprint = currentSprint
+        }
+      }
 
       this.sprintForm.setValue({
         name: this.sprint.name,
@@ -110,7 +109,7 @@ export class SprintComponent implements OnInit {
         effort_days: this.sprint.effort_days,
         revenue: this.sprint.revenue,
       });
-    })
+    
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
@@ -126,53 +125,36 @@ export class SprintComponent implements OnInit {
       this.projectService.warningBar('Tutti i campi sono obbligatori');
     } else {
       const sprint = this.sprintForm.value;
-      this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue)
+      this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue, this.sprint.id)
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Sprint modificato con successo!');
-          this.projectService.getUpdateProject().subscribe((res) => {
-            this.currentSprintsIds = res.data.sprint_ids;
-            this.getSprints();
-          });
+          this.getUserSprint()
         });
     }
   }
 
-  // cancella lo sprint selezionato
+  // richiama la modale per eliminare lo sprint
   deleteSprint(id: any, content: any) {
     this.confirm(id, content);
   }
-
-  // richiama la modale per eliminare lo sprint
+  
+  // cancella lo sprint selezionato
   confirm(id: any, content: any) {
+
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
-        let sprints: Sprint[];
-        let sprint: Sprint;
-        this.sprintService.getSprints().subscribe((res) => {
-          sprints = res.data;
-          for (let i = 0; i < sprints.length; i++) {
-            if (sprints[i].id == id) {
-              sprint = sprints[i];
-            }
-          }
 
-          if (sprint.task_ids.length) {
-            this.projectService.errorBar('Lo sprint non deve contenere task!');
+        if (this.sprint.tasks.length) {
+          this.projectService.errorBar('Lo sprint non deve contenere task!');
+          this.modalService.dismissAll();
+        } else {
+          this.sprintService.deleteSprint(id).subscribe(() => {
+            this.projectService.successBar('Sprint eliminato!');
             this.modalService.dismissAll();
-          } else {
-            this.sprintService.deleteSprint(id).subscribe(() => {
-              this.projectService.successBar('Sprint eliminato!');
-              this.modalService.dismissAll();
-              this.projectService.getUpdateProject().subscribe((res) => {
-                this.currentSprintsIds = res.data.sprint_ids;
-                this.getSprints();
-              });
-            });
-          }
-        });
-      }, () => {
-        console.log('annullato');
-      });
+            this.getUserSprint();
+          });
+        }
+      })
   }
 }

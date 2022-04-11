@@ -30,7 +30,7 @@ export class HeaderSidebarLargeComponent implements OnInit {
 
     
     const user = this.interc.takeRole()
-    console.log(user,'log header sidebar');
+  
     
     if (user) {
 

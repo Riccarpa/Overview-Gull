@@ -13,7 +13,6 @@ export class ClientService {
   constructor(private http: HttpClient,private projectService:ProjectService) {}
 
   clientsList: Client[];
-  token: any;
   currentClient: any;
   url = environment.apiURL + '/clients';
   idClient:number // id passato al click per vedere i progetti associati
@@ -22,8 +21,6 @@ export class ClientService {
   // lista di tutti i clienti
   getClients(): Observable<any> {
     const url = this.url;
-
-    
     return this.http.get(url);
   }
 
@@ -40,17 +37,12 @@ export class ClientService {
     if (logo) {
       body['logo_path'] = logo;
     }
-
-   
-
     return this.http.post(url, body);
   }
 
   // retrieve cliente
   getClient(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
-   
     return this.http.get(url);
   }
 
@@ -67,18 +59,12 @@ export class ClientService {
     if (logo) {
       body['logo_path'] = logo;
     }
-
-    
-
     return this.http.patch(url, body);
   }
 
   // cancella cliente
   deleteClient(id: any): Observable<any> {
     const url = `${this.url}/${id}`;
-
-    
-
     return this.http.delete(url);
   }
 
@@ -88,7 +74,6 @@ export class ClientService {
 
     const formData = new FormData()
     formData.append('image', image, image.name);
-   
     return this.http.post(url, formData);
   }
 }

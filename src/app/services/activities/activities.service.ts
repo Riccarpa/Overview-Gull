@@ -10,18 +10,10 @@ import { Observable } from 'rxjs';
 })
 export class ActivitiesService {
 
-  constructor(private http:HttpClient) {
-    this.token = localStorage.getItem('token');
-   }
-   token:any
-   url = `${environment.apiURL}/activities` 
+  constructor(private http: HttpClient) { }
 
-
-   getActivities():Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
-    })
-    return this.http.get(this.url,{headers: headers});
-}
+  url = `${environment.apiURL}/activities`
+  getActivities(): Observable<any> {
+    return this.http.get(this.url);
+  }
 }

@@ -6,6 +6,7 @@ import { format } from 'path';
 import { element } from 'protractor';
 import { ActivitiesService } from 'src/app/services/activities/activities.service';
 import { FinancialService } from 'src/app/services/financial/financial.service';
+import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -15,7 +16,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) {
+  constructor(private inter:ReqInterceptInterceptor,private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) {
 
     this.allActivities = []
    }
@@ -50,13 +51,22 @@ export class FinancialComponent implements OnInit {
       this.toastr.error(error.error.message);
     })
 
-    this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
-      this.monthlyLogs = res.data;
-      console.log('monthlyLogs',this.monthlyLogs)
-      this.getCurrMonthLog();
-    },(error)=>{
-      this.toastr.error(error.error.message);
-    })
+    if (this.inter.takeRole().role !== 1) {
+
+      this.fService.getUserMonthlyLogs().subscribe((res) => {
+        this.monthlyLogs = res.data;
+        
+        this.getCurrMonthLog();
+      })
+    }else{
+
+      this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+        this.monthlyLogs = res.data;
+        console.log('monthlyLogs',this.monthlyLogs)
+        this.getCurrMonthLog();
+      })
+    }
+
 
   }
   

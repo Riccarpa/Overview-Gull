@@ -27,15 +27,9 @@ export class HomeUserComponent implements OnInit {
       (res)=>{
         this.user = res
         this.user = this.user.data
-       console.log(this.user);
-       
+        console.log(this.user);
+        
       }
     )
-
-
   }
-
- 
-  
-
 }
