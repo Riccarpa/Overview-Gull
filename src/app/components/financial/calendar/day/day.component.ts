@@ -83,6 +83,7 @@ export class DayComponent implements OnInit {
       let element = this.patchArr.activity_days_array[i];
       if(element.hours_spent==0){
         this.patchArr.activity_days_array.splice(i,1)
+        i--
       }
     }
      this.childsData.emit(this.patchArr)
