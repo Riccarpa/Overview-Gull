@@ -7,7 +7,24 @@
       </div>
       <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
     </div>
-    <!-- <button type="button" class="btn btn-primary m-1">Save</button> -->
+    <div>
+      <button
+        *ngIf="!isSaved"
+        type="button"
+        class="btn btn-primary m-1"
+        (click)="save()"
+      >
+        Collect
+      </button>
+      <button
+        *ngIf="isSaved"
+        type="button"
+        class="btn btn-success m-1"
+        (click)="confirm()"
+      >
+        Save
+      </button>
+    </div>
   </div>
 
   <div *ngIf="days" class="table-body p-4">
@@ -15,10 +32,11 @@
       <span class="col">Date</span>
       <span class="col">Activity and Hours</span>
       <span class="col text-center">SmartWorking</span>
-      <span class="col">Actions</span>
+      <!-- <span class="col">Actions</span> -->
     </div>
     <hr />
     <app-day
+      (childsData)="childsData($event)"
       [activities]="activities"
       [day]="day"
       *ngFor="let day of days; let j = index"

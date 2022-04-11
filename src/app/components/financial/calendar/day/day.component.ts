@@ -1,8 +1,8 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FinancialService } from 'src/app/services/financial/financial.service';
-
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-day',
   templateUrl: './day.component.html',
@@ -10,13 +10,20 @@ import { FinancialService } from 'src/app/services/financial/financial.service';
 })
 export class DayComponent implements OnInit {
 
-  constructor(private fb:FormBuilder,private fService:FinancialService,private toastr:ToastrService) { }
+  constructor(private fb:FormBuilder,private fService:FinancialService,private toastr:ToastrService) {
+    this.clickEventSubsctiption = this.fService.getClickEvent().subscribe(()=>{
+      this.save()
+    })
+  }
   @Input() date : any
   @Input() day : any
   @Input() activities :any
+  @Output()childsData:EventEmitter<any> = new EventEmitter()
+  clickEventSubsctiption:Subscription;
   smartWorking:any
   patchArr:any
   OldActivities:any
+   
   loadingButtons = [
     {
       name: 'secondary',
@@ -57,8 +64,8 @@ export class DayComponent implements OnInit {
   }
 
   // patch activity
-  saveActivity(btn){
-    btn.loading = true;
+
+  save(){
     for (let i = 0; i < this.activitiesArray.value.length; i++) {
       const element = this.activitiesArray.value[i];
       element.activity_id = parseInt(element.activity_id)
@@ -70,18 +77,44 @@ export class DayComponent implements OnInit {
       "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
       "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
     }  
-
-
-    this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
-      console.log(res)
-      btn.loading = false;
-      this.toastr.success('Activity saved succefully')
-    },(error)=>{
-      btn.loading = false;
-      this.toastr.error(error.error.message);
-    })
     
+   if(this.patchArr.activity_days_array.length !== 0){
+    for (let i = 0; i < this.patchArr.activity_days_array.length; i++) {
+      let element = this.patchArr.activity_days_array[i];
+      if(element.hours_spent==0){
+        this.patchArr.activity_days_array.splice(i,1)
+      }
+    }
+     this.childsData.emit(this.patchArr)
+   }
   }
+
+  // saveActivity(btn){
+  //   btn.loading = true;
+  //   for (let i = 0; i < this.activitiesArray.value.length; i++) {
+  //     const element = this.activitiesArray.value[i];
+  //     element.activity_id = parseInt(element.activity_id)
+  //   }
+
+
+  //    this.patchArr = {
+  //     "day": this.date,
+  //     "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
+  //     "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
+  //   }  
+
+
+  //   this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
+  //     console.log(res)
+  //     btn.loading = false;
+  //     this.toastr.success('Activity saved succefully')
+  //   },(error)=>{
+  //     btn.loading = false;
+  //     this.toastr.error(error.error.message);
+  //   })
+    
+    
+  // }
 
 
 // prepare patch array with old activities
@@ -128,22 +161,25 @@ onInputChange(input,j){
   }
 }
 
-deleteOldActivity(j){
+// deleteOldActivity(j){
 
-  for (let i = 0; i < this.OldActivities.length; i++) {
-    const element = this.OldActivities[i];
-    if(i==j){
-     this.OldActivities.splice(i, 1)
-    }
-  }
-  for (let i = 0; i < this.day.activity_days_array.length; i++) {
-    const element = this.day.activity_days_array[i];
-    if(i==j){
-     this.day.activity_days_array.splice(i, 1)
-    }
-  }
+//   for (let i = 0; i < this.OldActivities.length; i++) {
+//     const element = this.OldActivities[i];
+//     if(i==j){
+//      this.OldActivities.splice(i, 1)
+//     }
+//   }
+//   for (let i = 0; i < this.day.activity_days_array.length; i++) {
+//     const element = this.day.activity_days_array[i];
+//     if(i==j){
+//      this.day.activity_days_array.splice(i, 1)
+//     }
+//   }
   
-}
+// }
+
+// activate children emitter 
+
 
 
 

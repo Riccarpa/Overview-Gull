@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { el } from 'date-fns/locale';
 import { ToastrService } from 'ngx-toastr';
+import { format } from 'path';
+import { element } from 'protractor';
 import { ActivitiesService } from 'src/app/services/activities/activities.service';
 import { FinancialService } from 'src/app/services/financial/financial.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -13,7 +15,10 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) { }
+  constructor(private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) {
+
+    this.allActivities = []
+   }
   id = this.route.snapshot.paramMap.get('id');
   user:any
   activities:any
@@ -23,6 +28,10 @@ export class FinancialComponent implements OnInit {
   currMonthLog:any
   days:any
   monthAndYear:any
+  allActivities:Array<Object>
+  isSaved=false
+
+ 
 
   ngOnInit(): void {
     this.month=new Date().getMonth() +1
@@ -101,6 +110,31 @@ export class FinancialComponent implements OnInit {
    
     this.getCurrMonthLog();
 
+  }
+
+  // child activities data trigger and catcher
+  
+  save(){
+    this.fService.sendClickEvent();
+    this.isSaved = true
+  }
+  childsData(data:object){
+    this.allActivities.push(data)
+  }
+
+   // all activities patch 
+   
+  confirm(){
+    this.fService.patchActivities(this.currMonthLog.id,this.allActivities).subscribe((res)=>{
+      this.toastr.success('Activities saved succefully', 'Success!', {progressBar: true});
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500);
+    },(error)=>{
+      this.allActivities = []
+      this.isSaved = false
+      this.toastr.error(error.error.message);
+    })
   }
 
 }

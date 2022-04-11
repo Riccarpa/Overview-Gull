@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable,Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -16,7 +16,7 @@ export class FinancialService {
   
     token:any
     url = `${environment.apiURL}` 
-    
+    private subject = new Subject<any>();
     
     getMonthlyLogs(id:any):Observable<any>{
     const headers = new HttpHeaders({
@@ -45,12 +45,17 @@ export class FinancialService {
       'Authorization': `Bearer ${this.token}`
     })
     let body ={
-      "daily_logs": [arr]
+      "daily_logs": arr
     }
 
     return this.http.patch(`${this.url}/monthlyLogs/${id}`, body,{headers: headers});
   }
 
- 
+ sendClickEvent(){
+   this.subject.next()
+ }
+ getClickEvent():Observable<any>{
+   return this.subject.asObservable()
+ }
 
 }
