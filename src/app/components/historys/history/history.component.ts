@@ -32,7 +32,7 @@ export class HistoryComponent implements OnInit {
         filterData.created_at = new Date(filterData.created_at)
         filterData.data = JSON.parse(filterData.data)
         let eventTask = {
-          'name': this.getTaskName(filterData.data.task),
+          'name': filterData.data.name,
           'id': filterData.id,
           'created_at': filterData.created_at,
           'updated_at': filterData.updated_at,
@@ -50,19 +50,7 @@ export class HistoryComponent implements OnInit {
     })
   }
 
-  getTaskName(id: number) {
-
-    for (let i = 0; i < this.projectTasks.length; i++) {
-      let task = this.projectTasks[i];
-      if (task.id === id) {
-        return task.name
-      }
-    }
-    return id
-  }
-
   getDiffDate(dateTask: any){
-
 
     let dateT = Math.abs(parseInt((new Date(dateTask).getTime() / 1000).toFixed(0)))
     let diff = this.time - dateT
@@ -82,8 +70,6 @@ export class HistoryComponent implements OnInit {
       'hours':hours,  
       'minutes':minutes,
     }
-    
-    
   }
 
   ngOnInit(): void {
@@ -93,8 +79,6 @@ export class HistoryComponent implements OnInit {
     this.month = new Date().getMonth() + 1 //mese corrente
     this.day = new Date().getDate() // giorno corrente
     this.getHistory(this.projectId)     
-    
-    
   }
 }
 

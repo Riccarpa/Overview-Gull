@@ -27,7 +27,8 @@
                               class="disc"></div>
                           <div class="w-50  d-flex align-items-center justify-content-between">
                               <span class="text-20 mr-2">
-                                  {{event.filterData.event}} Task {{event.name}} : </span>
+                                  {{event.filterData.event}} Task :{{event.filterData.name || event.filterData.task }} 
+                                  </span>
                               <span class="text-20 "> {{ event.created_at | date  : "dd.MM.y" }} </span>
                           </div>
                           <div class="w-50 text-right">
@@ -77,7 +78,8 @@
                                 class="disc"></div>
                             <div class="w-50  d-flex align-items-center justify-content-between">
                                 <span class="text-20 mr-2">
-                                    {{event.filterData.event}} Task {{event.name}} : </span>
+                                    {{event.filterData.event}} Task :{{event.filterData.name || event.filterData.task }}
+                                    </span>
                                 <span class="text-20 "> {{ event.created_at | date  : "dd.MM.y" }} </span>
                             </div>
                             <div class="w-50 text-right">
