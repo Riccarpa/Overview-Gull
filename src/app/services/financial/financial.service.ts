@@ -28,7 +28,7 @@ export class FinancialService {
       "user_id": id,
       "month": date
     };
-    return this.http.post(`${this.url}/monthlyLogs`, body);
+    return this.http.post(`${this.url}/user/monthlyLogs`, body);
   }
 
   patchActivities(id, arr): Observable<any> {
