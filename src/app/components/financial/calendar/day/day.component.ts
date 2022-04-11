@@ -24,18 +24,12 @@ export class DayComponent implements OnInit {
   patchArr:any
   OldActivities:any
    
-  loadingButtons = [
-    {
-      name: 'secondary',
-      loading: false,
-    }
-  ]
-
+  
   ngOnInit(): void {
    this.retrieveOldActivities()
   }
 
-  // acrivities Form Array
+  // new acrivities Form Array
   activitiesForm=this.fb.group({
     activitiesArray:this.fb.array([])
   })
@@ -43,82 +37,88 @@ export class DayComponent implements OnInit {
     return this.activitiesForm.controls['activitiesArray'] as FormArray;
   }
   addActivity(){
-      const activityForm=this.fb.group({
-        activity_id:[],
-        hours_spent:[],
-        activity_type:['generic']
-      })
-      this.activitiesArray.push(activityForm);
+    const activityForm=this.fb.group({
+      activity_id:[],
+      hours_spent:[],
+      activity_type:['generic']
+    })
+    this.activitiesArray.push(activityForm);
   }
   deleteActivity(i){
     this.activitiesArray.removeAt(i)
   }
-
+  
   // catch smartWorking value
   smartAssign(e){
-   if(e.target.checked==true){
-     this.smartWorking = 1
-   }else{
-     this.smartWorking = 0;
-   }
+    if(e.target.checked==true){
+      this.smartWorking = 1
+    }else{
+      this.smartWorking = 0;
+    }
   }
-
-  // patch activity
-
+  
+  // emit activity data for parent component
+  
   save(){
     for (let i = 0; i < this.activitiesArray.value.length; i++) {
       const element = this.activitiesArray.value[i];
       element.activity_id = parseInt(element.activity_id)
     }
-
-
-     this.patchArr = {
+    
+    
+    this.patchArr = {
       "day": this.date,
       "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
       "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
     }  
     
-   if(this.patchArr.activity_days_array.length !== 0){
-    for (let i = 0; i < this.patchArr.activity_days_array.length; i++) {
-      let element = this.patchArr.activity_days_array[i];
-      if(element.hours_spent==0){
-        this.patchArr.activity_days_array.splice(i,1)
-        i--
+    if(this.patchArr.activity_days_array.length !== 0){
+      for (let i = 0; i < this.patchArr.activity_days_array.length; i++) {
+        let element = this.patchArr.activity_days_array[i];
+        if(element.hours_spent==0){
+          this.patchArr.activity_days_array.splice(i,1)
+          i--
+        }
       }
+      this.childsData.emit(this.patchArr)
     }
-     this.childsData.emit(this.patchArr)
-   }
   }
-
+  
   // saveActivity(btn){
-  //   btn.loading = true;
-  //   for (let i = 0; i < this.activitiesArray.value.length; i++) {
-  //     const element = this.activitiesArray.value[i];
-  //     element.activity_id = parseInt(element.activity_id)
-  //   }
-
-
-  //    this.patchArr = {
-  //     "day": this.date,
-  //     "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
-  //     "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
-  //   }  
-
-
-  //   this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
-  //     console.log(res)
-  //     btn.loading = false;
+    //   btn.loading = true;
+    //   for (let i = 0; i < this.activitiesArray.value.length; i++) {
+      //     const element = this.activitiesArray.value[i];
+      //     element.activity_id = parseInt(element.activity_id)
+      //   }
+      
+      
+      //    this.patchArr = {
+        //     "day": this.date,
+        //     "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
+        //     "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
+        //   }  
+        
+        
+        //   this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
+          //     console.log(res)
+          //     btn.loading = false;
   //     this.toastr.success('Activity saved succefully')
   //   },(error)=>{
   //     btn.loading = false;
   //     this.toastr.error(error.error.message);
   //   })
-    
-    
+  
+  
   // }
-
-
-// prepare patch array with old activities
+  // loadingButtons = [
+  //   {
+  //     name: 'secondary',
+  //     loading: false,
+  //   }
+  // ]
+  
+  
+  // prepare patch array with old activities
   retrieveOldActivities(){
     let oldActivities = [];
     for (let i = 0; i < this.day.activity_days_array.length; i++) {
@@ -179,7 +179,7 @@ onInputChange(input,j){
   
 // }
 
-// activate children emitter 
+
 
 
 
