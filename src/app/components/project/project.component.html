@@ -160,24 +160,22 @@
                 </tr>
                 <tr>
                   <td>Client</td>
-                  <td class="font-weight-bold">
+                  <td class="font-weight-bold d-flex flex-nowrap align-items-center " >
                     <p class="m-0 d-inline mr-2">
                       {{proj.client_details.name}}</p>
-                    <span>
-                      <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-                        class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
-                    </span>
+                    <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
+                      class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
                   </td>
                 </tr>
                 <tr [ngSwitch]="proj.status">
                   <td>Status</td>
-                  <td *ngSwitchCase="0" class="text-danger font-weight-bold">pending</td>
-                  <td *ngSwitchCase="1" class="text-danger font-weight-bold">open</td>
+                  <td *ngSwitchCase="0" class="text-warning font-weight-bold">pending</td>
+                  <td *ngSwitchCase="1" class="text-success font-weight-bold">open</td>
                   <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
                 </tr>
 
                 <tr>
-                  <td>collaboratori</td>
+                  <td>Collaboratori</td>
                   <td class="text-warning font-weight-bold ">
                     <ul class="overflow p-0">
                       <li>
@@ -215,12 +213,13 @@
     <!-- body dei tab con i progetti -->
     <div class="card-body nav-center col-12">
       <ul ngbNav #nav="ngbNav"
-        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-center justify-content-center">
-        <li class="w-2" *ngFor="let proj of userProjects; let i = index" ngbNavItem title="{{proj.name}}">
-          <a ngbNavLink class="w-100">
-            <div *ngIf="proj" class="d-flex align-items-center justify-content-start">
-              <h2 class="m-0 mr-1">{{proj.name}}</h2>
-              <img *ngIf="proj.logo" class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-stretch justify-content-between border-bottom border-bottom-secondary">
+        <li class="col-lg-2 col-md-3 col-sm-6 mr-2" *ngFor="let proj of userProjects; let i = index" ngbNavItem
+          title="{{proj.name}}">
+          <a ngbNavLink class="h-100 d-block _tabNav">
+            <div *ngIf="proj" class="d-flex align-items-center justify-content-start pr-4">
+              <h3 class="m-0 mr-1">{{proj.name}}</h3>
+              <img *ngIf="proj.logo" class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0"
                 src="{{url}}{{proj.logo}}" alt="">
               <img *ngIf="proj.logo === null" src="assets/images/project.png"
                 class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
@@ -228,27 +227,17 @@
           </a>
           <ng-template ngbNavContent>
 
-
             <div class="col-lg-12 col-md-12 mb-4">
               <div class="card mb-4 h-100">
                 <div class="card-body h-100">
-
                   <!-- header card -->
                   <div class=" d-flex justify-content-start align-items-center mb-2">
 
-
                     <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="">
                     <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
-
-                    <div class="card-title m-0 mr-5">{{proj.name}}</div>
-
-                    <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
-
-                    <div class="card-title m-0">{{proj.client_details.name}}</div>
-
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="">
+                    <div class="card-title m-0 mr-5 text-24">{{proj.name}}</div>
                   </div>
 
                   <div class="row">
@@ -257,8 +246,12 @@
                         <tbody>
                           <tr>
                             <td>Client</td>
-                            <td class="font-weight-bold">
-                              <p>{{proj.client_details.name}}</p>
+                            <td class=" font-weight-bold d-flex flex-nowrap align-items-center ">
+                              <p class="m-0 d-inline mr-2">
+                                {{proj.client_details.name}}</p>
+                              <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
+                                class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 "
+                                alt="">
                             </td>
                           </tr>
                           <tr [ngSwitch]="proj.status">
