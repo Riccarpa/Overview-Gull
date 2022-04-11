@@ -31,6 +31,7 @@ import { TaskComponent } from './components/project/task/task.component';
 import { FinancialComponent } from './components/financial/financial.component';
 import { DayComponent } from './components/financial/calendar/day/day.component';
 import { HistoryComponent } from './components/historys/history/history.component';
+import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
 
 
 
@@ -54,7 +55,8 @@ import { HistoryComponent } from './components/historys/history/history.componen
     TaskComponent,
     FinancialComponent,
     DayComponent,
-    HistoryComponent
+    HistoryComponent,
+    ShowFinancialComponent
   ],
   imports: [
     BrowserModule,

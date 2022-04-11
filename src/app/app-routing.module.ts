@@ -9,21 +9,25 @@ import { UpdateUserComponent } from './components/user/update-user/update-user.c
 import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/admin-layout-sidebar-large/admin-layout-sidebar-large.component';
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
 import { FinancialComponent } from './components/financial/financial.component';
+import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'home',component:AdminLayoutSidebarLargeComponent,children:[
-    { path: 'client', component: ClientComponent },
-    { path: 'user', component: UserComponent },
-    { path: 'user/:id', component: UpdateUserComponent },
-    { path: 'project', component: ProjectComponent },
-    { path: 'updateProject/:id', component: UpdateProjectComponent },
-    { path: 'homeUser/:id', component: HomeUserComponent },
-    { path: 'financial/:id', component: FinancialComponent },
-  ] },
-  
+  {
+    path: 'home', component: AdminLayoutSidebarLargeComponent, children: [
+      { path: 'client', component: ClientComponent },
+      { path: 'user', component: UserComponent },
+      { path: 'user/:id', component: UpdateUserComponent },
+      { path: 'project', component: ProjectComponent },
+      { path: 'updateProject/:id', component: UpdateProjectComponent },
+      { path: 'homeUser/:id', component: HomeUserComponent },
+      { path: 'financial/:id', component: FinancialComponent },
+      { path: 'showFinancial/:id', component: ShowFinancialComponent },
+    ]
+  },
+
   { path: 'login', component: LoginComponent },
-  
+
 ];
 
 @NgModule({
