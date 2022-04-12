@@ -75,7 +75,7 @@ export class UserComponent implements OnInit {
       this.filteredUsers = res.data
       console.log(res)
       for(let i=0;i<this.users.length;i++){
-        console.log(this.users[i].role);
+        
         
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
           this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.pService.randomNumber()}`
@@ -129,7 +129,7 @@ export class UserComponent implements OnInit {
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
-      console.log(result);
+      
     }, (reason) => {
       if(reason){
       
@@ -159,7 +159,7 @@ export class UserComponent implements OnInit {
     const rows = this.users.filter(function(d) {
       for (let i = 0; i <= columns.length; i++) {
         const column = columns[i];
-        // console.log(d[column]);
+        
         if (d[column] && d[column].toString().toLowerCase().indexOf(val) > -1) {
           return true;
         }
