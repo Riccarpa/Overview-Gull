@@ -10,14 +10,16 @@
         </div>
     </div>
 
-    <div *ngIf="days" class="table-body p-4">
+    <div class="table-body p-4">
         <div class="table-body-head d-flex align-items-center">
             <span class="col-3">Date</span>
             <span class="col-6 text-center">Activity and Hours</span>
             <span class="col-3 text-center">SmartWorking</span>
         </div>
         <hr />
-        <div *ngIf="!days" class="text-center">No data to display</div>
+        <div *ngIf="!days" class="text-center no-data d-flex justify-content-center align-items-center">
+            <span>No data to display</span>
+        </div>
         <div *ngIf="days">
             <div *ngFor="let day of days">
                 <div class="d-flex align-items-center">
