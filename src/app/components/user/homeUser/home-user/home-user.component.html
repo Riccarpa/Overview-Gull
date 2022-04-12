@@ -14,7 +14,7 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="mb-2 text-muted">Task Completati</h5>
-                    <p class="mb-1 text-22 font-weight-light">{{user.closed_tasks_percent}}%</p>
+                    <p class="mb-1 text-22 font-weight-light">{{user.closed_tasks_percent | number : '1.1-1'}}%</p>
                     <p class="mb-1">
                         <ngb-progressbar type="success" [value]="user.closed_tasks_percent" height="4px">
                         </ngb-progressbar>
