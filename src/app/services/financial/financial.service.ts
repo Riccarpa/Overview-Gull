@@ -35,7 +35,7 @@ export class FinancialService {
     let body = {
       "daily_logs": arr
     }
-    return this.http.patch(`${this.url}/monthlyLogs/${id}`, body);
+    return this.http.patch(`${this.url}/user/monthlyLogs/${id}`, body);
   }
 
  sendClickEvent(){
