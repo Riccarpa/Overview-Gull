@@ -396,7 +396,7 @@
                   *ngFor="let u of arrayUsersIds"
                 >
                   <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
-                    {{ user.name }}
+                    {{ user.name }} {{ user.surname }}
                   </p>
                   <i
                     (click)="removeUserToProject(u.id)"
