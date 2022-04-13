@@ -3,58 +3,91 @@
 
   <!-- se admin creazione progetto-->
   <div *appRole="role == 1">
-    <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">Aggiungi Progetto</button>
+    <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">
+      Aggiungi Progetto
+    </button>
 
     <!-- modale di creazione -->
     <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
         <h4 class="modal-title" id="modal-title">Crea Un Progetto</h4>
-        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-          (click)="modal.dismiss('Cross click')">
+        <button
+          type="button"
+          class="close"
+          aria-label="Close button"
+          aria-describedby="modal-title"
+          (click)="modal.dismiss('Cross click')"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body ">
-
+      <div class="modal-body">
         <div class="col-md-12">
           <div class="card mb-4">
             <div class="card-body">
               <div class="card-title mb-3"></div>
               <form [formGroup]="projectForm">
                 <div class="row">
-
                   <div class="col-md-6 form-group mb-3">
                     <label for="name">Project</label>
-                    <input minlength="3" maxlength="40" type="text" class="form-control " formControlName="name"
-                      placeholder="* nome progetto">
+                    <input
+                      minlength="3"
+                      maxlength="40"
+                      type="text"
+                      class="form-control"
+                      formControlName="name"
+                      placeholder="* nome progetto"
+                    />
 
-                    <div *ngIf="projectForm.get('name').invalid &&  projectForm.get('name').touched"
+                    <div
+                      *ngIf="
+                        projectForm.get('name').invalid &&
+                        projectForm.get('name').touched
+                      "
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
-                      role="alert">
-                      <div>
-                        inserisci un nome di almeno 3 caratteri
-                      </div>
+                      role="alert"
+                    >
+                      <div>inserisci un nome di almeno 3 caratteri</div>
                     </div>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">client</label>
-                    <select class="form-control" formControlName="client_id" name="client_id">
+                    <select
+                      class="form-control"
+                      formControlName="client_id"
+                      name="client_id"
+                    >
                       <option value="" selected disabled hidden>clienti</option>
-                      <option *ngFor="let c of clients" [value]="c.id">{{c.name}}</option>
+                      <option *ngFor="let c of clients" [value]="c.id">
+                        {{ c.name }}
+                      </option>
                     </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="revenue">Revenue</label>
-                    <input min="0" class="form-control" type="number" name="revenue" formControlName="revenue"
-                      placeholder="revenue">
+                    <input
+                      min="0"
+                      class="form-control"
+                      type="number"
+                      name="revenue"
+                      formControlName="revenue"
+                      placeholder="revenue"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="status">Status</label>
-                    <select class="form-control" name="status" formControlName="status" placeholder="status">
-                      <option selected disabled hidden [value]="null">Status</option>
+                    <select
+                      class="form-control"
+                      name="status"
+                      formControlName="status"
+                      placeholder="status"
+                    >
+                      <option selected disabled hidden [value]="null">
+                        Status
+                      </option>
                       <option [value]="0">Pending</option>
                       <option [value]="1">Open</option>
                       <option [value]="2">Close</option>
@@ -63,91 +96,138 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">Start date</label>
-                    <input type="date" class="form-control" formControlName="start_date">
+                    <input
+                      type="date"
+                      class="form-control"
+                      formControlName="start_date"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">End Date</label>
-                    <input type="date" class="form-control" formControlName="end_date">
+                    <input
+                      type="date"
+                      class="form-control"
+                      formControlName="end_date"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">Progress</label>
-                    <input type="number" min="0" class="form-control" formControlName="progress" name="progress">
-
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      formControlName="progress"
+                      name="progress"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3 d-flex flex-column">
                     <label for="picker1">Project Logo</label>
-                    <button class="form-control text-left" (click)="openModalImg(modalCropper)">Aggiungi Un
-                      Logo</button>
-                    <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
-                      [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
+                    <button
+                      class="form-control text-left"
+                      (click)="openModalImg(modalCropper)"
+                    >
+                      Aggiungi Un Logo
+                    </button>
+                    <img
+                      *ngIf="data?.image"
+                      class="rounded-circle"
+                      [src]="data?.image"
+                      [width]="cropperSettings.croppedWidth"
+                      [height]="cropperSettings.croppedHeight"
+                    />
                   </div>
-
-
 
                   <!-- cropper per img -->
                   <ng-template #modalCropper let-modal>
                     <div class="modal-header">
-                      <h4 class="modal-title" id="modal-basic-title">Carica Un Immagine</h4>
-                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+                      <h4 class="modal-title" id="modal-basic-title">
+                        Carica Un Immagine
+                      </h4>
+                      <button
+                        type="button"
+                        class="close"
+                        aria-label="Close"
+                        (click)="modal.dismiss('')"
+                      >
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings">
+                      <img-cropper
+                        (change)="uploadImg($event)"
+                        [image]="data"
+                        [settings]="cropperSettings"
+                      >
                       </img-cropper>
-                      <br>
-
+                      <br />
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-rounded btn-outline-dark"
-                        (click)="saveImg();modal.close()">Save</button>
+                      <button
+                        type="button"
+                        class="btn btn-rounded btn-outline-dark"
+                        (click)="saveImg(); modal.close()"
+                      >
+                        Save
+                      </button>
                     </div>
                   </ng-template>
-
                 </div>
               </form>
             </div>
           </div>
         </div>
-
-
-
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary btn-rounded"
-          (click)="modal.dismiss('cancel')">Cancel</button>
-        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger btn-rounded"
-          (click)="addProject(projectForm)">Ok</btn-loading>
+        <btn-loading
+          [loading]="loading"
+          type="button"
+          ngbAutofocus
+          btnClass="btn btn-primary "
+          (click)="addProject(projectForm)"
+          >Create</btn-loading
+        >
       </div>
     </ng-template>
-
   </div>
 </div>
 
-<div *ngIf="client && client.project_ids.length < 1 ">
-  <h2 class="text-center mt-5 ">Non Ci Sono Progetti Associati Per Questo Cliente</h2>
-  <button class="btn btn-success tex-center" (click)="back()">Back</button>
+<div *ngIf="client && client.project_ids.length < 1">
+  <h2 class="text-center mt-5">
+    Non Ci Sono Progetti Associati Per Questo Cliente
+  </h2>
+  <div class="mt-4 text-right">
+    <button class="btn btn-outline-secondary" (click)="back()">Back</button>
+  </div>
 </div>
 
 <!-- main container visualizzazione admin/PM-->
 <section class="d-flex align-items-stretch flex-wrap">
-
   <!-- card project -->
-  <div *ngFor="let proj of projects  | filterProject: idClient" class="col-lg-6 col-md-12 mb-4">
+  <div
+    *ngFor="let proj of projects | filterProject: idClient"
+    class="col-lg-6 col-md-12 mb-4"
+  >
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100">
-
         <!-- header card -->
-        <div class=" d-flex justify-content-start align-items-center mb-2">
-          <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
-            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
-          <img *ngIf="proj.logo === null" src="assets/images/project.png"
-            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+        <div class="d-flex justify-content-start align-items-center mb-2">
+          <img
+            *ngIf="proj.logo"
+            src="{{ url }}{{ proj.logo }}"
+            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+            alt=""
+          />
+          <img
+            *ngIf="proj.logo === null"
+            src="assets/images/project.png"
+            class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+            alt=""
+          />
 
-          <div class="card-title m-0">{{proj.name}}</div>
+          <div class="card-title m-0">{{ proj.name }}</div>
         </div>
 
         <div class="row">
@@ -156,31 +236,46 @@
               <tbody>
                 <tr>
                   <td>Revenue</td>
-                  <td class="font-weight-bold text-success">{{proj.revenue}}</td>
+                  <td class="font-weight-bold text-success">
+                    {{ proj.revenue }}
+                  </td>
                 </tr>
                 <tr>
                   <td>Client</td>
-                  <td class="font-weight-bold d-flex flex-nowrap align-items-center " >
+                  <td
+                    class="font-weight-bold d-flex flex-nowrap align-items-center"
+                  >
                     <p class="m-0 d-inline mr-2">
-                      {{proj.client_details.name}}</p>
-                    <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-                      class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2 " alt="">
+                      {{ proj.client_details.name }}
+                    </p>
+                    <img
+                      *ngIf="proj.client_details.logo"
+                      src="{{ url }}{{ proj.client_details.logo }}"
+                      class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                      alt=""
+                    />
                   </td>
                 </tr>
                 <tr [ngSwitch]="proj.status">
                   <td>Status</td>
-                  <td *ngSwitchCase="0" class="text-warning font-weight-bold">pending</td>
-                  <td *ngSwitchCase="1" class="text-success font-weight-bold">open</td>
-                  <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
+                  <td *ngSwitchCase="0" class="text-warning font-weight-bold">
+                    pending
+                  </td>
+                  <td *ngSwitchCase="1" class="text-success font-weight-bold">
+                    open
+                  </td>
+                  <td *ngSwitchCase="2" class="text-danger font-weight-bold">
+                    close
+                  </td>
                 </tr>
 
                 <tr>
                   <td>Collaboratori</td>
-                  <td class="text-warning font-weight-bold ">
+                  <td class="text-warning font-weight-bold">
                     <ul class="overflow p-0">
                       <li>
-                        <p *ngFor="let u of proj.user_details ">
-                          {{u.name}}
+                        <p *ngFor="let u of proj.user_details">
+                          {{ u.name }}
                         </p>
                       </li>
                     </ul>
@@ -190,8 +285,12 @@
             </table>
           </div>
           <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
-            <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true" style="height: 200px;">
-            </div>
+            <div
+              echarts
+              [options]="getChartPercent(proj.progress)"
+              [autoResize]="true"
+              style="height: 200px"
+            ></div>
           </div>
         </div>
       </div>
@@ -199,45 +298,79 @@
   </div>
 </section>
 
-
 <!-- visualizzazione collaboratore -->
-<section *appRole="role === 0" id="collab" class="d-flex align-items-stretch flex-wrap col-12">
-
+<section
+  *appRole="role === 0"
+  id="collab"
+  class="d-flex align-items-stretch flex-wrap col-12"
+>
   <div class="card user-profile mt-5 mb-4 col-12">
     <!-- immagine user -->
     <div *ngIf="userRetrive" class="user-info">
-      <img class="profile-picture avatar-lg mb-2" src="{{url}}{{userRetrive.picture}}" alt="">
-      <p class="m-0 text-24">{{userRetrive.name}}</p>
+      <img
+        class="profile-picture avatar-lg mb-2"
+        src="{{ url }}{{ userRetrive.picture }}"
+        alt=""
+      />
+      <p class="m-0 text-24">{{ userRetrive.name }}</p>
     </div>
 
     <!-- body dei tab con i progetti -->
     <div class="card-body nav-center col-12">
-      <ul ngbNav #nav="ngbNav"
-        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-stretch justify-content-between border-bottom border-bottom-secondary">
-        <li class="col-lg-2 col-md-3 col-sm-6 mr-2" *ngFor="let proj of userProjects; let i = index" ngbNavItem
-          title="{{proj.name}}">
+      <ul
+        ngbNav
+        #nav="ngbNav"
+        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-stretch justify-content-between border-bottom border-bottom-secondary"
+      >
+        <li
+          class="col-lg-2 col-md-3 col-sm-6 mr-2"
+          *ngFor="let proj of userProjects; let i = index"
+          ngbNavItem
+          title="{{ proj.name }}"
+        >
           <a ngbNavLink class="h-100 d-block _tabNav">
-            <div *ngIf="proj" class="d-flex align-items-center justify-content-start pr-4">
-              <h3 class="m-0 mr-1">{{proj.name}}</h3>
-              <img *ngIf="proj.logo" class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0"
-                src="{{url}}{{proj.logo}}" alt="">
-              <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="">
+            <div
+              *ngIf="proj"
+              class="d-flex align-items-center justify-content-start pr-4"
+            >
+              <h3 class="m-0 mr-1">{{ proj.name }}</h3>
+              <img
+                *ngIf="proj.logo"
+                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0"
+                src="{{ url }}{{ proj.logo }}"
+                alt=""
+              />
+              <img
+                *ngIf="proj.logo === null"
+                src="assets/images/project.png"
+                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                alt=""
+              />
             </div>
           </a>
           <ng-template ngbNavContent>
-
             <div class="col-lg-12 col-md-12 mb-4">
               <div class="card mb-4 h-100">
                 <div class="card-body h-100">
                   <!-- header card -->
-                  <div class=" d-flex justify-content-start align-items-center mb-2">
-
-                    <img *ngIf="proj.logo" src="{{url}}{{proj.logo}}"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="">
-                    <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="">
-                    <div class="card-title m-0 mr-5 text-24">{{proj.name}}</div>
+                  <div
+                    class="d-flex justify-content-start align-items-center mb-2"
+                  >
+                    <img
+                      *ngIf="proj.logo"
+                      src="{{ url }}{{ proj.logo }}"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2"
+                      alt=""
+                    />
+                    <img
+                      *ngIf="proj.logo === null"
+                      src="assets/images/project.png"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2"
+                      alt=""
+                    />
+                    <div class="card-title m-0 mr-5 text-24">
+                      {{ proj.name }}
+                    </div>
                   </div>
 
                   <div class="row">
@@ -246,29 +379,51 @@
                         <tbody>
                           <tr>
                             <td>Client</td>
-                            <td class=" font-weight-bold d-flex flex-nowrap align-items-center ">
+                            <td
+                              class="font-weight-bold d-flex flex-nowrap align-items-center"
+                            >
                               <p class="m-0 d-inline mr-2">
-                                {{proj.client_details.name}}</p>
-                              <img *ngIf="proj.client_details.logo" src="{{url}}{{proj.client_details.logo}}"
-                                class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2 "
-                                alt="">
+                                {{ proj.client_details.name }}
+                              </p>
+                              <img
+                                *ngIf="proj.client_details.logo"
+                                src="{{ url }}{{ proj.client_details.logo }}"
+                                class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                                alt=""
+                              />
                             </td>
                           </tr>
                           <tr [ngSwitch]="proj.status">
                             <td>Status</td>
-                            <td *ngSwitchCase="0" class="text-danger font-weight-bold">pending</td>
-                            <td *ngSwitchCase="1" class="text-danger font-weight-bold">open</td>
-                            <td *ngSwitchCase="2" class="text-danger font-weight-bold">close</td>
+                            <td
+                              *ngSwitchCase="0"
+                              class="text-danger font-weight-bold"
+                            >
+                              pending
+                            </td>
+                            <td
+                              *ngSwitchCase="1"
+                              class="text-danger font-weight-bold"
+                            >
+                              open
+                            </td>
+                            <td
+                              *ngSwitchCase="2"
+                              class="text-danger font-weight-bold"
+                            >
+                              close
+                            </td>
                           </tr>
 
                           <tr>
                             <td>collaboratori</td>
-                            <td class="text-warning font-weight-bold ">
-                              <ul *ngIf="proj.user_details" class="overflow p-0">
+                            <td class="text-warning font-weight-bold">
+                              <ul
+                                *ngIf="proj.user_details"
+                                class="overflow p-0"
+                              >
                                 <li *ngFor="let user of proj.user_details">
-                                  <p>
-                                    {{user.name}} {{user.surname}}
-                                  </p>
+                                  <p>{{ user.name }} {{ user.surname }}</p>
                                 </li>
                               </ul>
                             </td>
@@ -276,16 +431,21 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
-                      <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true"
-                        style="height: 200px;">
-                      </div>
+                    <div
+                      *ngIf="proj.progress || proj.progress === 0"
+                      class="col-md-6"
+                    >
+                      <div
+                        echarts
+                        [options]="getChartPercent(proj.progress)"
+                        [autoResize]="true"
+                        style="height: 200px"
+                      ></div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </ng-template>
         </li>
       </ul>

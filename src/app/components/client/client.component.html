@@ -1,124 +1,234 @@
 <div class="d-flex justify-content-between w-100 mb-4">
-    <h2 class="px-3 m-3">Clients</h2>
-    <button class="btn btn-success px-3 m-3" (click)="openModalAddClient(modalBasic)">Aggiungi Cliente</button>
+  <h2 class="px-3 m-3">Clients</h2>
+  <button
+    class="btn btn-success px-3 m-3"
+    (click)="openModalAddClient(modalBasic)"
+  >
+    Aggiungi Cliente
+  </button>
 </div>
 
 <!-- cards clienti -->
 <div class="row">
-    <div class="col-md-6" *ngFor="let client of clientsList">
-        <div class="card card-profile-1 mb-4 p-4">
-            <div class="card-body text-center">
-                <div (click)="goToDashboard(client.id)">
-                    <h3 class="m-0">{{client.name}}</h3>
-                    <h5 class="mt-0 text-muted">P. IVA: {{client.vat_number}}</h5>
-                    <div class="avatar box-shadow-2 my-5">
-                        <img [src]="client.logo? url + '/' +client.logo : ''" alt="">
-                    </div>
-                </div>
-                <div (click)="goToDashboard(client.id)" class="d-flex justify-content-between my-4">
-                    <div class="col-12 col-md-4">
-                        <h3 class="m-0">{{client.total_revenue}}</h3>
-                        <h5 class="mt-0 text-muted">Ricavi {{currentDate | date:'yyyy'}}</h5>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <h3 class="m-0">{{client.total_cost}}</h3>
-                        <h5 class="mt-0 text-muted">Costi {{currentDate | date:'yyyy'}}</h5>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <h3 class="m-0">{{client.project_ids.length}}</h3>
-                        <h5 class="mt-0 text-muted">Progetti attuali</h5>
-                    </div>
-                </div>
-                <button class="btn btn-primary px-5 m-2"
-                    (click)="openModalEditClient(client.id, modalBasic)">Modifica</button>
-            </div>
+  <div class="col-md-6" *ngFor="let client of clientsList">
+    <div class="card card-profile-1 mb-4 p-4">
+      <div class="card-body text-center">
+        <div (click)="goToDashboard(client.id)">
+          <h3 class="m-0">{{ client.name }}</h3>
+          <h5 class="mt-0 text-muted">P. IVA: {{ client.vat_number }}</h5>
+          <div class="avatar box-shadow-2 my-5">
+            <img [src]="client.logo ? url + '/' + client.logo : ''" alt="" />
+          </div>
         </div>
+        <div
+          (click)="goToDashboard(client.id)"
+          class="d-flex justify-content-between my-4"
+        >
+          <div class="col-12 col-md-4">
+            <h3 class="m-0">{{ client.total_revenue }}</h3>
+            <h5 class="mt-0 text-muted">
+              Ricavi {{ currentDate | date: "yyyy" }}
+            </h5>
+          </div>
+          <div class="col-12 col-md-4">
+            <h3 class="m-0">{{ client.total_cost }}</h3>
+            <h5 class="mt-0 text-muted">
+              Costi {{ currentDate | date: "yyyy" }}
+            </h5>
+          </div>
+          <div class="col-12 col-md-4">
+            <h3 class="m-0">{{ client.project_ids.length }}</h3>
+            <h5 class="mt-0 text-muted">Progetti attuali</h5>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary px-5 m-2"
+          (click)="openModalEditClient(client.id, modalBasic)"
+        >
+          Modifica
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- modale cancella cliente -->
 <ng-template #modalConfirm let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-title">Cancella Cliente</h4>
-        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <p><strong>Sei sicuro di eliminare <span class="text-primary">"{{currentDeleteClient}}"</span>?</strong></p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary btn-rounded"
-            (click)="modal.dismiss('cancel')">Annulla</button>
-        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Cancella Cliente</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close button"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong
+        >Sei sicuro di eliminare
+        <span class="text-primary">"{{ currentDeleteClient }}"</span>?</strong
+      >
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel')"
+    >
+      Annulla
+    </button>
+    <button
+      type="button"
+      ngbAutofocus
+      class="btn btn-danger"
+      (click)="modal.close('Ok')"
+    >
+      Ok
+    </button>
+  </div>
 </ng-template>
 
 <!-- modale crea/modifica cliente -->
 <ng-template #modalBasic let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="clientForm">
-            <div class="row">
-                <div class="col-md-6 form-group mb-3">
-                    <label for="name">Nome</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
-                        formControlName="name">
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label for="vat_number">Partita IVA</label>
-                    <input type="text" class="form-control" id="vat_number" name="vat_number"
-                        placeholder="Inserisci partita IVA" formControlName="vat_number">
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label for="business_name">Nome Commerciale</label>
-                    <input type="text" class="form-control" id="business_name" name="business_name"
-                        placeholder="Inserisci nome commerciale" formControlName="business_name">
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                    <label for="representatives">Rappresentanti</label>
-                    <input type="text" class="form-control" id="representatives" name="representatives"
-                        placeholder="Inserisci rappresentanti" formControlName="representatives">
-                </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ titleModal }}</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="clientForm">
+      <div class="row">
+        <div class="col-md-6 form-group mb-3">
+          <label for="name">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Inserisci nome"
+            formControlName="name"
+          />
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label for="vat_number">Partita IVA</label>
+          <input
+            type="text"
+            class="form-control"
+            id="vat_number"
+            name="vat_number"
+            placeholder="Inserisci partita IVA"
+            formControlName="vat_number"
+          />
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label for="business_name">Nome Commerciale</label>
+          <input
+            type="text"
+            class="form-control"
+            id="business_name"
+            name="business_name"
+            placeholder="Inserisci nome commerciale"
+            formControlName="business_name"
+          />
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label for="representatives">Rappresentanti</label>
+          <input
+            type="text"
+            class="form-control"
+            id="representatives"
+            name="representatives"
+            placeholder="Inserisci rappresentanti"
+            formControlName="representatives"
+          />
+        </div>
 
-                <div class="col-md-12 form-group mb-3">
-                    <button class="btn btn-outline-primary btn-rounded mr-3"
-                        (click)="openModalCropper(modalCropper)">Logo</button>
-                    <img *ngIf="data?.image" class="rounded-circle" [src]="data?.image"
-                        [width]="cropperSettings.croppedWidth" [height]="cropperSettings.croppedHeight">
-                </div>
-            </div>
-        </form>
+        <div class="col-md-12 form-group mb-3">
+          <button
+            class="btn btn-outline-secondary mr-3"
+            (click)="openModalCropper(modalCropper)"
+          >
+            Logo
+          </button>
+          <img
+            *ngIf="data?.image"
+            class="rounded-circle"
+            [src]="data?.image"
+            [width]="cropperSettings.croppedWidth"
+            [height]="cropperSettings.croppedHeight"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      *ngIf="titleModal == 'Modifica Cliente'"
+      class="btn btn-danger"
+      (click)="deleteClient(client.id, client.name, modalConfirm)"
+    >
+      Elimina
+    </button>
+    <div>
+      <button
+        *ngIf="titleModal == 'Aggiungi Cliente'"
+        type="button"
+        class="btn btn-primary"
+        (click)="addClient()"
+      >
+        Salva
+      </button>
+      <button
+        *ngIf="titleModal == 'Modifica Cliente'"
+        type="button"
+        class="btn btn-primary"
+        (click)="editClient()"
+      >
+        Salva
+      </button>
     </div>
-    <div class="modal-footer">
-        <button *ngIf="titleModal == 'Aggiungi Cliente'" type="button" class="btn btn-outline-dark btn-rounded"
-            (click)="addClient()">Salva</button>
-        <button *ngIf="titleModal == 'Modifica Cliente'" type="button" class="btn btn-outline-dark btn-rounded"
-            (click)="editClient()">Salva</button>
-        <button *ngIf="titleModal == 'Modifica Cliente'" class="btn btn-outline-danger btn-rounded"
-            (click)="deleteClient(client.id, client.name, modalConfirm)">Elimina</button>
-    </div>
+  </div>
 </ng-template>
 
 <!-- modale logo clienti -->
 <ng-template #modalCropper let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <img-cropper [image]="data" [settings]="cropperSettings" (change)="fileChange($event)"></img-cropper><br>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-rounded btn-outline-dark"
-            (click)="modal.close('Save click')">Salva</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Upload & Crop</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <img-cropper
+      [image]="data"
+      [settings]="cropperSettings"
+      (change)="fileChange($event)"
+    ></img-cropper
+    ><br />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Save click')"
+    >
+      Salva
+    </button>
+  </div>
 </ng-template>
