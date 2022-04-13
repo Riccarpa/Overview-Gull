@@ -386,41 +386,14 @@
           </div>
 
           <!-- button update-delete -->
-          <div
-            *ngIf="role === 1"
-            class="col-lg-12 d-flex align-items-center mt-3"
-          >
-            <div class="col-lg-6 p-0">
-              <btn-loading
-                (click)="delProject(project.id)"
-                [loading]="loadingDelete"
-                btnClass="btn-danger "
-              >
-                Delete
-              </btn-loading>
-              <btn-loading
-                (click)="updateProject()"
-                btnClass=" btn-primary "
-                [loading]="loadingUpdate"
-                class="m-4"
-              >
-                Update</btn-loading
-              >
-
-              <label class="switch switch-success mr-3">
-                <span>History</span>
-                <input type="checkbox" [formControl]="historyCheck" />
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="col-lg-6 p-0 row flex-row-reverse">
+          <div *ngIf="role === 1" class="col-12 d-flex align-items-center mt-3">
+            <div class="col-6 row flex-row-reverse">
               <div
                 class="d-flex flex-wrap p-1 align-items-center"
                 *ngIf="role === 1"
               >
                 <div
-                  class="ml-1 btn btn-primary d-flex p-1 align-items-center pl-2 mb-1"
+                  class="ml-1 btn btn-outline-primary d-flex p-1 align-items-center pl-2 mb-1"
                   *ngFor="let u of arrayUsersIds"
                 >
                   <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
@@ -432,6 +405,23 @@
                   ></i>
                 </div>
               </div>
+            </div>
+            <div class="col-6 text-right">
+              <btn-loading
+                (click)="delProject(project.id)"
+                [loading]="loadingDelete"
+                btnClass="btn-danger "
+                class="mr-2"
+              >
+                Delete
+              </btn-loading>
+              <btn-loading
+                (click)="updateProject()"
+                btnClass=" btn-primary "
+                [loading]="loadingUpdate"
+              >
+                Update</btn-loading
+              >
             </div>
           </div>
         </div>
@@ -607,6 +597,15 @@
         </ng-template>
       </form>
     </div>
+  </div>
+
+  <!-- History switch -->
+  <div class="col-12 mb-4">
+    <label class="switch switch-success mr-3">
+      <span>History</span>
+      <input type="checkbox" [formControl]="historyCheck" />
+      <span class="slider"></span>
+    </label>
   </div>
 </div>
 
