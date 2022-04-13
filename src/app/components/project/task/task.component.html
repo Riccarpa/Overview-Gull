@@ -1,137 +1,236 @@
 <div class="mb-3 d-flex justify-content-between w-100">
-    <label class="switch switch-success mr-3">
-        <span>Filtra completati</span>
-        <input type="checkbox" [formControl]="searchControl">
-        <span class="slider"></span>
-    </label>
-    <button class="btn btn-success px-3 m-3" (click)="openModalAddTask(modalBasic)">Crea Nuovo Task</button>
+  <label class="switch switch-success mr-3">
+    <span>Filtra completati</span>
+    <input type="checkbox" [formControl]="searchControl" />
+    <span class="slider"></span>
+  </label>
+  <button
+    class="btn btn-success px-3 m-3"
+    (click)="openModalAddTask(modalBasic)"
+  >
+    Create
+  </button>
 </div>
 
 <!-- table task -->
 <div class="row mb-5">
-    <div class="col-md-12">
-        <div class="card o-hidden">
-            <ngx-datatable style="min-height: 300px; box-shadow: none" class="material fullscreen"
-                [columnMode]="'force'" [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="filteredTasks">
-                <ngx-datatable-column name="name" [width]="200">
-                    <ng-template ngx-datatable-header-template>Task name</ng-template>
-                    <ng-template ngx-datatable-cell-template let-row="row">
-                        <span class="d-inline-block" style="width: 80%;">
-                            {{row.name}}
-                        </span>
-                        <button class="btn bg-transparent ml-2 p-0">
-                            <i class="text-20 i-Clouds" style="color: blue;"></i>
-                        </button>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column>
-                    <ng-template ngx-datatable-header-template>Assignee</ng-template>
-                    <ng-template ngx-datatable-cell-template let-row="row">
-                        {{getAssignee(row.assignee_id)}}
-                       
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column>
-                    <ng-template ngx-datatable-header-template>End Date</ng-template>
-                    <ng-template ngx-datatable-cell-template let-row="row">
-                        {{row.end_date | date:'dd-MM-yyyy'}}
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column [width]="300">
-                    <ng-template ngx-datatable-header-template>Task Status</ng-template>
-                    <ng-template ngx-datatable-cell-template let-row="row">
-                        <span class="rounded-circle d-inline-block"
-                            [ngClass]="{'red': row.status == 0, 'green' : row.status == 2, 'orange' : row.status == 1 }"
-                            style="height: 10px; width: 10px;"></span>
-                        {{getStatus(row.status)}}
-                        {{getDate(row.status, (row.start_date | date:'dd-MM-yyyy'), (row.end_date |
-                        date:'dd-MM-yyyy'))}}
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column [width]="100">
-                    <ng-template ngx-datatable-header-template>Actions</ng-template>
-                    <ng-template ngx-datatable-cell-template let-row="row">
-                        <button (click)="openModalEditTask(row.id, modalBasic,filteredTasks)" class="btn bg-transparent mr-2 p-0"><i
-                                class="text-20 i-Pen-5"></i></button>
-                        <button (click)="deleteTask(row.id, modalConfirm)"
-                            class="btn bg-transparent text-danger ml-2 p-0"><i class="text-20 i-Close"></i></button>
-                    </ng-template>
-                </ngx-datatable-column>
-            </ngx-datatable>
-        </div>
+  <div class="col-md-12">
+    <div class="card o-hidden">
+      <ngx-datatable
+        style="min-height: 300px; box-shadow: none"
+        class="material fullscreen"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [rowHeight]="60"
+        [scrollbarV]="false"
+        [rows]="filteredTasks"
+      >
+        <ngx-datatable-column name="name" [width]="200">
+          <ng-template ngx-datatable-header-template>Task name</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <span class="d-inline-block" style="width: 80%">
+              {{ row.name }}
+            </span>
+            <button class="btn bg-transparent ml-2 p-0">
+              <i class="text-20 i-Clouds" style="color: blue"></i>
+            </button>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template>Assignee</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            {{ getAssignee(row.assignee_id) }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template>End Date</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            {{ row.end_date | date: "dd-MM-yyyy" }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="300">
+          <ng-template ngx-datatable-header-template>Task Status</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <span
+              class="rounded-circle d-inline-block"
+              [ngClass]="{
+                red: row.status == 0,
+                green: row.status == 2,
+                orange: row.status == 1
+              }"
+              style="height: 10px; width: 10px"
+            ></span>
+            {{ getStatus(row.status) }}
+            {{
+              getDate(
+                row.status,
+                row.start_date | date: "dd-MM-yyyy",
+                row.end_date | date: "dd-MM-yyyy"
+              )
+            }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [width]="100">
+          <ng-template ngx-datatable-header-template>Actions</ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <button
+              (click)="openModalEditTask(row.id, modalBasic, filteredTasks)"
+              class="btn bg-transparent mr-2 p-0"
+            >
+              <i class="text-20 i-Pen-5"></i>
+            </button>
+            <button
+              (click)="deleteTask(row.id, modalConfirm)"
+              class="btn bg-transparent text-danger ml-2 p-0"
+            >
+              <i class="text-20 i-Close"></i>
+            </button>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
     </div>
+  </div>
 </div>
 
 <!-- modale aggiunta/modifica task -->
 <ng-template #modalBasic let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{titleModal}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form [formGroup]="taskForm">
-            <div class="row">
-                <div class="col-md-12 form-group mb-3">
-                    <label for="name">Nome task</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
-                        formControlName="name">
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                    <label for="assignee_id">Assegnatario</label>
-                    <select class="form-control" type="number" name="assignee_id" formControlName="assignee_id">
-                        <option *ngFor="let c of collaborators" [value]="c.id">{{c.name}} {{c.surname}}</option>
-                    </select>
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                    <label for="status">Status</label>
-                    <select class="form-control" type="number" name="status" formControlName="status">
-                        <option [value]="0">Aperto</option>
-                        <option [value]="1">In corso</option>
-                        <option [value]="2">Completato</option>
-                    </select>
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                    <label for="start_date">Data inizio</label>
-                    <input type="date" class="form-control" id="start_date" name="start_date"
-                        formControlName="start_date">
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                    <label for="end_date">Data fine</label>
-                    <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date">
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                    <label for="effort">Effort</label>
-                    <input type="number" class="form-control" id="effort" name="effort" placeholder="Inserisci effort"
-                        formControlName="effort">
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button *ngIf="titleModal == 'Aggiungi Task'" type="button" class="btn btn-outline-dark btn-rounded"
-            (click)="addTask()">Salva</button>
-        <button *ngIf="titleModal == 'Modifica Task'" type="button" class="btn btn-outline-dark btn-rounded"
-            (click)="editTask()">Salva</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ titleModal }}</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="taskForm">
+      <div class="row">
+        <div class="col-md-12 form-group mb-3">
+          <label for="name">Nome task</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Inserisci nome"
+            formControlName="name"
+          />
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label for="assignee_id">Assegnatario</label>
+          <select
+            class="form-control"
+            type="number"
+            name="assignee_id"
+            formControlName="assignee_id"
+          >
+            <option *ngFor="let c of collaborators" [value]="c.id">
+              {{ c.name }} {{ c.surname }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label for="status">Status</label>
+          <select
+            class="form-control"
+            type="number"
+            name="status"
+            formControlName="status"
+          >
+            <option [value]="0">Aperto</option>
+            <option [value]="1">In corso</option>
+            <option [value]="2">Completato</option>
+          </select>
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label for="start_date">Data inizio</label>
+          <input
+            type="date"
+            class="form-control"
+            id="start_date"
+            name="start_date"
+            formControlName="start_date"
+          />
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label for="end_date">Data fine</label>
+          <input
+            type="date"
+            class="form-control"
+            id="end_date"
+            name="end_date"
+            formControlName="end_date"
+          />
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label for="effort">Effort</label>
+          <input
+            type="number"
+            class="form-control"
+            id="effort"
+            name="effort"
+            placeholder="Inserisci effort"
+            formControlName="effort"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      *ngIf="titleModal == 'Aggiungi Task'"
+      type="button"
+      class="btn btn-primary"
+      (click)="addTask()"
+    >
+      Salva
+    </button>
+    <button
+      *ngIf="titleModal == 'Modifica Task'"
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="editTask()"
+    >
+      Salva
+    </button>
+  </div>
 </ng-template>
 
 <!-- modale cancellazione task -->
 <ng-template #modalConfirm let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-title">Cancella Task</h4>
-        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <p><strong>Sei sicuro di voler eliminare il task selezionato?</strong></p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary btn-rounded"
-            (click)="modal.dismiss('cancel')">Annulla</button>
-        <button type="button" ngbAutofocus class="btn btn-danger btn-rounded" (click)="modal.close('Ok')">Ok</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Cancella Task</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close button"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Sei sicuro di voler eliminare il task selezionato?</strong></p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel')"
+    >
+      Annulla
+    </button>
+    <button
+      type="button"
+      ngbAutofocus
+      class="btn btn-danger"
+      (click)="modal.close('Ok')"
+    >
+      Ok
+    </button>
+  </div>
 </ng-template>
