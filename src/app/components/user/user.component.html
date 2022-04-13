@@ -134,13 +134,15 @@
                 >
                   Open file
                 </button>
-                <img
-                  *ngIf="data?.image"
-                  class="rounded-circle ml-4"
-                  [src]="data?.image"
-                  [width]="cropperSettings.croppedWidth"
-                  [height]="cropperSettings.croppedHeight"
-                />
+                <div class="text-right">
+                  <img
+                    *ngIf="data?.image"
+                    class="rounded-circle ml-4"
+                    [src]="data?.image"
+                    [width]="cropperSettings.croppedWidth"
+                    [height]="cropperSettings.croppedHeight"
+                  />
+                </div>
               </div>
             </div>
           </div>
