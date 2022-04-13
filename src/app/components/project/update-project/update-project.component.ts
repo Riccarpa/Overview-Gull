@@ -169,18 +169,21 @@ export class UpdateProjectComponent implements OnInit {
 
     //invio del form  id e array userIds  al service per update
     if (this.projectForm.status == 'INVALID') {
-      this.service.warningBar('Nome Progetto Obbligatorio e di almeno 3 caratteri')
+      this.toastr.warning('Nome Progetto Obbligatorio e di almeno 3 caratteri')
     }else if(!diff){
-      this.service.warningBar('La Data di fine progetto é precedente alla data di creazione')
+      this.toastr.warning('La Data di fine progetto é precedente alla data di creazione')
     }else{
       let updatedProj = this.projectForm.value
+      this.loadingUpdate = true;
+
         this.service.updateProject(updatedProj, this.project.id, this.arrayUsersIds).subscribe((res) => {
-          this.loadingUpdate = true;
+          this.loadingUpdate = false;
+          
+          this.service.successBar(`progetto modificato con successo`)
           setTimeout(() => {
-            this.loadingUpdate = false;
-            this.service.successBar(`progetto modificato con successo`)
-            this.ngOnInit()
-          }, 2000);
+            window.location.reload()
+
+          }, 1500);
         })
     }
   }
@@ -218,7 +221,7 @@ export class UpdateProjectComponent implements OnInit {
       const e = this.arrayUsersIds[i];
       if (e.id === id) {// se trova doppione elimina 
         this.arrayUsersIds.splice(i, 1)
-        this.service.warningBar('user rimosso con successo, Ricordati di fare Update per salvare le modifiche')
+       this.toastr.warning('user rimosso con successo, Ricordati di fare Update per salvare le modifiche')
         break
       }
     }
@@ -232,7 +235,7 @@ export class UpdateProjectComponent implements OnInit {
 
     if (this.arrayUsersIds.length == 0) {
       this.arrayUsersIds.push(user)
-      this.service.successBar('user aggiunto con successo.')
+      this.toastr.success('user aggiunto con successo.')
     } else {
 
       for (let i = 0; i < this.arrayUsersIds.length; i++) {
@@ -240,12 +243,12 @@ export class UpdateProjectComponent implements OnInit {
 
         if (e.id !== user.id && i == this.arrayUsersIds.length - 1) { //se ha finito di ciclare e non trova id allora pusha
           this.arrayUsersIds.push(user)
-          this.service.successBar('user aggiunto con successo.')
+         this.toastr.success('user aggiunto con successo.')
           break
         } else if (e.id === user.id) { // se trova un doppione 
 
           if (isNaN(user.percent) && isNaN(e.percent) || e.percent === user.percent) {// se sono uguali non modifica valori
-            this.service.warningBar('utente giá associato al progetto. o niente da modificare')
+            this.toastr.warning('utente giá associato al progetto. o niente da modificare')
             break
           } else {// se sono diversi modifica valori
             this.arrayUsersIds.splice(i, 1, user)

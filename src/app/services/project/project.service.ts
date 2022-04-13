@@ -117,15 +117,15 @@ export class ProjectService {
 
 
   warningBar(message:string) {
-    this.toastr.warning(message, 'Warning', { timeOut: 2000, closeButton: true, progressBar: true });
+    this.toastr.warning(message, 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 
   successBar(message:string){
-    this.toastr.success(message, 'Success', { timeOut: 2000, closeButton: true, progressBar: true });
+    this.toastr.success(message, 'Success', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 
   errorBar(message: any) {
-    this.toastr.error(message, 'Error', { timeOut: 2000, closeButton: true, progressBar: true });
+    this.toastr.error(message, 'Error', { timeOut: 3000, closeButton: true, progressBar: true });
   }
 
   randomNumber() {
