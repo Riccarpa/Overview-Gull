@@ -387,13 +387,13 @@
 
           <!-- button update-delete -->
           <div *ngIf="role === 1" class="col-12 d-flex align-items-center mt-3">
-            <div class="col-6 row flex-row-reverse">
+            <div class="col-6">
               <div
                 class="d-flex flex-wrap p-1 align-items-center"
                 *ngIf="role === 1"
               >
                 <div
-                  class="ml-1 btn btn-outline-primary d-flex p-1 align-items-center pl-2 mb-1"
+                  class="ml-1 btn btn-outline-secondary d-flex p-1 align-items-center pl-2 mb-1"
                   *ngFor="let u of arrayUsersIds"
                 >
                   <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
