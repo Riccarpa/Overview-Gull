@@ -6,18 +6,27 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators';
+import { retry, window } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute } from '@angular/router';
+
+
+
 
 @Injectable({providedIn:'root'})
 export class ReqInterceptInterceptor implements HttpInterceptor {
 
   url = environment.apiURL + '/uploadImage'
-  constructor() {}
+  constructor(private router:Router,private route:ActivatedRoute) {}
 
   takeRole(){
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user
+    if (localStorage.getItem('user')) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      return user
+    }else{
+     this.router.navigate(['/'])
+    }
   }
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
@@ -37,13 +46,13 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
     if (request.url !== this.url) {
     return next.handle(request.clone({ setHeaders: headers })).pipe(
 
-      retry(3)
+      // retry(3)
     )
     }else{
       
       return next.handle(request.clone({setHeaders:headerImg})).pipe(
   
-        retry(3)
+        // retry(3)
       )
     }
    
