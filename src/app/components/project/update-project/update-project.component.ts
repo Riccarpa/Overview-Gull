@@ -151,14 +151,12 @@ export class UpdateProjectComponent implements OnInit {
   }
 
   delProject(id: number) { // delete proj ADMIN
+    this.modalService.dismissAll()
     this.service.deleteProject(id).subscribe(res => {
 
-      this.loadingDelete = true;
-      setTimeout(() => {
-        this.loadingDelete = false;
-        this.service.successBar(`progetto eliminato con successo`)
-        this.route.navigate(['home/project'])
-      }, 2000);
+      this.service.successBar(`progetto eliminato con successo`)
+      this.route.navigate(['home/project'])
+     
     })
   }
 
@@ -284,5 +282,15 @@ export class UpdateProjectComponent implements OnInit {
 
   back(){
    this.route.navigate(['home/project'])
+  }
+
+
+  confirm(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+    .result.then((result) => {
+      this.confirmResut = `Closed with: ${result}`;
+    }, (reason) => {
+      this.confirmResut = `Dismissed with: ${reason}`;
+    });
   }
 }
