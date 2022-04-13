@@ -30,6 +30,13 @@ export class FinancialService {
     };
     return this.http.post(`${this.url}/user/monthlyLogs`, body);
   }
+  createMonthlyLogforAdmin(id: any, date: any): Observable<any> {
+    let body = {
+      "user_id": id,
+      "month": date
+    };
+    return this.http.post(`${this.url}/monthlyLogs`, body);
+  }
 
   patchActivities(id, arr): Observable<any> {
     let body = {

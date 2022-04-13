@@ -31,7 +31,7 @@ export class FinancialComponent implements OnInit {
   monthAndYear:any
   allActivities:Array<Object>
   isSaved=false
-
+   isAdmin:boolean
  
 
   ngOnInit(): void {
@@ -40,6 +40,7 @@ export class FinancialComponent implements OnInit {
 
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
+      
     },(error)=>{
       this.toastr.error(error.error.message);
     })
@@ -52,21 +53,21 @@ export class FinancialComponent implements OnInit {
     })
 
     if (this.inter.takeRole().role !== 1) {
-
+      this.isAdmin = false
       this.fService.getUserMonthlyLogs().subscribe((res) => {
         this.monthlyLogs = res.data;
         
         this.getCurrMonthLog();
       })
     }else{
-
+      this.isAdmin = true
       this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
         this.monthlyLogs = res.data;
      
         this.getCurrMonthLog();
       })
     }
-     
+    
 
   }
   
@@ -85,20 +86,26 @@ export class FinancialComponent implements OnInit {
       }else{
         var date = `${this.year.toString()}-${this.month.toString()} `
       }
-      this.fService.createMonthlyLog(parseInt(this.id),date).subscribe((res)=>{
-        this.currMonthLog = res.data;
-        this.days =  res.data.daily_logs_array
-        this.fService.getUserMonthlyLogs().subscribe((res) => {
-          this.monthlyLogs = res.data;
-          
-         
-        })
-        
-      },(error)=>{
+     
+      if (!this.isAdmin) {
+        this.fService.createMonthlyLog(parseInt(this.id),date).subscribe((res)=>{
+          this.currMonthLog = res.data;
+          this.days =  res.data.daily_logs_array
+          this.fService.getUserMonthlyLogs().subscribe((res) => {
+            this.monthlyLogs = res.data;
+          })},(error)=>{
+          this.toastr.error(error.error.message);})
+     
+      }else{
+        this.fService.createMonthlyLogforAdmin(parseInt(this.id),date).subscribe((res)=>{
+          this.currMonthLog = res.data;
+          this.days =  res.data.daily_logs_array
+          this.fService.getMonthlyLogs(this.id).subscribe((res) => {
+            this.monthlyLogs = res.data;
+          })},(error)=>{
+          this.toastr.error(error.error.message);})
        
-        this.toastr.error(error.error.message);
-        
-          })
+      }
     }
 
   }

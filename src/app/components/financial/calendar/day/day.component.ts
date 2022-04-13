@@ -82,6 +82,7 @@ export class DayComponent implements OnInit {
       }
       this.childsData.emit(this.patchArr)
     }
+    
   }
   
   // saveActivity(btn){
@@ -162,22 +163,22 @@ onInputChange(input,j){
   }
 }
 
-// deleteOldActivity(j){
+deleteOldActivity(j){
 
-//   for (let i = 0; i < this.OldActivities.length; i++) {
-//     const element = this.OldActivities[i];
-//     if(i==j){
-//      this.OldActivities.splice(i, 1)
-//     }
-//   }
-//   for (let i = 0; i < this.day.activity_days_array.length; i++) {
-//     const element = this.day.activity_days_array[i];
-//     if(i==j){
-//      this.day.activity_days_array.splice(i, 1)
-//     }
-//   }
+  for (let i = 0; i < this.OldActivities.length; i++) {
+    const element = this.OldActivities[i];
+    if(i==j){
+     this.OldActivities.splice(i, 1)
+    }
+  }
+  for (let i = 0; i < this.day.activity_days_array.length; i++) {
+    const element = this.day.activity_days_array[i];
+    if(i==j){
+     this.day.activity_days_array.splice(i, 1)
+    }
+  }
   
-// }
+}
 
 
 
