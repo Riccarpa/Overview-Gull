@@ -115,7 +115,7 @@ export class ClientComponent implements OnInit {
           this.modalService.dismissAll();
         });
       }, () => {
-        console.log('annullato');
+       
       });
   }
 
@@ -145,9 +145,9 @@ export class ClientComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+       
       }, () => {
-        console.log('annullato');
+        
       });
   }
 
@@ -175,9 +175,9 @@ export class ClientComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+      
       }, () => {
-        console.log('annullato');
+       
       });
   }
 
@@ -186,11 +186,11 @@ export class ClientComponent implements OnInit {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         this.clientService.updateImage(this.currentImage).subscribe((res) => {
-          console.log(res);
+          
           this.clientForm.value.logo_data = res.message;
         });
       }, () => {
-        console.log('Err!');
+     
       });
   }
 

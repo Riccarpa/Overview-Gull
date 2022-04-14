@@ -137,7 +137,7 @@ export class UpdateUserComponent implements OnInit {
   open(modal) {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
-      console.log(result);
+      
     }, (reason) => { });
   }
   

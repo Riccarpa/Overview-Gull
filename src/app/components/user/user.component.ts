@@ -73,7 +73,7 @@ export class UserComponent implements OnInit {
     this.uService.getUsers().subscribe(res=>{
       this.users = res.data
       this.filteredUsers = res.data
-      console.log(res)
+     
       for(let i=0;i<this.users.length;i++){
         
         
