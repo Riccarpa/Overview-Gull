@@ -1,6 +1,6 @@
 <div class="mb-3 d-flex justify-content-between w-100">
   <label class="switch switch-success mr-3">
-    <span>Filtra completati</span>
+    <span>Filter completed</span>
     <input type="checkbox" [formControl]="searchControl" />
     <span class="slider"></span>
   </label>
@@ -109,7 +109,7 @@
     <form [formGroup]="taskForm">
       <div class="row">
         <div class="col-md-12 form-group mb-3">
-          <label for="name">Nome task</label>
+          <label for="name">Task name</label>
           <input
             type="text"
             class="form-control"
@@ -120,7 +120,7 @@
           />
         </div>
         <div class="col-md-12 form-group mb-3">
-          <label for="assignee_id">Assegnatario</label>
+          <label for="assignee_id">Assignee</label>
           <select
             class="form-control"
             type="number"
@@ -140,13 +140,13 @@
             name="status"
             formControlName="status"
           >
-            <option [value]="0">Aperto</option>
-            <option [value]="1">In corso</option>
-            <option [value]="2">Completato</option>
+            <option [value]="0">Open</option>
+            <option [value]="1">In progress</option>
+            <option [value]="2">Completed</option>
           </select>
         </div>
         <div class="col-md-12 form-group mb-3">
-          <label for="start_date">Data inizio</label>
+          <label for="start_date">Start date</label>
           <input
             type="date"
             class="form-control"
@@ -156,7 +156,7 @@
           />
         </div>
         <div class="col-md-12 form-group mb-3">
-          <label for="end_date">Data fine</label>
+          <label for="end_date">End date</label>
           <input
             type="date"
             class="form-control"
@@ -186,15 +186,15 @@
       class="btn btn-primary"
       (click)="addTask()"
     >
-      Salva
+      Save
     </button>
     <button
       *ngIf="titleModal == 'Modifica Task'"
       type="button"
-      class="btn btn-outline-dark"
+      class="btn btn-primary"
       (click)="editTask()"
     >
-      Salva
+      Save
     </button>
   </div>
 </ng-template>
@@ -202,7 +202,7 @@
 <!-- modale cancellazione task -->
 <ng-template #modalConfirm let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Cancella Task</h4>
+    <h4 class="modal-title" id="modal-title">Delete Task</h4>
     <button
       type="button"
       class="close"
@@ -214,7 +214,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <p><strong>Sei sicuro di voler eliminare il task selezionato?</strong></p>
+    <p><strong>Are you sure you want to delete the selected task ?</strong></p>
   </div>
   <div class="modal-footer">
     <button
@@ -222,7 +222,7 @@
       class="btn btn-outline-secondary"
       (click)="modal.dismiss('cancel')"
     >
-      Annulla
+      Back
     </button>
     <button
       type="button"

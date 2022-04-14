@@ -62,7 +62,7 @@
             *ngIf="!associateClient"
             class="text-primary text-left text-18 line-height-1 mb-2"
           >
-            nessuno
+            No client associated
           </p>
         </div>
       </div>
@@ -141,14 +141,14 @@
   <div class="card mb-4">
     <div class="card-body">
       <div class="card-title mb-3 d-flex justify-content-between">
-        <h3>{{ role === 1 ? "Modifica Progetto" : "Dettagli Progetto" }}</h3>
+        <h3>{{ role === 1 ? "Edit project" : "Project details" }}</h3>
         <div>
           <button
             *ngIf="role === 1"
             class="btn btn-outline-secondary mr-3"
             (click)="openModalImg(modalCropper)"
           >
-            modifica logo
+            Edit Logo
           </button>
           <img
             *ngIf="data?.image"
@@ -320,13 +320,13 @@
             ngbDropdown
             class="mega-menu col-6 align-items-center"
           >
-            <label class="mb-1">collaboratori</label>
+            <label class="mb-1">collaborators</label>
             <button
               ngbDropdownToggle
               href="#"
               class="btn form-group col-12 border text-muted dropdown-toggle d-block form-control"
             >
-              Associa Collaboratori
+              Associa Collaborators
             </button>
             <div ngbDropdownMenu perfectScrollbar>
               <div class="row">
@@ -334,7 +334,7 @@
                   <p
                     class="text-primary text--cap border-bottom-primary d-inline-block"
                   >
-                    Collaboratori
+                    Collaborators
                   </p>
                   <div
                     class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between"
@@ -375,7 +375,7 @@
             </div>
           </div>
           <div class="col-6" *ngIf="role === 2">
-            <label class="d-block" for="">collaboratori</label>
+            <label class="d-block" for="">collaborators</label>
 
             <div
               class="m-1 btn btn-outline-primary"
@@ -475,7 +475,7 @@
         <!-- modale img -->
         <ng-template #modalCropper let-modal>
           <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Modifica Il Logo</h4>
+            <h4 class="modal-title" id="modal-basic-title">Edit logo</h4>
             <button
               type="button"
               class="close"
@@ -507,7 +507,7 @@
         <!-- modale per cards -->
         <ng-template class="m-0" id="modal" #modalConfirm let-modal>
           <div class="modal-header">
-            <h4 class="modal-title" id="modal-title">Modifica</h4>
+            <h4 class="modal-title" id="modal-title">Edit</h4>
             <button
               type="button"
               class="close"
@@ -535,7 +535,7 @@
                           name="client_id"
                         >
                           <option value="" selected disabled hidden>
-                            clienti
+                            clientsss
                           </option>
                           <option *ngFor="let c of clients" [value]="c.id">
                             {{ c.name }}
@@ -567,7 +567,7 @@
                             href="#"
                             class="btn form-group col-12 border text-muted dropdown-toggle d-block form-control"
                           >
-                            Associa Collaboratori
+                            Associa Collaborators
                           </button>
                           <div ngbDropdownMenu perfectScrollbar>
                             <div class="m-0">
@@ -575,7 +575,7 @@
                                 <p
                                   class="text-primary text--cap border-bottom-primary d-inline-block"
                                 >
-                                  Collaboratori
+                                  Collaborators
                                 </p>
 
                                 <div

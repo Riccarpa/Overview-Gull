@@ -51,7 +51,7 @@
     <form [formGroup]="sprintForm">
       <div class="row">
         <div class="col-md-12 form-group mb-3">
-          <label for="name">Nome sprint</label>
+          <label for="name">Sprint name</label>
           <input
             type="text"
             class="form-control"
@@ -62,7 +62,7 @@
           />
         </div>
         <div class="col-md-12 form-group mb-3">
-          <label for="start_date">Data inizio</label>
+          <label for="start_date">Start date</label>
           <input
             type="date"
             class="form-control"
@@ -72,7 +72,7 @@
           />
         </div>
         <div class="col-md-12 form-group mb-3">
-          <label for="end_date">Data fine</label>
+          <label for="end_date">End date</label>
           <input
             type="date"
             class="form-control"
@@ -112,7 +112,7 @@
       class="btn btn-primary"
       (click)="addSprint()"
     >
-      Salva
+      Save
     </button>
     <div class="w-100 d-flex justify-content-between">
       <button
@@ -120,7 +120,7 @@
         class="btn btn-danger"
         (click)="deleteSprint(sprint.id, modalConfirm)"
       >
-        Elimina
+        Delete
       </button>
       <button
         *ngIf="titleModal == 'Modifica Sprint'"
@@ -128,7 +128,7 @@
         class="btn btn-primary ml-2"
         (click)="editSprint()"
       >
-        Salva
+        Save
       </button>
     </div>
   </div>
@@ -137,7 +137,7 @@
 <!-- modale cancella sprint -->
 <ng-template #modalConfirm let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Cancella Sprint</h4>
+    <h4 class="modal-title" id="modal-title">DeleteSprint</h4>
     <button
       type="button"
       class="close"
@@ -149,7 +149,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <p><strong>Sei sicuro di eliminare lo sprint?</strong></p>
+    <p><strong>Are you sure you want to delete the sprint?</strong></p>
   </div>
   <div class="modal-footer">
     <button
@@ -157,7 +157,7 @@
       class="btn btn-outline-secondary"
       (click)="modal.dismiss('cancel')"
     >
-      Annulla
+      Back
     </button>
     <button
       type="button"

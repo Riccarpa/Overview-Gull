@@ -1,16 +1,19 @@
-<div class="d-flex justify-content-between w-100 mb-4">
-  <h2 class="">Projects</h2>
+<div class="d-flex justify-content-between w-100 mb-5">
+  <h2 class="ml-2">Projects</h2>
 
   <!-- se admin creazione progetto-->
   <div *appRole="role == 1">
-    <button class="btn btn-success" (click)="openCreateModal(modalConfirm)">
-      Aggiungi Progetto
+    <button
+      class="btn btn-success mr-2 mt-1"
+      (click)="openCreateModal(modalConfirm)"
+    >
+      New project
     </button>
 
     <!-- modale di creazione -->
     <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-title">Crea Un Progetto</h4>
+        <h4 class="modal-title" id="modal-title">Create new project</h4>
         <button
           type="button"
           class="close"
@@ -47,7 +50,7 @@
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
                       role="alert"
                     >
-                      <div>inserisci un nome di almeno 3 caratteri</div>
+                      <div>Insert at leat 3 characters</div>
                     </div>
                   </div>
 
@@ -58,7 +61,7 @@
                       formControlName="client_id"
                       name="client_id"
                     >
-                      <option value="" selected disabled hidden>clienti</option>
+                      <option value="" selected disabled hidden>Clients</option>
                       <option *ngFor="let c of clients" [value]="c.id">
                         {{ c.name }}
                       </option>
@@ -123,28 +126,21 @@
                     />
                   </div>
 
-                  <div class="col-md-6 form-group mb-3 d-flex flex-column">
-                    <label for="picker1">Project Logo</label>
+                  <div class="col-6 mb-3">
+                    <label class="d-block mb-1">Project Logo</label>
                     <button
-                      class="form-control text-left"
+                      class="btn btn-outline-secondary w-50 btn-sm mt-1"
                       (click)="openModalImg(modalCropper)"
                     >
-                      Aggiungi Un Logo
+                      Upload logo
                     </button>
-                    <img
-                      *ngIf="data?.image"
-                      class="rounded-circle"
-                      [src]="data?.image"
-                      [width]="cropperSettings.croppedWidth"
-                      [height]="cropperSettings.croppedHeight"
-                    />
                   </div>
 
                   <!-- cropper per img -->
                   <ng-template #modalCropper let-modal>
                     <div class="modal-header">
                       <h4 class="modal-title" id="modal-basic-title">
-                        Carica Un Immagine
+                        Image upload
                       </h4>
                       <button
                         type="button"
@@ -167,7 +163,7 @@
                     <div class="modal-footer">
                       <button
                         type="button"
-                        class="btn btn-rounded btn-outline-dark"
+                        class="btn btn-outline-dark"
                         (click)="saveImg(); modal.close()"
                       >
                         Save
@@ -195,9 +191,7 @@
 </div>
 
 <div *ngIf="client && client.project_ids.length < 1">
-  <h2 class="text-center mt-5">
-    Non Ci Sono Progetti Associati Per Questo Cliente
-  </h2>
+  <h2 class="text-center mt-5">There are no projects linked to this client</h2>
   <div class="mt-4 text-right">
     <button class="btn btn-outline-secondary" (click)="back()">Back</button>
   </div>
@@ -270,12 +264,12 @@
                 </tr>
 
                 <tr>
-                  <td>Collaboratori</td>
+                  <td>Collaborators</td>
                   <td class="text-warning font-weight-bold">
                     <ul class="overflow p-0">
                       <li>
                         <p *ngFor="let u of proj.user_details">
-                          {{ u.name }}
+                          {{ u.name }} {{ u.surname }}
                         </p>
                       </li>
                     </ul>
@@ -416,7 +410,7 @@
                           </tr>
 
                           <tr>
-                            <td>collaboratori</td>
+                            <td>collaborators</td>
                             <td class="text-warning font-weight-bold">
                               <ul
                                 *ngIf="proj.user_details"
