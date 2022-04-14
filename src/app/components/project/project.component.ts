@@ -160,11 +160,11 @@ export class ProjectComponent implements OnInit {
     let newProj = this.projectForm.value;
     if (this.projectForm.status == "INVALID") {
       this.service.warningBar(
-        "Nome Progetto Obbligatorio e di almeno 3 caratteri"
+        "Name is required, 3 characters needed"
       );
     } else if (!diff) {
       this.service.warningBar(
-        "La Data di fine progetto é precedente alla data di creazione"
+        "End date is precedent of starrt date"
       );
     } else {
       this.service.addProject(newProj).subscribe((res) => {
@@ -174,7 +174,7 @@ export class ProjectComponent implements OnInit {
         setTimeout(() => {
           this.loading = false;
           this.updateProject(this.dataRes.id);
-          this.service.successBar(`progetto creato con successo`);
+          this.service.successBar(`Project created successfully`);
           this.modalService.dismissAll();
         }, 2000);
       });
@@ -192,7 +192,7 @@ export class ProjectComponent implements OnInit {
       this.projectForm.value.logo = JSON.parse(JSON.stringify(res));
       if (res) {
         this.data = this.projectForm.value.logo.message;
-        this.service.successBar("file caricato con successo");
+        this.service.successBar("File uploaded successfully");
       }
     });
   }

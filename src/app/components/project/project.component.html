@@ -306,7 +306,9 @@
         src="{{ url }}{{ userRetrive.picture }}"
         alt=""
       />
-      <p class="m-0 text-24">{{ userRetrive.name }}</p>
+      <p class="m-0 text-24">
+        {{ userRetrive.name }} {{ userRetrive.surname }}
+      </p>
     </div>
 
     <!-- body dei tab con i progetti -->
@@ -443,6 +445,7 @@
           </ng-template>
         </li>
       </ul>
+
       <div [ngbNavOutlet]="nav"></div>
     </div>
   </div>
