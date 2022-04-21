@@ -4,7 +4,7 @@
     <div class="card-body text-center d-flex flex-row align-items-center">
       <div
         (click)="openModalImg(modalCropper)"
-        class="avatar box-shadow-2 m-0 mr-2"
+        class="avatar box-shadow-2 m-0 mr-2 pointer"
       >
         <img
           *ngIf="project.logo == null"
@@ -24,10 +24,8 @@
       *ngIf="associateClient"
       class="card-body text-center d-flex flex-row align-items-center"
     >
-      <div
-        (click)="modal_client_id = true; openCreateModal(modalConfirm)"
-        class="avatar box-shadow-2 m-0 mr-2"
-      >
+      <!-- (click)="modal_client_id = true; openCreateModal(modalConfirm)" -->
+      <div class="avatar box-shadow-2 m-0 mr-2">
         <img
           *ngIf="associateClient.logo"
           src="{{ url }}{{ associateClient.logo }}"

@@ -1,39 +1,45 @@
-<div *ngIf=" user" class="main-header">
+<div *ngIf="user" class="main-header">
+  <div class="menu-toggle" (click)="toggelSidebar()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 
-    <div class="menu-toggle" (click)="toggelSidebar()">
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
+  <div style="margin: auto"></div>
 
-    
+  <div class="header-part-right">
+    <div
+      *ngIf="currentUser"
+      ngbDropdown
+      [placement]="'bottom-right'"
+      class="user col align-self-end d-flex align-items-center"
+    >
+      <p class="m-0 mr-2 text-24">{{ currentUser.name }}</p>
+      <img
+        src="{{ currentUser.picture }}"
+        id="userDropdown"
+        ngbDropdownToggle
+        class="pointer"
+        alt=""
+      />
 
-    <div style="margin: auto">
-    
-    </div>
-
-    <div class="header-part-right  ">
-
-        
-        
-        
-        
-        <div *ngIf="currentUser" ngbDropdown [placement]="'bottom-right'"
-            class="user col align-self-end d-flex align-items-center">
-            <p class="m-0 mr-2 text-24" >{{currentUser.name}}</p>
-            <img src="{{currentUser.picture}}" id="userDropdown" ngbDropdownToggle alt="">
-            
-            <div ngbDropdownMenu aria-labelledby="userDropdown" class="header-account-dropdown">
-                <div class="dropdown-header">
-                    <i class="i-Lock-User mr-1"></i> 
-                    {{currentUser.name}} 
-                </div>
-                
-                <button class="dropdown-item" (click)="signout()">Sign out</button>
-            </div>
+      <div
+        ngbDropdownMenu
+        aria-labelledby="userDropdown"
+        class="header-account-dropdown"
+      >
+        <div class="dropdown-header">
+          <i class="i-Lock-User mr-1"></i>
+          {{ currentUser.name }}
         </div>
-        <i fullScreenWindow class="i-Full-Screen header-icon d-none d-sm-inline-block" role="button"></i>
 
+        <button class="dropdown-item" (click)="signout()">Sign out</button>
+      </div>
     </div>
-
+    <i
+      fullScreenWindow
+      class="i-Full-Screen header-icon d-none d-sm-inline-block"
+      role="button"
+    ></i>
+  </div>
 </div>
