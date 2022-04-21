@@ -62,7 +62,7 @@ export class ClientComponent implements OnInit {
   // aggiunge un nuovo cliente
   addClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.toastr.warning('Tutti i campi sono obbligatori');
+      this.toastr.warning('All fileds are required');
       this.data.image = '';
       this.clientForm.value.logo_data = '';
     } else {
@@ -79,7 +79,7 @@ export class ClientComponent implements OnInit {
           });
           this.data.image = '';
           this.getClients();
-          this.toastr.success('Cliente aggiunto con successo!')
+          this.toastr.success('Client added successfully')
         },(err)=>{
           this.toastr.error(err.error)
         });
@@ -89,14 +89,14 @@ export class ClientComponent implements OnInit {
   // modifica il cliente selezionato
   editClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.toastr.warning('Tutti i campi sono obbligatori')
+      this.toastr.warning('All fields are required')
       this.data.image = `http://80.211.57.191/overview_dev/${this.client.logo}?time=${new Date()}`;
     } else {
       const client = this.clientForm.value;
       this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
         .subscribe((res) => {
           this.modalService.dismissAll();
-          this.toastr.success('Cliente modificato con successo!');
+          this.toastr.success('Client edited succefully');
           this.getClients();
         },(err)=>{
           this.toastr.error(err.error)
@@ -117,7 +117,7 @@ export class ClientComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
         this.clientService.deleteClient(id).subscribe(() => {
-         this.toastr.success('Cliente eliminato')
+         this.toastr.success('Cliente deleted')
           this.getClients();
           this.modalService.dismissAll();
         });
@@ -131,7 +131,7 @@ export class ClientComponent implements OnInit {
 
   // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
-    this.titleModal = "Aggiungi Cliente";
+    this.titleModal = "Add Client";
     this.clientForm.setValue({
       name: '',
       vat_number: '',
@@ -153,7 +153,7 @@ export class ClientComponent implements OnInit {
   // richiama la modale per modificare il cliente
   openModalEditClient(id: any, content: any) {
     this.clientService.currentClient = id;
-    this.titleModal = "Modifica Cliente";
+    this.titleModal = "Edit Client";
     this.clientService.getClient(id).subscribe((res) => {
       this.client = res.data;
 

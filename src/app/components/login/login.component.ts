@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
   }
 
   error() {
-    this.projectService.errorBar('Acceso non riuscito, dati non validi');
+    this.projectService.errorBar('Access denied, username or password are wrong');
   }
 
   checkText() {
