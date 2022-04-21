@@ -92,7 +92,7 @@ export class TaskComponent implements OnInit {
   // apre la modale per aggiungere un nuovo task
   openModalAddTask(content: any) {
 
-    this.titleModal = "Add Task";
+    this.titleModal = "Aggiungi Task";
     this.taskForm.setValue({
       name: '',
       assignee_id: '',
@@ -158,7 +158,7 @@ export class TaskComponent implements OnInit {
   // richiama la modale per modificare il task
   openModalEditTask(id: any, content: any, sprints: any) {
     this.taskService.currentTask = id;
-    this.titleModal = "Edit Task";
+    this.titleModal = "Modifica Task";
     console.log(this.tasks);
 
       for (let i = 0; i < this.tasks.length; i++) {
