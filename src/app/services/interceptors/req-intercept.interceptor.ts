@@ -46,13 +46,13 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
     if (request.url !== this.url) {
     return next.handle(request.clone({ setHeaders: headers })).pipe(
 
-      retry(3)
+      
     )
     }else{
       
       return next.handle(request.clone({setHeaders:headerImg})).pipe(
   
-        // retry(3)
+        
       )
     }
    
