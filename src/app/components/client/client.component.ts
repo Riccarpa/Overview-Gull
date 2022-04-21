@@ -7,6 +7,7 @@ import { Client } from 'src/app/models/client.model';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
@@ -14,7 +15,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private projectService: ProjectService) {
+  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private projectService: ProjectService,private toastr:ToastrService) {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
@@ -46,6 +47,8 @@ export class ClientComponent implements OnInit {
           this.clientsList[i].logo += `?time=${new Date()}`;
         }
       }
+    },(err)=>{
+      this.toastr.error(err)
     })
   }
 
@@ -59,11 +62,11 @@ export class ClientComponent implements OnInit {
   // aggiunge un nuovo cliente
   addClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.warningBar()
+      this.toastr.warning('Tutti i campi sono obbligatori');
       this.data.image = '';
       this.clientForm.value.logo_data = '';
     } else {
-      console.log(this.clientForm.value);
+      
       const newClient = this.clientForm.value;
       this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo_data)
         .subscribe(() => {
@@ -76,7 +79,9 @@ export class ClientComponent implements OnInit {
           });
           this.data.image = '';
           this.getClients();
-          this.successAddClient();
+          this.toastr.success('Cliente aggiunto con successo!')
+        },(err)=>{
+          this.toastr.error(err)
         });
     }
   }
@@ -84,15 +89,17 @@ export class ClientComponent implements OnInit {
   // modifica il cliente selezionato
   editClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.warningBar();
+      this.toastr.warning('Tutti i campi sono obbligatori')
       this.data.image = `http://80.211.57.191/overview_dev/${this.client.logo}?time=${new Date()}`;
     } else {
       const client = this.clientForm.value;
       this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
-        .subscribe(() => {
+        .subscribe((res) => {
           this.modalService.dismissAll();
-          this.projectService.successBar('Cliente modificato con successo!');
+          this.toastr.success('Cliente modificato con successo!');
           this.getClients();
+        },(err)=>{
+          this.toastr.error(err)
         })
     }
   }
@@ -110,7 +117,7 @@ export class ClientComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
         this.clientService.deleteClient(id).subscribe(() => {
-          this.successDeleteClient();
+         this.toastr.success('Cliente eliminato')
           this.getClients();
           this.modalService.dismissAll();
         });
@@ -119,18 +126,8 @@ export class ClientComponent implements OnInit {
       });
   }
 
-  // alert
-  successDeleteClient() {
-    this.projectService.successBar('Cliente eliminato');
-  }
 
-  successAddClient() {
-    this.projectService.successBar('Cliente aggiunto con successo!');
-  }
-
-  warningBar() {
-    this.projectService.warningBar('Tutti i campi sono obbligatori');
-  }
+  
 
   // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
