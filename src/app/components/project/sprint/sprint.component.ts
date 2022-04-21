@@ -70,7 +70,7 @@ export class SprintComponent implements OnInit {
   // aggiunge un nuovo sprint al progetto
   addSprint() {
     if (this.sprintForm.status == 'INVALID') {
-      this.projectService.warningBar('Tutti i campi sono obbligatori');
+      this.projectService.warningBar('All fields are required');
     } else {
       const newSprint = this.sprintForm.value;
       this.sprintService.addSprint(newSprint.name, newSprint.start_date, newSprint.end_date, newSprint.effort_days, newSprint.revenue, this.project.id)
@@ -84,7 +84,7 @@ export class SprintComponent implements OnInit {
             revenue: '',
           });
           this.getUserSprint()
-          this.projectService.successBar('Sprint aggiunto con successo!');
+          this.projectService.successBar('Sprint adeed successfully!');
         });
     }
   }
@@ -92,7 +92,7 @@ export class SprintComponent implements OnInit {
   // richiama la modale per modificare lo sprint
   openModalEditSprint(id: any, content: any) {
 
-    this.titleModal = "Modifica Sprint";
+    this.titleModal = "Edit Sprint";
     
      
       for (let i = 0; i < this.currentSprints.length; i++) {
@@ -113,22 +113,22 @@ export class SprintComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+        console.log('Ok');
       }, () => {
-        console.log('annullato');
+        console.log('Dismissed');
       });
   }
 
   // modifica lo sprint selezionato
   editSprint() {
     if (this.sprintForm.status == 'INVALID') {
-      this.projectService.warningBar('Tutti i campi sono obbligatori');
+      this.projectService.warningBar('All fields are required');
     } else {
       const sprint = this.sprintForm.value;
       this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue, this.sprint.id)
         .subscribe(() => {
           this.modalService.dismissAll();
-          this.projectService.successBar('Sprint modificato con successo!');
+          this.projectService.successBar('Sprint edited successfully!');
           this.getUserSprint()
         });
     }
@@ -146,11 +146,11 @@ export class SprintComponent implements OnInit {
       .result.then(() => {
 
         if (this.sprint.tasks.length) {
-          this.projectService.errorBar('Lo sprint non deve contenere task!');
+          this.projectService.errorBar("Sprint musn't contain task to be deleted!");
           this.modalService.dismissAll();
         } else {
           this.sprintService.deleteSprint(id).subscribe(() => {
-            this.projectService.successBar('Sprint eliminato!');
+            this.projectService.successBar('Sprint deleted!');
             this.modalService.dismissAll();
             this.getUserSprint();
           });

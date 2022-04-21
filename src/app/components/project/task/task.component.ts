@@ -92,7 +92,7 @@ export class TaskComponent implements OnInit {
   // apre la modale per aggiungere un nuovo task
   openModalAddTask(content: any) {
 
-    this.titleModal = "Aggiungi Task";
+    this.titleModal = "Add Task";
     this.taskForm.setValue({
       name: '',
       assignee_id: '',
@@ -104,9 +104,9 @@ export class TaskComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+        console.log('Ok');
       }, () => {
-        console.log('annullato');
+        console.log('Dismissed');
       });
   }
 
@@ -114,7 +114,7 @@ export class TaskComponent implements OnInit {
   addTask() {
 
     if (this.taskForm.status == 'INVALID') {
-      this.projectService.warningBar('Tutti i campi sono obbligatori');
+      this.projectService.warningBar('All fields are required');
     } else {
       const newTask = this.taskForm.value;
       this.taskService.addTask(newTask.name, newTask.assignee_id, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, this.sprint.id)
@@ -128,7 +128,7 @@ export class TaskComponent implements OnInit {
             end_date: '',
             effort: '',
           });
-          this.projectService.successBar('Task aggiunto con successo!');
+          this.projectService.successBar('Task added successfully');
           this.sprintComponent.ngOnInit()
         });
     }
@@ -144,21 +144,21 @@ export class TaskComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
         this.taskService.deleteTask(id).subscribe(() => {
-          this.projectService.successBar('Task eliminato');
+          this.projectService.successBar('Task deleted');
 
             // resfresh page dopo delete
             this.sprintComponent.ngOnInit()
           this.modalService.dismissAll();
         });
       }, () => {
-        console.log('annullato');
+        console.log('Dismissed');
       });
   }
 
   // richiama la modale per modificare il task
   openModalEditTask(id: any, content: any, sprints: any) {
     this.taskService.currentTask = id;
-    this.titleModal = "Modifica Task";
+    this.titleModal = "Edit Task";
     console.log(this.tasks);
 
       for (let i = 0; i < this.tasks.length; i++) {
@@ -177,22 +177,22 @@ export class TaskComponent implements OnInit {
       }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+        console.log('Ok');
       }, () => {
-        console.log('annullato');
+        console.log('Dismissed');
       });
   }
 
   // modifica il task selezionato
   editTask() {
     if (this.taskForm.status == 'INVALID') {
-      this.projectService.warningBar('Tutti i campi sono obbligatori');
+      this.projectService.warningBar('All fileds are required');
     } else {
       const task = this.taskForm.value;
       this.taskService.updateTask(task.name, task.assignee_id, task.status, task.start_date, task.end_date, task.effort)
         .subscribe(() => {
           this.modalService.dismissAll();
-          this.projectService.successBar('Task modificato con successo!');
+          this.projectService.successBar('Task edited successfully');
             this.sprintComponent.ngOnInit()
         });
     }

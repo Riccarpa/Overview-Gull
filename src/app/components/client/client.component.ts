@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ClientComponent implements OnInit {
 
-  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal, private projectService: ProjectService,private toastr:ToastrService) {
+  constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal,private toastr:ToastrService) {
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
@@ -48,7 +48,7 @@ export class ClientComponent implements OnInit {
         }
       }
     },(err)=>{
-      this.toastr.error(err)
+      this.toastr.error(err.error)
     })
   }
 
@@ -81,7 +81,7 @@ export class ClientComponent implements OnInit {
           this.getClients();
           this.toastr.success('Cliente aggiunto con successo!')
         },(err)=>{
-          this.toastr.error(err)
+          this.toastr.error(err.error)
         });
     }
   }
@@ -99,7 +99,7 @@ export class ClientComponent implements OnInit {
           this.toastr.success('Cliente modificato con successo!');
           this.getClients();
         },(err)=>{
-          this.toastr.error(err)
+          this.toastr.error(err.error)
         })
     }
   }

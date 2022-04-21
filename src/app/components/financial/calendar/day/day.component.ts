@@ -85,39 +85,7 @@ export class DayComponent implements OnInit {
     
   }
   
-  // saveActivity(btn){
-    //   btn.loading = true;
-    //   for (let i = 0; i < this.activitiesArray.value.length; i++) {
-      //     const element = this.activitiesArray.value[i];
-      //     element.activity_id = parseInt(element.activity_id)
-      //   }
-      
-      
-      //    this.patchArr = {
-        //     "day": this.date,
-        //     "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
-        //     "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
-        //   }  
-        
-        
-        //   this.fService.patchActivities(this.day.monthly_log_id,this.patchArr).subscribe((res)=>{
-          //     console.log(res)
-          //     btn.loading = false;
-  //     this.toastr.success('Activity saved succefully')
-  //   },(error)=>{
-  //     btn.loading = false;
-  //     this.toastr.error(error.error.message);
-  //   })
-  
-  
-  // }
-  // loadingButtons = [
-  //   {
-  //     name: 'secondary',
-  //     loading: false,
-  //   }
-  // ]
-  
+ 
   
   // prepare patch array with old activities
   retrieveOldActivities(){

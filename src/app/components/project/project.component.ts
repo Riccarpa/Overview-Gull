@@ -29,7 +29,6 @@ import { environment } from "src/environments/environment";
 export class ProjectComponent implements OnInit {
   
   //variabili template
-  chartPercent: any;
   confirmResut: any;
   active = false;
   loading: boolean;
@@ -228,7 +227,7 @@ export class ProjectComponent implements OnInit {
 
   // percentuali progress
   getChartPercent(value: number) {
-    return (this.chartPercent = new Chart(value).chartPie);
+    return (new Chart(value).chartPie);
   }
 
   back() {
