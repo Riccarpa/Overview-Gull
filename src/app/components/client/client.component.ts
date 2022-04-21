@@ -117,7 +117,7 @@ export class ClientComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
       .result.then(() => {
         this.clientService.deleteClient(id).subscribe(() => {
-         this.toastr.success('Cliente deleted')
+         this.toastr.success('Client deleted')
           this.getClients();
           this.modalService.dismissAll();
         });
@@ -131,7 +131,7 @@ export class ClientComponent implements OnInit {
 
   // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
-    this.titleModal = "Add Client";
+    this.titleModal = "Aggiungi Cliente";
     this.clientForm.setValue({
       name: '',
       vat_number: '',
@@ -153,7 +153,7 @@ export class ClientComponent implements OnInit {
   // richiama la modale per modificare il cliente
   openModalEditClient(id: any, content: any) {
     this.clientService.currentClient = id;
-    this.titleModal = "Edit Client";
+    this.titleModal = "Modifica Cliente";
     this.clientService.getClient(id).subscribe((res) => {
       this.client = res.data;
 
