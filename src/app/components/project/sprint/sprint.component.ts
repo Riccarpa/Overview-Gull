@@ -92,7 +92,7 @@ export class SprintComponent implements OnInit {
   // richiama la modale per modificare lo sprint
   openModalEditSprint(id: any, content: any) {
 
-    this.titleModal = "Edit Sprint";
+    this.titleModal = "Modifica Sprint";
     
      
       for (let i = 0; i < this.currentSprints.length; i++) {
