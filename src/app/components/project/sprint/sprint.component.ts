@@ -70,7 +70,7 @@ export class SprintComponent implements OnInit {
   // aggiunge un nuovo sprint al progetto
   addSprint() {
     if (this.sprintForm.status == 'INVALID') {
-      this.projectService.warningBar('All fields are required');
+      this.projectService.warningBar('Name and start_date are reuired');
     } else {
       const newSprint = this.sprintForm.value;
       this.sprintService.addSprint(newSprint.name, newSprint.start_date, newSprint.end_date, newSprint.effort_days, newSprint.revenue, this.project.id)
@@ -83,7 +83,7 @@ export class SprintComponent implements OnInit {
             effort_days: '',
             revenue: '',
           });
-          this.getUserSprint()
+          window.location.reload();
           this.projectService.successBar('Sprint adeed successfully!');
         });
     }
@@ -122,14 +122,15 @@ export class SprintComponent implements OnInit {
   // modifica lo sprint selezionato
   editSprint() {
     if (this.sprintForm.status == 'INVALID') {
-      this.projectService.warningBar('All fields are required');
+      this.projectService.warningBar('Name and start_date are reuired');
     } else {
       const sprint = this.sprintForm.value;
       this.sprintService.updateSprint(sprint.name, sprint.start_date, sprint.end_date, sprint.effort_days, sprint.revenue, this.sprint.id)
         .subscribe(() => {
-          this.modalService.dismissAll();
+          // this.modalService.dismissAll();
           this.projectService.successBar('Sprint edited successfully!');
-          this.getUserSprint()
+          window.location.reload();
+         
         });
     }
   }
@@ -151,8 +152,9 @@ export class SprintComponent implements OnInit {
         } else {
           this.sprintService.deleteSprint(id).subscribe(() => {
             this.projectService.successBar('Sprint deleted!');
-            this.modalService.dismissAll();
-            this.getUserSprint();
+            // this.modalService.dismissAll();
+          window.location.reload();
+            
           });
         }
       })

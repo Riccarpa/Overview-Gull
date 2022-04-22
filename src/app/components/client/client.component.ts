@@ -62,7 +62,7 @@ export class ClientComponent implements OnInit {
   // aggiunge un nuovo cliente
   addClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.toastr.warning('All fileds are required');
+      this.toastr.warning('Name,P.iva and businness name are required');
       this.data.image = '';
       this.clientForm.value.logo_data = '';
     } else {
@@ -89,7 +89,7 @@ export class ClientComponent implements OnInit {
   // modifica il cliente selezionato
   editClient() {
     if (this.clientForm.status == 'INVALID') {
-      this.toastr.warning('All fields are required')
+      this.toastr.warning('Name,P.iva and businness name are required')
       this.data.image = `http://80.211.57.191/overview_dev/${this.client.logo}?time=${new Date()}`;
     } else {
       const client = this.clientForm.value;
