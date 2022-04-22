@@ -36,7 +36,7 @@ export class SprintComponent implements OnInit {
   sprintForm = new FormGroup({
     name: new FormControl('', Validators.required),
     start_date: new FormControl('', Validators.required),
-    end_date: new FormControl('', Validators.required),
+    end_date: new FormControl(''),
     effort_days: new FormControl(''),
     revenue: new FormControl(''),
   });
@@ -63,7 +63,7 @@ export class SprintComponent implements OnInit {
       .result.then(() => {
         console.log('ok');
       }, () => {
-        console.log('annullato');
+        
       });
   }
 
@@ -115,7 +115,7 @@ export class SprintComponent implements OnInit {
       .result.then(() => {
         console.log('Ok');
       }, () => {
-        console.log('Dismissed');
+        
       });
   }
 

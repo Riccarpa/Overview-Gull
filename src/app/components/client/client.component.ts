@@ -56,7 +56,7 @@ export class ClientComponent implements OnInit {
     name: new FormControl('', Validators.required),
     vat_number: new FormControl('', Validators.required),
     business_name: new FormControl('', Validators.required),
-    representatives: new FormControl('', Validators.required),
+    representatives: new FormControl(''),
   });
 
   // aggiunge un nuovo cliente
