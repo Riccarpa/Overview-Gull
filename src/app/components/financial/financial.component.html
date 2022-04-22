@@ -1,4 +1,4 @@
-<h2 class="mt-2 mb-4 text-center" *ngIf="isAdmin">
+<h2 class="mt-2 mb-4 text-center" *ngIf="monthlyLogs && isAdmin">
   <strong>Financial</strong>: {{ user.name }} {{ user.surname }}
 </h2>
 <div *ngIf="monthlyLogs" class="card">
