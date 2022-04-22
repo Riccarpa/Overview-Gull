@@ -202,6 +202,8 @@ export class UpdateProjectComponent implements OnInit {
           this.data = this.projectForm.value.logo.message
           this.updateProject()
         }
+      },(err)=>{
+        this.toastr.error(err.error)
       })
   }
 
