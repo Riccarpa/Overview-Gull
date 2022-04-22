@@ -207,7 +207,7 @@ export class UpdateProjectComponent implements OnInit {
 
   // cropper img
   openModalImg(modal) {
-    if (this.role === 1){
+    if (this.role === 1 ){
       this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
         .result.then((result) => {
         }, (reason) => {
