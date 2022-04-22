@@ -45,14 +45,17 @@
 
             <div class="col-md-6 form-group mb-3">
               <label for="role">Role</label>
-              <input
-                type="number"
-                min="0"
-                max="2"
+
+              <select
                 class="form-control"
-                id="role"
                 formControlName="role"
-              />
+                name="role"
+                id="role"
+              >
+                <option value="0">Collaborator</option>
+                <option value="2">PM</option>
+                <option value="1">Admin</option>
+              </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
