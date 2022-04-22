@@ -26,11 +26,13 @@ export class SprintService {
     let body = {
       "name": name,
       "start_date": start_date,
-      "end_date": end_date,
       "effort_days": effort_days | 0.1,
       "revenue": revenue | 0.1,
       "project_id": projectId,
     };
+    if(end_date){
+     body['end_date']=end_date
+    }
     return this.http.post(url, body);
   }
 
