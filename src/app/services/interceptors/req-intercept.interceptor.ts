@@ -3,10 +3,11 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { retry, window } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry, window } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -45,7 +46,14 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
     
     if (request.url !== this.url) {
     return next.handle(request.clone({ setHeaders: headers })).pipe(
-
+      catchError((error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status === 401) {
+          localStorage.clear();
+          this.router.navigate(['login'])
+        }
+        return throwError(error)
+      })
       
     )
     }else{

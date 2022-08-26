@@ -10,6 +10,8 @@ import { ProjectService } from 'src/app/services/project/project.service';
 import { SprintService } from 'src/app/services/sprint/sprint.service';
 import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { SprintComponent } from '../sprint/sprint.component';
+import { $ } from 'protractor';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-task',
@@ -34,6 +36,9 @@ export class TaskComponent implements OnInit {
       .subscribe(value => {
         this.filerData(value);
       });
+      console.log(this.filteredTasks);
+      this.user = localStorage.getItem('user');
+      this.user = JSON.parse(this.user);
   }
 
   @Input() sprint: any;
@@ -43,17 +48,33 @@ export class TaskComponent implements OnInit {
   filteredTasks:any
   titleModal: string;
   searchControl: FormControl = new FormControl();
-
+  chatCollection: any[] = [];
+  user: any;
 
   taskForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    assignee_id: new FormControl(''),
-    status: new FormControl('', Validators.required),
-    start_date: new FormControl('', Validators.required),
-    end_date: new FormControl('', Validators.required),
-    effort: new FormControl(''),
+    assignee_id: new FormControl('',),
+    status: new FormControl(''),
+    start_date: new FormControl(''),
+    end_date: new FormControl(''),
+    effort: new FormControl('',),
   });
 
+
+
+  // creare un comparatore per ordinare i task in base alla end_date con formato dd/mm/yyyy 
+  compare(a, b) {
+
+    console.log(a);
+    
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  }
 
   // visualizza nell'html nome e cognome dell'assegnatario del task
   getAssignee(id: number) {
@@ -114,7 +135,7 @@ export class TaskComponent implements OnInit {
   addTask() {
 
     if (this.taskForm.status == 'INVALID') {
-      this.projectService.warningBar('All fields are required');
+      this.projectService.warningBar('Task name is required');
     } else {
       const newTask = this.taskForm.value;
       this.taskService.addTask(newTask.name, newTask.assignee_id, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, this.sprint.id)
@@ -189,7 +210,8 @@ export class TaskComponent implements OnInit {
       this.projectService.warningBar('All fileds are required');
     } else {
       const task = this.taskForm.value;
-      this.taskService.updateTask(task.name, task.assignee_id, task.status, task.start_date, task.end_date, task.effort)
+      let assignee_id = task.assignee_id != 'null' ? task.assignee_id : null; 
+      this.taskService.updateTask(task.name, assignee_id, task.status, task.start_date, task.end_date, task.effort)
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Task edited successfully');
@@ -214,6 +236,37 @@ export class TaskComponent implements OnInit {
       })
       this.filteredTasks = rows;
     }
+  }
+
+  openChatModal(content: any, id: any) {
+    this.chatCollection = [];
+    this.taskService.getTaskComments(1).subscribe((comments) => {
+    this.chatCollection.push(comments);
+    for (let i = 0; i < this.chatCollection.length; i++) {
+      let chat = this.chatCollection[i];
+      
+      if (chat.user.picture && chat.user.picture.includes('.png')) {
+        chat.user.picture = `${environment.apiURL2}/images/users/${chat.user.id}.png?r=${this.projectService.randomNumber()}`
+      } else {
+        chat.user.picture = `${environment.apiURL2}/images/users/${chat.user.id}.jpg?r=${this.projectService.randomNumber()}`
+      }
+    }
+    console.log(this.chatCollection);
+    
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg' })
+      .result.then(() => {
+        console.log('Ok');
+      }
+      , () => {
+        console.log('Dismissed');
+      }
+      );
+
+    });
+
+
+
+    
   }
 
 }

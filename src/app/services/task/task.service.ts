@@ -13,6 +13,7 @@ export class TaskService {
 
 
   url = environment.apiURL + '/tasks';
+  url2 = environment.apiURL + '/task';
   currentTask: any;
 
   // aggiunge task
@@ -56,4 +57,38 @@ export class TaskService {
     };
     return this.http.patch(url, body);
   }
+
+  // get tasks comments(per il momento terive quindi id del commento, TODO: cambiare in id del task)
+  getTaskComments(id: any): Observable<any> {
+    const url = `${this.url2}Comments/${id}`;
+    return this.http.get(url);
+  }
+
+  // post comment
+  postComment(id: any, comment: string): Observable<any> {
+    const url = `${this.url2}Comments/`;
+    let body = {
+      "task_id": id,
+      "text": comment,
+    };
+    return this.http.post(url, body);
+  }
+
+  // patch comment
+  patchComment(id: any, comment: string): Observable<any> {
+    const url = `${this.url2}Comments/${id}`;
+    let body = {
+      "text": comment,
+    };
+    return this.http.patch(url, body);
+  }
+
+  // delete comment
+  deleteComment(id: any): Observable<any> {
+    const url = `${this.url2}Comments/${id}`;
+    return this.http.delete(url);
+  }
+
+
+
 }

@@ -41,7 +41,7 @@
 <!-- sezione card  -->
 <div *ngIf="project" class="row">
   <div
-    (click)="modal_client_id = true; openCreateModal(modalConfirm)"
+    (click)="modal_client_id = true; openCreateModal(modalConfirmCard)"
     id="debug"
     class="col-lg-3 col-md-6 col-sm-6"
   >
@@ -82,7 +82,7 @@
   </div>
 
   <div
-    (click)="modal_progress = true; openCreateModal(modalConfirm)"
+    (click)="modal_progress = true; openCreateModal(modalConfirmCard)"
     class="col-lg-3 col-md-6 col-sm-6"
   >
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
@@ -108,7 +108,7 @@
   </div>
 
   <div
-    (click)="modal_user_ids = true; openCreateModal(modalConfirm)"
+    (click)="modal_user_ids = true; openCreateModal(modalConfirmCard)"
     class="col-lg-3 col-md-6 col-sm-6"
   >
     <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
@@ -503,7 +503,7 @@
         </ng-template>
 
         <!-- modale per cards -->
-        <ng-template class="m-0" id="modal" #modalConfirm let-modal>
+        <ng-template class="m-0" id="modal" #modalConfirmCard let-modal>
           <div class="modal-header">
             <h4 class="modal-title" id="modal-title">Edit</h4>
             <button

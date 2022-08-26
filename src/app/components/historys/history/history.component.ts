@@ -40,11 +40,13 @@ export class HistoryComponent implements OnInit {
         }
         // filtro per data odierna e popolo array 
         if (filterData.updated_at.getDate() === this.day) {
-          this.dataToday.push(eventTask)
+          this.dataToday.push(eventTask);
+          this.dataToday.reverse();
         }
         // filtro per mese corrente e popolo array
         if (filterData.created_at.getMonth() + 1 === this.month) {
         this.dataMonth.push(eventTask)
+        this.dataMonth.reverse();
         }
       }
     })
