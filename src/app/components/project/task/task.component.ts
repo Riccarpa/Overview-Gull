@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Sprint } from 'src/app/models/sprint.model';
 import { Task } from 'src/app/models/task.model';
 import { User } from 'src/app/models/user.model';
@@ -11,6 +11,7 @@ import { SprintService } from 'src/app/services/sprint/sprint.service';
 import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
 import { SprintComponent } from '../sprint/sprint.component';
 import { $ } from 'protractor';
+import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -19,6 +20,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
+
+  @ViewChild(PerfectScrollbarDirective) psContainer: PerfectScrollbarDirective;
 
   constructor(
     public sprintComponent: SprintComponent, 
@@ -30,6 +33,11 @@ export class TaskComponent implements OnInit {
 
   ngOnInit(): void {
 
+    for (let i = 0; i < this.sprint.tasks.length; i++) {
+    
+      this.sprint.tasks[i]['assigne_name'] = this.getAssignee(this.sprint.tasks[i].assignee_id);
+      
+    }
     this.filteredTasks = this.sprint.tasks
     // filtro checkbox
     this.searchControl.valueChanges
@@ -50,6 +58,15 @@ export class TaskComponent implements OnInit {
   searchControl: FormControl = new FormControl();
   chatCollection: any[] = [];
   user: any;
+  taskName: string;
+  currentTask: any;
+  currentComment: any;
+  send_update: boolean = false
+  indexComment : number
+  //form control di testo per aggiungere un commento
+  commentForm = new FormGroup({
+    text: new FormControl('', Validators.required),
+  });
 
   taskForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -63,17 +80,25 @@ export class TaskComponent implements OnInit {
 
 
   // creare un comparatore per ordinare i task in base alla end_date con formato dd/mm/yyyy 
-  compare(a, b) {
+  compare(a, b,c,d) {
+    b = new Date(d.end_date).getTime() 
+    a = new Date(c.end_date).getTime()
+    // se null return 0
+    if (a == null || b == null) {
+      return 0;
+    }else{
+      return a < b ? -1 : a > b ? 1 : 0;
+    }
+  }
 
-    console.log(a);
+  // comparatore per assignee_id per ordinare i task in base all'assegnatario 
+  compareAssignee(a, b,c,d)  {
+    // funziona con gli id e non con i nomi e cognomi
+    a = c.assigne_name
+    b = d.assigne_name
+    console.log(a,b);
     
-    if (a < b) {
-      return -1;
-    }
-    if (a > b) {
-      return 1;
-    }
-    return 0;
+    return a < b ? -1 : a > b ? 1 : 0;
   }
 
   // visualizza nell'html nome e cognome dell'assegnatario del task
@@ -237,11 +262,13 @@ export class TaskComponent implements OnInit {
       this.filteredTasks = rows;
     }
   }
-
-  openChatModal(content: any, id: any) {
-    this.chatCollection = [];
-    this.taskService.getTaskComments(1).subscribe((comments) => {
-    this.chatCollection.push(comments);
+  // apre modale chat per il task selezionato 
+  openChatModal(content: any, task: any) {
+    this.chatCollection = task.comments
+    this.taskName = task.name;
+    this.currentTask = task
+    // this.taskService.getTaskComments(10).subscribe((comments) => {
+    // this.chatCollection.push(comments);
     for (let i = 0; i < this.chatCollection.length; i++) {
       let chat = this.chatCollection[i];
       
@@ -262,12 +289,97 @@ export class TaskComponent implements OnInit {
       }
       );
 
-    });
-
-
-
     
   }
+
+  // delete comment from task
+  deleteComment(idComment: number,id:number) {
+    console.log(idComment);
+    
+    this.taskService.deleteComment(idComment).subscribe(() => {
+      this.projectService.successBar('Comment deleted');
+        this.chatCollection.splice(id, 1);
+    });
+  }
+    
+  // update comment from task
+  updateComment(currentComment:number,text:string,id: number) {
+    this.send_update = true;
+    this.currentComment = currentComment;
+    this.indexComment = id;
+    this.commentForm.value.text = text;
+    let input = document.getElementById('message') as HTMLInputElement;
+    input.value = text;
+  }
+
+  sendUpdatedComment() {
+
+    if (this.commentForm.status == 'INVALID') {
+      this.projectService.warningBar('Message is required');
+    }else{
+      this.taskService.patchComment(this.currentComment.id,this.commentForm.value.text).subscribe(() => {
+        this.projectService.successBar('Comment updated');
+        this.send_update = false;
+        this.chatCollection[this.indexComment].text = this.commentForm.value.text;
+        this.commentForm.setValue({
+          text: '',
+        });
+        let input  = document.getElementById('message') as HTMLInputElement;
+        input.value = '';
+
+      });
+    }
+      
+    }
+
+
+  //send message (post) to task
+  sendMessage(event: number) {
+    if (this.commentForm.status == 'INVALID') {
+      this.projectService.warningBar('Message is required');
+    }else{
+
+      const content = this.commentForm.value.text;
+      this.taskService.postComment(this.currentTask.id,content).subscribe((res) => {
+        this.projectService.successBar('Comment sent');
+        console.log(res);
+        
+        let msg = {
+          'id': res.data?.id,
+          'task_id': res.data?.task_id,
+          'user_id': res.data?.user_id,
+          'text': content,
+          'created_at': res.data?.created_at,
+          'user': {
+            'id': res.data?.user.id,
+            'name': res.data?.user.name,
+            'picture': res.data?.user.picture ? `${environment.apiURL2}/images/users/${res.data?.user.id}.png?r=${this.projectService.randomNumber()}` : `${environment.apiURL2}/images/users/${res.data?.user.id}.jpg?r=${this.projectService.randomNumber()}`,
+          }
+        }
+        this.chatCollection.push(msg);
+      });
+      this.commentForm.setValue({
+        text: '',
+      });
+
+      let input  = document.getElementById('message') as HTMLInputElement;
+      input.value = '';
+
+    }
+    
+  }
+
+  dismiss(){
+    this.send_update = false;
+    this.commentForm.setValue({
+      text: '',
+    });
+    let input  = document.getElementById('message') as HTMLInputElement;
+    input.value = '';
+    
+  }
+  
+    
 
 }
 

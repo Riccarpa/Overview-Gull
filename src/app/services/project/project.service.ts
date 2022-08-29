@@ -110,9 +110,52 @@ export class ProjectService {
   getHistory(id: number): Observable<any> {
 
     let url = `${this.url}/${id}/history`;
-
-
     return this.http.get(url)
+  }
+
+  // get retrive issue by project id /api/issues/id
+  getIssues(id: number): Observable<any> {
+
+    let url = `${this.url}/issues/${id}`;
+    return this.http.get(url)
+  }
+
+  //post aggiunta issue /api/issues
+  addIssue(form: any, projId: number): Observable<any> {
+
+    let body = {
+      "name": form.name,
+      "description": form.description,
+      "project_id": projId,
+    }
+    return this.http.post(`${this.url}/issues`, body)
+  }
+
+  // patch update issue `${this.url}/issues/${id}`
+  updateIssue(form: any, id: number): Observable<any> {
+
+    let body = {
+      "name": form.name,
+      "description": form.description,
+      "project_id": form.project_id,
+    }
+    return this.http.patch(`${this.url}/issues/${id}`, body)
+  }
+
+  // delete issue
+  deleteIssue(id: number): Observable<any> {
+
+    return this.http.delete(`${this.url}/issues/${id}`)
+  }
+
+  //create comment  /api/issueComments
+  addIssueComment(form: any, issueId: number): Observable<any> {
+
+    let body = {
+      "issue_id": issueId,
+      "text": form.text,
+    }
+    return this.http.post(`${this.url}/issueComments`, body)
   }
 
 

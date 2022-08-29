@@ -128,10 +128,10 @@ export class UpdateProjectComponent implements OnInit {
 
           this.users = res.data
 
-          for (let j = 0; j < this.users.length; j++) {
+          for (let j = 0; j < this.users?.length; j++) {
             let u = this.users[j];
 
-            for (let i = 0; i < this.project.user_ids.length; i++) {
+            for (let i = 0; i < this.project?.user_ids.length; i++) {
               let e = this.project.user_ids[i];
               if (e === u.id) {
 

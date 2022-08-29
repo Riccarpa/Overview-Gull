@@ -58,7 +58,7 @@ export class TaskService {
     return this.http.patch(url, body);
   }
 
-  // get tasks comments(per il momento terive quindi id del commento, TODO: cambiare in id del task)
+  // get tasks comments(per il momento retrive quindi id del commento, TODO: cambiare in id del task)
   getTaskComments(id: any): Observable<any> {
     const url = `${this.url2}Comments/${id}`;
     return this.http.get(url);
@@ -66,7 +66,7 @@ export class TaskService {
 
   // post comment
   postComment(id: any, comment: string): Observable<any> {
-    const url = `${this.url2}Comments/`;
+    const url = `${this.url2}Comments`;
     let body = {
       "task_id": id,
       "text": comment,

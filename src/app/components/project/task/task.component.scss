@@ -36,13 +36,14 @@
         
         content: "";
         position: absolute;
-        top: 14px;
+        top: 40%;
         right: -5px;
         background: transparent;
         border-style: solid;
         border-width: 0 10px 10px 0px;
         border-color: transparent transparent #f8f9fa transparent;
         transform: rotate(-135deg);
+        
     }
 }
 
@@ -59,4 +60,19 @@
         right: auto;
         transform: rotate(45deg);
     }
+}
+
+a{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vh{
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.del a{
+    font-size: 12px;
+    color: grey;
 }

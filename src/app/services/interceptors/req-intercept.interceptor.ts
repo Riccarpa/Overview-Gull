@@ -19,7 +19,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ReqInterceptInterceptor implements HttpInterceptor {
 
   url = environment.apiURL + '/uploadImage'
-  constructor(private router:Router,private route:ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute,private toastr: ToastrService ) {}
 
   takeRole(){
     if (localStorage.getItem('user')) {
@@ -48,22 +48,18 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
     return next.handle(request.clone({ setHeaders: headers })).pipe(
       catchError((error: HttpErrorResponse) => {
         console.log(error);
-        if (error.status === 401) {
+        if (error.status === 403) {
           localStorage.clear();
           this.router.navigate(['login'])
+        }else if(error.status === 401){
+          this.toastr.warning('Non hai i permessi necessari per questa operazione', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
         }
         return throwError(error)
       })
-      
     )
     }else{
-      
       return next.handle(request.clone({setHeaders:headerImg})).pipe(
-  
-        
       )
     }
-   
-    
   }
 }
