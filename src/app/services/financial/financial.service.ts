@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable,Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -13,6 +13,7 @@ export class FinancialService {
   constructor(private http: HttpClient) { }
 
   private subject = new Subject<any>();
+  private addSubject = new Subject<any>();
   url = `${environment.apiURL}`
 
   getMonthlyLogs(id: any): Observable<any> {
@@ -45,11 +46,23 @@ export class FinancialService {
     return this.http.patch(`${this.url}/user/monthlyLogs/${id}`, body);
   }
 
- sendClickEvent(){
-   this.subject.next()
- }
- getClickEvent():Observable<any>{
-   return this.subject.asObservable()
- }
+  sendClickEvent() {
+    this.subject.next()
+  }
 
+  getClickEvent(): Observable<any> {
+    return this.subject.asObservable()
+  }
+
+  addClickEvent(days: Array<number>, formData: any) {
+    let data = {
+      days: days,
+      activity: formData
+    } 
+    this.addSubject.next(data);
+  }
+
+  getAddClickEvent(): Observable<any> {
+    return this.addSubject.asObservable()
+  }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { el } from 'date-fns/locale';
 import { ToastrService } from 'ngx-toastr';
@@ -16,8 +17,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private inter:ReqInterceptInterceptor,private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService) {
-
+  constructor(private inter:ReqInterceptInterceptor,private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService, private fb: FormBuilder) {
     this.allActivities = []
    }
   id = this.route.snapshot.paramMap.get('id');
@@ -33,6 +33,12 @@ export class FinancialComponent implements OnInit {
   isSaved=false
   isAdmin:boolean
   projects:any
+  dayIds:any[] = [] // array of day ids
+  bulkActivities = this.fb.group({
+    activity_id: [],
+    hours_spent: [8],
+    activity_type: [] 
+  })
  
 
   ngOnInit(): void {
@@ -75,14 +81,11 @@ export class FinancialComponent implements OnInit {
         this.getCurrMonthLog();
       })
     }
-    
-
   }
   
   
   getCurrMonthLog(){
-   
-
+  
     if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
       this.currMonthLog =  this.monthlyLogs[this.year][this.month]
     
@@ -115,7 +118,6 @@ export class FinancialComponent implements OnInit {
        
       }
     }
-
   }
   
 
@@ -128,9 +130,7 @@ export class FinancialComponent implements OnInit {
 
       this.month =this.month-1
     }
- 
     this.getCurrMonthLog();
-    
   }
   nextMonth(){
     this.days = null
@@ -141,9 +141,7 @@ export class FinancialComponent implements OnInit {
     }else{
         this.month= this.month+1
       }
-   
     this.getCurrMonthLog();
-
   }
 
   // child activities data trigger and catcher
@@ -154,6 +152,14 @@ export class FinancialComponent implements OnInit {
   }
   childsData(data:object){
     this.allActivities.push(data)
+  }
+
+  isChecked(id:number){ // check if day is checked 
+    if(!this.dayIds.includes(id)){
+      this.dayIds.push(id)
+    }else{
+      this.dayIds.splice(this.dayIds.indexOf(id),1)
+    }
   }
 
    // all activities patch 
@@ -171,4 +177,17 @@ export class FinancialComponent implements OnInit {
     })
   }
 
+  onSelectChange(event:any){ // bulk activities patch 
+    this.bulkActivities.patchValue({
+      activity_id: event.target.value,
+      hours_spent: 8,
+      activity_type: event.target.selectedOptions[0].dataset.type == 'project' ? 'project' : 'generic'
+    })
+  }
+
+  // send array of day ids and bulk activities value to service subject 
+  bulkSave(){
+    this.fService.addClickEvent(this.dayIds,this.bulkActivities.value);
+    this.dayIds = []
+  }
 }

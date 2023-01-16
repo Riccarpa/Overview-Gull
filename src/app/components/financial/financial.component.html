@@ -6,7 +6,7 @@
     <div class="d-flex align-items-center">
       <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
       <div class="month m-2">
-        <strong>{{ currMonthLog.month | date: "MMMM yyyy" }}</strong>
+        <strong>{{ currMonthLog.month | date : "MMMM yyyy" }}</strong>
       </div>
       <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
     </div>
@@ -30,6 +30,22 @@
     </div>
   </div>
 
+  <div *ngIf="dayIds.length > 0" class="col-5 d-flex">
+    <button class="btn btn-primary mr-1" (click)="bulkSave()">Applica attività</button>
+    <form action="d-flex" [formGroup]="bulkActivities">
+      <select formControlName="activity_id" class="form-control" name="activity_id" id="activity_id" (change)="onSelectChange($event)">
+        <option disabled class="bg-ligth">Seleziona attività</option>
+        <option *ngFor="let activity of activities" [value]="activity?.id">
+          {{ activity?.name }}
+        </option>
+        <option disabled class="bg-light">Seleziona Progetto</option>
+        <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
+          {{ project?.name }}
+        </option>
+      </select>
+    </form>
+  </div>
+
   <div *ngIf="days" class="table-body p-4">
     <div class="table-body-head d-flex align-items-center">
       <span class="col">Date</span>
@@ -40,6 +56,7 @@
     <hr />
     <app-day
       (childsData)="childsData($event)"
+      (isChecked)="isChecked($event)"
       [activities]="activities"
       [projects]="projects"
       [day]="day"

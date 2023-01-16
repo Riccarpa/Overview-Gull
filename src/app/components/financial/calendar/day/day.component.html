@@ -1,7 +1,20 @@
 <div class="d-flex align-items-center">
+  <span>
+    <div class="col mb-3 justify-content-center d-flex">
+    <label class="checkbox checkbox-primary">
+      <input
+        id="bulkCheckbox"
+        (change)="addDayToParentArray($event)"
+        type="checkbox"
+      />
+      <span class="checkmark"></span>
+    </label>
+  </div>
+  </span>
   <span class="col"
     ><strong>{{ day.date | date: "d EEEE" }}</strong></span
   >
+  
   <!-- activities and hours -->
   <div class="col" [formGroup]="activitiesForm">
     <div formArrayName="activitiesArray">
@@ -18,7 +31,7 @@
           <option *ngFor="let activity of activities" [value]="activity.id">
             {{ activity.name }}
           </option>
-          <option class="bg-light" *ngIf="projects" disabled value="">projects</option>
+          <option class="bg-light" *ngIf="projects" disabled value="">Seleziona Progetto</option>
           <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
             {{ project?.name }}
           </option>
@@ -45,9 +58,13 @@
           <div class="d-flex align-items-center position-relative">
             <!-- activity input -->
             <select formControlName="activity_id" class="form-control mb-2">
-              <option>Seleziona attività</option>
+              <option disabled class="bg-light" >Seleziona attività</option>
               <option *ngFor="let activity of activities" [value]="activity.id">
                 {{ activity.name }}
+              </option>
+              <option class="bg-light" *ngIf="projects" disabled value="">Seleziona Progetto</option>
+              <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
+                {{ project?.name }}
               </option>
             </select>
             <!-- hours input -->

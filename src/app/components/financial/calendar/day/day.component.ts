@@ -14,13 +14,36 @@ export class DayComponent implements OnInit {
     this.clickEventSubsctiption = this.fService.getClickEvent().subscribe(() => {
       this.save()
     })
+    this.addActivities = this.fService.getAddClickEvent().subscribe((data) => {
+      let activity = data.activity
+      let days = data.days
+      if (days.includes(this.day.id)) {
+        days.forEach(element => {
+          if (element == this.day.id) {
+            this.activitiesArray.push(this.fb.group({
+              activity_id: activity.activity_id,
+              hours_spent: activity.hours_spent,
+              activity_type: activity.activity_type
+            }))
+          }
+        });
+      }
+      // checked = false id = bulkCheckbox
+      let bulkCheckbox = document.querySelectorAll('#bulkCheckbox')
+      bulkCheckbox.forEach(element => {
+        element['checked'] = false
+      });
+      
+    })
   }
   @Input() date: any
   @Input() day: any
   @Input() activities: any
   @Input() projects: any
   @Output() childsData: EventEmitter<any> = new EventEmitter()
+  @Output() isChecked: EventEmitter<any> = new EventEmitter()
   clickEventSubsctiption: Subscription;
+  addActivities: Subscription;
   smartWorking: any
   patchArr: any
   OldActivities: any
@@ -45,6 +68,10 @@ export class DayComponent implements OnInit {
     })
     this.activitiesArray.push(activityForm);
   }
+
+  // addActivitiesBulk() {
+
+
   deleteActivity(i) {
     this.activitiesArray.removeAt(i)
   }
@@ -83,10 +110,11 @@ export class DayComponent implements OnInit {
       }
       this.childsData.emit(this.patchArr)
     }
-
   }
 
-
+  addDayToParentArray(day) {
+    this.isChecked.emit(this.day.id)
+  }
 
   // prepare patch array with old activities
   retrieveOldActivities() {
