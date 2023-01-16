@@ -19,6 +19,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ReqInterceptInterceptor implements HttpInterceptor {
 
   url = environment.apiURL + '/uploadImage'
+  url2 = environment.apiURL + '/files'
   constructor(private router: Router, private route: ActivatedRoute,private toastr: ToastrService ) {}
 
   takeRole(){
@@ -43,6 +44,12 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
 
       'Authorization': `Bearer ${token}`
     }
+
+    const headerImg2 = {
+      'Content-Type': 'multipart/form-data',
+      "Accept": "application/json",
+      'Authorization': `Bearer ${token}`
+    }
     
     if (request.url !== this.url) {
     return next.handle(request.clone({ setHeaders: headers })).pipe(
@@ -57,9 +64,14 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
         return throwError(error)
       })
     )
-    }else{
+    }else if(request.url === this.url){
       return next.handle(request.clone({setHeaders:headerImg})).pipe(
       )
+    } else if (request.url == this.url2) {
+      return next.handle(request.clone({ setHeaders: headerImg2 })).pipe(
+      )
     }
+      
+    
   }
 }

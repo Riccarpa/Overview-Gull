@@ -24,19 +24,19 @@ export class TaskComponent implements OnInit {
   @ViewChild(PerfectScrollbarDirective) psContainer: PerfectScrollbarDirective;
 
   constructor(
-    public sprintComponent: SprintComponent, 
-    private taskService: TaskService, 
-    private userService: UserService, 
-    private modalService: NgbModal, 
-    private projectService: ProjectService, 
+    public sprintComponent: SprintComponent,
+    private taskService: TaskService,
+    private userService: UserService,
+    private modalService: NgbModal,
+    private projectService: ProjectService,
     private sprintService: SprintService) { }
 
   ngOnInit(): void {
 
     for (let i = 0; i < this.sprint.tasks.length; i++) {
-    
+
       this.sprint.tasks[i]['assigne_name'] = this.getAssignee(this.sprint.tasks[i].assignee_id);
-      
+
     }
     this.filteredTasks = this.sprint.tasks
     // filtro checkbox
@@ -44,16 +44,16 @@ export class TaskComponent implements OnInit {
       .subscribe(value => {
         this.filerData(value);
       });
-      console.log(this.filteredTasks);
-      this.user = localStorage.getItem('user');
-      this.user = JSON.parse(this.user);
+
+    this.user = localStorage.getItem('user');
+    this.user = JSON.parse(this.user);
   }
 
   @Input() sprint: any;
   @Input() collaborators: any[];
   @Input() tasks: any[]
- 
-  filteredTasks:any
+
+  filteredTasks: any
   titleModal: string;
   searchControl: FormControl = new FormControl();
   chatCollection: any[] = [];
@@ -62,7 +62,7 @@ export class TaskComponent implements OnInit {
   currentTask: any;
   currentComment: any;
   send_update: boolean = false
-  indexComment : number
+  indexComment: number
   //form control di testo per aggiungere un commento
   commentForm = new FormGroup({
     text: new FormControl('', Validators.required),
@@ -80,24 +80,24 @@ export class TaskComponent implements OnInit {
 
 
   // creare un comparatore per ordinare i task in base alla end_date con formato dd/mm/yyyy 
-  compare(a, b,c,d) {
-    b = new Date(d.end_date).getTime() 
+  compare(a, b, c, d) {
+    b = new Date(d.end_date).getTime()
     a = new Date(c.end_date).getTime()
     // se null return 0
     if (a == null || b == null) {
       return 0;
-    }else{
+    } else {
       return a < b ? -1 : a > b ? 1 : 0;
     }
   }
 
   // comparatore per assignee_id per ordinare i task in base all'assegnatario 
-  compareAssignee(a, b,c,d)  {
+  compareAssignee(a, b, c, d) {
     // funziona con gli id e non con i nomi e cognomi
     a = c.assigne_name
     b = d.assigne_name
-    console.log(a,b);
-    
+    console.log(a, b);
+
     return a < b ? -1 : a > b ? 1 : 0;
   }
 
@@ -192,8 +192,8 @@ export class TaskComponent implements OnInit {
         this.taskService.deleteTask(id).subscribe(() => {
           this.projectService.successBar('Task deleted');
 
-            // resfresh page dopo delete
-            this.sprintComponent.ngOnInit()
+          // resfresh page dopo delete
+          this.sprintComponent.ngOnInit()
           this.modalService.dismissAll();
         });
       }, () => {
@@ -205,22 +205,21 @@ export class TaskComponent implements OnInit {
   openModalEditTask(id: any, content: any, sprints: any) {
     this.taskService.currentTask = id;
     this.titleModal = "Modifica Task";
-    console.log(this.tasks);
+ 
+    for (let i = 0; i < this.tasks.length; i++) {
+      let task = this.tasks[i]; //task singolo
 
-      for (let i = 0; i < this.tasks.length; i++) {
-        let task = this.tasks[i]; //task singolo
-
-        if (task.id === id) {
-          this.taskForm.setValue({
-            name: task.name,
-            assignee_id: task.assignee_id,
-            status: task.status,
-            start_date: task.start_date,
-            end_date: task.end_date,
-            effort: task.effort,
-          });
-        }
+      if (task.id === id) {
+        this.taskForm.setValue({
+          name: task.name,
+          assignee_id: task.assignee_id,
+          status: task.status,
+          start_date: task.start_date,
+          end_date: task.end_date,
+          effort: task.effort,
+        });
       }
+    }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
         console.log('Ok');
@@ -235,12 +234,12 @@ export class TaskComponent implements OnInit {
       this.projectService.warningBar('All fileds are required');
     } else {
       const task = this.taskForm.value;
-      let assignee_id = task.assignee_id != 'null' ? task.assignee_id : null; 
+      let assignee_id = task.assignee_id != 'null' ? task.assignee_id : null;
       this.taskService.updateTask(task.name, assignee_id, task.status, task.start_date, task.end_date, task.effort)
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Task edited successfully');
-            this.sprintComponent.ngOnInit()
+          this.sprintComponent.ngOnInit()
         });
     }
   }
@@ -248,10 +247,10 @@ export class TaskComponent implements OnInit {
   // filtra i task, rimuovendo i task completati, in base al valore della checkbox (true/false) 
   filerData(val: boolean) {
     if (!val) {
-      
+
       return this.filteredTasks = this.sprint.tasks
     } else {
-      const rows = this.sprint.tasks.filter((task:any) => {
+      const rows = this.sprint.tasks.filter((task: any) => {
 
         if (task.status == 2) {
           return false;
@@ -262,48 +261,47 @@ export class TaskComponent implements OnInit {
       this.filteredTasks = rows;
     }
   }
+
   // apre modale chat per il task selezionato 
   openChatModal(content: any, task: any) {
     this.chatCollection = task.comments
     this.taskName = task.name;
     this.currentTask = task
-    // this.taskService.getTaskComments(10).subscribe((comments) => {
-    // this.chatCollection.push(comments);
+
     for (let i = 0; i < this.chatCollection.length; i++) {
       let chat = this.chatCollection[i];
-      
+
       if (chat.user.picture && chat.user.picture.includes('.png')) {
         chat.user.picture = `${environment.apiURL2}/images/users/${chat.user.id}.png?r=${this.projectService.randomNumber()}`
       } else {
         chat.user.picture = `${environment.apiURL2}/images/users/${chat.user.id}.jpg?r=${this.projectService.randomNumber()}`
       }
     }
-    console.log(this.chatCollection);
-    
+
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg' })
       .result.then(() => {
         console.log('Ok');
       }
-      , () => {
-        console.log('Dismissed');
-      }
+        , () => {
+          console.log('Dismissed');
+          window.location.reload();
+        }
       );
 
-    
+
   }
 
   // delete comment from task
-  deleteComment(idComment: number,id:number) {
-    console.log(idComment);
-    
+  deleteComment(idComment: number, id: number) {
+
     this.taskService.deleteComment(idComment).subscribe(() => {
       this.projectService.successBar('Comment deleted');
-        this.chatCollection.splice(id, 1);
+      this.chatCollection.splice(id, 1);
     });
   }
-    
-  // update comment from task
-  updateComment(currentComment:number,text:string,id: number) {
+
+  // update comment from task (popola il form con i dati del commento selezionato )
+  updateComment(currentComment: number, text: string, id: number) {
     this.send_update = true;
     this.currentComment = currentComment;
     this.indexComment = id;
@@ -312,38 +310,38 @@ export class TaskComponent implements OnInit {
     input.value = text;
   }
 
+  // invia il commento modificato e richiama la patch
   sendUpdatedComment() {
 
     if (this.commentForm.status == 'INVALID') {
       this.projectService.warningBar('Message is required');
-    }else{
-      this.taskService.patchComment(this.currentComment.id,this.commentForm.value.text).subscribe(() => {
+    } else {
+      this.taskService.patchComment(this.currentComment.id, this.commentForm.value.text).subscribe(() => {
         this.projectService.successBar('Comment updated');
         this.send_update = false;
         this.chatCollection[this.indexComment].text = this.commentForm.value.text;
         this.commentForm.setValue({
           text: '',
         });
-        let input  = document.getElementById('message') as HTMLInputElement;
+        let input = document.getElementById('message') as HTMLInputElement;
         input.value = '';
 
       });
     }
-      
-    }
+  }
 
 
   //send message (post) to task
   sendMessage(event: number) {
     if (this.commentForm.status == 'INVALID') {
       this.projectService.warningBar('Message is required');
-    }else{
+    } else {
 
       const content = this.commentForm.value.text;
-      this.taskService.postComment(this.currentTask.id,content).subscribe((res) => {
+      this.taskService.postComment(this.currentTask.id, content).subscribe((res) => {
         this.projectService.successBar('Comment sent');
         console.log(res);
-        
+
         let msg = {
           'id': res.data?.id,
           'task_id': res.data?.task_id,
@@ -362,25 +360,20 @@ export class TaskComponent implements OnInit {
         text: '',
       });
 
-      let input  = document.getElementById('message') as HTMLInputElement;
+      let input = document.getElementById('message') as HTMLInputElement;
       input.value = '';
-
     }
-    
   }
 
-  dismiss(){
+  // reset form 
+  dismiss() {
     this.send_update = false;
     this.commentForm.setValue({
       text: '',
     });
-    let input  = document.getElementById('message') as HTMLInputElement;
+    let input = document.getElementById('message') as HTMLInputElement;
     input.value = '';
-    
   }
-  
-    
-
 }
 
 

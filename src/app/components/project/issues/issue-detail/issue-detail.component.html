@@ -1,0 +1,174 @@
+<div *ngIf="issue" class="col-12 ">
+    <form action="" [formGroup]="formIssue"
+        class="d-flex align-items-center justify-content-between col-12 row_issue text-center">
+        <div class="col-lg-5 col-md-5 col-sm-5 mb-1 mr-1 py-2 px-2 d-flex align-items-center justify-content-between">
+            <!-- <h5>{{issue?.name}}</h5> -->
+            <input id="name" type="text" formControlName="name"
+                [ngClass]="{'editable':isEditable == true}" 
+                class="text-24 custom_input" 
+                [readonly]="!isEditable"
+                placeholder="{{issue?.name}}" 
+                [value]="issue?.name"
+                (keyup.enter)="updateName();isEditable = !isEditable">
+
+            <div class="box_edit mt-1">
+                <i *ngIf="!isEditable && (user?.role > 0 || issue.user.id == user.id)" class="i-Pen-4 text-warning" (click)="isEditable = !isEditable"></i>
+                <i *ngIf="!isEditable && (user?.role > 0 || issue.user.id == user.id)" class="i-Close text-danger" (click)="open(modalConfirm)"></i>
+
+                <i *ngIf="!isEditable" class="i-Speach-Bubble-3" (click)="open(modalChat)"></i>
+                <i *ngIf="isEditable" class="i-Yes text-success"
+                    (click)="isEditable = !isEditable;updateName()"></i>
+                <i *ngIf="isEditable" class="i-Close text-danger"
+                    (click)="resetInputValue();isEditable = !isEditable"></i>
+
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 mb-1 mr-1 p-1 "><img class="" src="{{issue.user?.picture}}" alt=""></div>
+
+        
+        <ng-select (change)="changeStatus($event,i,issue)" 
+            [ngClass]="{
+                'bg_warning': issue.status == 1,
+                'bg_success': issue.status == 2,
+                'bg_light': issue.status == 3,
+                'bg_danger': issue.status == 4
+            }" class="custom col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 px-2" 
+            [items]="status" 
+            [searchable]="false"
+            [clearable]="false" 
+            [readonly]="user?.role == 0 && issue.user.id !== user.id"
+            bindLabel="viewValue" 
+            bindValue="id" 
+            formControlName="status"
+            [(ngModel)]="selectedStatus">
+
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div 
+                [ngClass]="{ 
+                    'bg_warning': item.id == 1,
+                    'bg_success': item.id == 2,
+                    'bg_light': item.id == 3,
+                    'bg_danger': item.id == 4
+                        
+                    }" class="px-4 py-4">
+                    <h5 class="">{{item.viewValue}}</h5>
+                </div>
+            </ng-template>
+
+        </ng-select>
+        <!-- TODO cambiare con end_date? -->
+        <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 px-2 text-center">{{issue?.updated_at | date }}</div>
+        <!-- to do inserire formcontrolname priority and [(ngModel)]="selectedPriority" -->
+        <ng-select  (change)="changePriority($event,i,issue)" [ngClass]="{
+                'bg_low': issue.priority == 1,
+                'bg_medium': issue.priority == 2,
+                'bg_high': issue.priority == 3,
+                'bg_blocker': issue.priority == 4
+            }" class="custom col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 px-2" 
+            [items]="priority" 
+            [searchable]="false" 
+            [clearable]="false"
+            [readonly]="user?.role == 0 || issue.user.id !== user.id"
+            bindLabel="viewValue" 
+            bindValue="id" 
+             
+            >
+
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div [ngClass]="{ 
+                    'bg_low': item.id == 1,
+                    'bg_medium': item.id == 2,
+                    'bg_high': item.id == 3,
+                    'bg_blocker': item.id == 4
+                    
+                }" class="px-4 py-4">
+                    <h5 class="">{{item.viewValue}}</h5>
+                </div>
+            </ng-template>
+
+        </ng-select>
+    </form>
+    <!-- modale di conferma eliminazione issue -->
+
+    <ng-template #modalConfirm let-cancel="cancel" let-confirm="confirm">
+        <div class="modal-header">
+            <h4 class="modal-title">Conferma eliminazione</h4>
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <h3>Sei sicuro di voler eliminare l'issue?</h3>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="close()">Annulla</button>
+            <button type="button" class="btn btn-danger" (click)="deleteIssue()">Elimina</button>
+        </div>
+    </ng-template>
+
+    <!-- modale commenti -->
+    <ng-template #modalChat let-modal class="vh">
+        <div class="d-flex align-items-center pl-3 pr-3 pt-2 vh  o-hidden box-shadow-1 chat-topbar">
+            <h3>Issue: {{ issue.name }}</h3>
+        </div>
+        <div [perfectScrollbar]="{suppressScrollX: true}" class="chat-content rtl-ps-none px-4 py-5 vh"
+            *ngIf="issue?.comments">
+            <div *ngFor="let chat of issue?.comments; let i = index" class="mb-4">
+
+                <div *ngIf="chat.user?.id === issue?.user.id" class="d-flex align-items-center user mb-4">
+                    <img src="{{chat.user?.picture}}" [alt]="chat.user?.name" class="avatar-sm rounded-circle mr-3">
+                    <div class="message userMessage flex-grow-1">
+                        <div class="d-flex align-items-center">
+                            <p class="del mb-1 text-title text-16 flex-grow-1">Tu
+                                <!-- <a class="ml-4 upd" (click)="updateComment(chat,chat?.text, i)">modifica</a> |
+                                <a class="" (click)="deleteComment(chat.id,i)">elimina</a> -->
+                            </p>
+                            <span class="text-small text-muted">{{chat.created_at | date}}</span>
+                        </div>
+                        <p class="m-0">{{chat.text}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="chat.user?.id !== issue?.user.id" class="d-flex align-items-center mb-4">
+                    <div class="message  flex-grow-1">
+                        <div class="d-flex align-items-center">
+                            <p class="mb-1 text-title text-16 flex-grow-1">{{chat.user?.name}}</p>
+                            <span class="text-small text-muted">{{chat.created_at | date}}</span>
+                        </div>
+                        <p class="m-0">{{chat.text}}</p>
+                    </div>
+                    <img src="{{chat.user?.picture}}" [alt]="chat.user?.name" class="avatar-sm rounded-circle ml-3">
+                </div>
+            </div>
+        </div>
+
+        <div class="pl-3 pr-3 pt-3 pb-3 box-shadow-1 chat-input-area" *ngIf="issue.comments">
+            <form [formGroup]="commentForm" class="inputForm">
+                <div class="form-group">
+                    <textarea class="form-control form-control-rounded" formControlName="text"
+                        placeholder="Type your message" name="message" id="message" cols="30" rows="3"></textarea>
+                </div>
+                <div class="d-flex">
+                    <div class="flex-grow-1"></div>
+                    <button type="submit" class="btn btn-icon btn-rounded btn-primary mr-2"
+                        (click)="sendMessage($event)">
+                        <i class="i-Paper-Plane"></i>
+                    </button>
+                    <button class="btn btn-icon btn-rounded btn-outline-primary" type="button">
+                        <i class="i-Add-File" (click)="file.click()"></i>
+                    </button>
+
+                    <input #file type="file" enctype="multipart/form-data" accept="audio/*,video/*,image/*"  hidden type="file" (change)="updateImg($event.target.files)">
+                    <!-- <button *ngIf="send_update" class="btn btn-icon btn-rounded btn-outline-danger mr-2" type="button"
+                        (click)="dismiss()">
+                        X
+                    </button> -->
+                    <!-- <button type="submit" class="btn btn-icon btn-rounded btn-warning mr-2"
+                        (click)="sendUpdatedComment()">
+                        <i class="i-Paper-Plane"></i>
+                    </button> -->
+                </div>
+            </form>
+        </div>
+    </ng-template>
+</div>

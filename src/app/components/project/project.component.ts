@@ -230,6 +230,11 @@ export class ProjectComponent implements OnInit {
     return (new Chart(value).chartPie);
   }
 
+  goToDetail(project:Project) {
+    this.service.currentProject = project;
+    this.route.navigate(["home/issue"]);
+  }
+
   back() {
     this.route.navigate(["home/client"]);
   }

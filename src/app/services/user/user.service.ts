@@ -14,7 +14,7 @@ export class UserService {
   constructor(private http: HttpClient,private projectService:ProjectService,private router:Router) {}
   
     url = `${environment.apiURL}/users` 
-  url2 = `${environment.apiURL}/user` 
+    url2 = `${environment.apiURL}/user` 
     
     getUsers():Observable<any>{
    

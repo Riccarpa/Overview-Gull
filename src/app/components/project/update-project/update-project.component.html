@@ -397,3 +397,7 @@
 <div *ngIf="project">
   <app-sprint [project]="project"></app-sprint>
 </div>
+
+<div *ngIf="project?.issues.length">
+  <app-issue [project]="project"></app-issue>
+</div>

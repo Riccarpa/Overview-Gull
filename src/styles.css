@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "~@ng-select/ng-select/themes/material.theme.css";
 .ngx-datatable.material .empty-row {
     margin-top: 100px;
     text-align: center;
@@ -8,3 +8,63 @@
 .pointer{
     cursor: pointer;
 }
+
+.ng-select.custom {
+   
+    min-height: 45px;
+    max-height: 45px;
+    border-radius: 0;
+    background-color: #ededed;
+}
+
+.ng-dropdown-panel.ng-select-top {
+    z-index: 9999;
+    min-width: fit-content;
+
+}
+
+.ng-dropdown-panel{
+    z-index: 9999;
+    min-width: fit-content;
+}
+.ng-select.custom .ng-template   {            
+    background-color: brown;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 0;
+    z-index: 99;
+}
+
+.ng-select .ng-select-container:after {
+    content: none;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-arrow-wrapper span{
+    color: #ededed;
+    display: none;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background: none;
+    padding: 0;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container{
+    margin-bottom: 5px;
+    line-height: 15px;
+}
+
+.ng-select .ng-select-container .ng-value-container{
+    border: none;
+}
+
+

@@ -6,6 +6,7 @@ import { Client } from 'src/app/models/client.model';
 import { User } from 'src/app/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+import { Issue } from 'src/app/models/issue.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ export class ProjectService {
   role:number
   token:any
   currentUser:any //utente loggato
+  currentProject: Project
   url = environment.apiURL + '/projects'
+  baseUrl = environment.apiURL
   updatedProject: any
   project: Project[]
   clients: Client[]
@@ -116,49 +119,60 @@ export class ProjectService {
   // get retrive issue by project id /api/issues/id
   getIssues(id: number): Observable<any> {
 
-    let url = `${this.url}/issues/${id}`;
-    return this.http.get(url)
+    let url = `${this.baseUrl}/issues/${id}`;
+    return this.http.get(this.baseUrl)
   }
 
   //post aggiunta issue /api/issues
-  addIssue(form: any, projId: number): Observable<any> {
+  createIssue(form: any, projId: number): Observable<any> {
 
     let body = {
       "name": form.name,
       "description": form.description,
       "project_id": projId,
     }
-    return this.http.post(`${this.url}/issues`, body)
+    return this.http.post(`${this.baseUrl}/issues`, body)
   }
 
-  // patch update issue `${this.url}/issues/${id}`
-  updateIssue(form: any, id: number): Observable<any> {
+  // patch update issue `${this.baseUrl}/issues/${id}`
+  updateIssue(issue: Issue,status:number): Observable<any> {
 
     let body = {
-      "name": form.name,
-      "description": form.description,
-      "project_id": form.project_id,
+      "name": issue.name,
+      "description": issue.description,
+      "status": status,
     }
-    return this.http.patch(`${this.url}/issues/${id}`, body)
+    return this.http.patch(`${this.baseUrl}/issues/${issue.id}`, body)
   }
 
   // delete issue
   deleteIssue(id: number): Observable<any> {
 
-    return this.http.delete(`${this.url}/issues/${id}`)
+    return this.http.delete(`${this.baseUrl}/issues/${id}`)
   }
 
   //create comment  /api/issueComments
-  addIssueComment(form: any, issueId: number): Observable<any> {
+  addCommentToIssue(form: any, issueId: number): Observable<any> {
 
     let body = {
       "issue_id": issueId,
       "text": form.text,
     }
-    return this.http.post(`${this.url}/issueComments`, body)
+    return this.http.post(`${this.baseUrl}/issueComments`, body)
+  }
+
+  // add file to issue
+  addFileToIssue(file: any, issueId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('container_id',`${issueId}`)
+    formData.append('container_type','App\\Issue')
+
+    return this.http.post(`${this.baseUrl}/files`,formData)
   }
 
 
+  // utils
   warningBar(message:string) {
     this.toastr.warning(message, 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
   }

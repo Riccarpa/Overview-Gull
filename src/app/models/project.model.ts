@@ -1,3 +1,5 @@
+import { Issue } from "./issue.model"
+
 export class Project {
     id: number
     name: string | null
@@ -13,5 +15,5 @@ export class Project {
     type: string | null
     sprint_ids: number[] | null
     user_ids: any | null
-
+    issues : Issue[] | null
 }

@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card card-icon-bg card-icon-bg-primary mb-4">
+            <div class="card-body">
+                <div class="card-title mb-3 d-flex justify-content-between align-items-center w-100">
+                    <h3>Project name: {{project?.name}} </h3>
+                    <button class="btn btn-success px-3" (click)="open(modalCreate)" >
+                        New Issue
+                    </button>
+                </div>
+            </div>
+            <div class="card-body pb-0 row">
+                <div class="d-flex align-items-center justify-content-between col-12 text-center">
+                    <div class="col-lg-5 col-md-4 col-sm-4 mb-1 mr-1 py-2 px-2 text-left">
+                        <h3 class="text-24">This Month</h3>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Owner</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Status</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Date</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Priority</div>
+                </div>
+            </div>
+            <div *ngIf="project"  [perfectScrollbar]="{suppressScrollX: true}" class="pb-4">
+                <div *ngFor="let issue of project?.issues">
+                    <app-issue-detail *ngIf="issue && user" [issue]="issue" [user]="user"></app-issue-detail>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalCreate let-modal >
+    <!--modale form di creazione issue -->
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Issue</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="formNewIssue" (ngSubmit)="createIssue()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" required formControlName="name">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" required rows="3" formControlName="description"></textarea>
+            </div>
+            <div class="text-right">
+
+                <button type="submit" class="btn btn-primary" [disabled]="!formNewIssue.valid">Save</button>
+            </div>
+        </form>
+    </div>
+</ng-template>

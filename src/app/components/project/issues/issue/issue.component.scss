@@ -1,0 +1,44 @@
+.row_issue >div{
+    min-height: 60px;
+    max-height: 60px;
+    background-color: #ededed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+    &:hover .box_edit{
+        opacity: 1;
+    }
+
+    &:first-child{
+        border-left: 5px solid #663399;
+        justify-content: flex-start;
+    }
+    h5{
+        margin: 0;
+    }
+    img {
+        max-width: 50%;
+        border-radius: 50%;
+        margin: auto;
+    }
+
+    .box_edit{
+        opacity: 0;
+        i{
+            transition: font-weight 0.5s ease-in-out;
+            font-size: 24px;
+            color: grey;
+            cursor: pointer;
+            &:hover{
+                font-weight: bolder;
+            }
+        }
+    }
+
+}
+
+.nowrap{
+    white-space: nowrap;
+}

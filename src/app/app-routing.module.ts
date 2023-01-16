@@ -10,6 +10,7 @@ import { AdminLayoutSidebarLargeComponent } from './shared/components/layouts/ad
 import { HomeUserComponent } from './components/user/homeUser/home-user/home-user.component';
 import { FinancialComponent } from './components/financial/financial.component';
 import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
+import { IssueComponent } from './components/project/issues/issue/issue.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,6 +24,9 @@ const routes: Routes = [
       { path: 'homeUser/:id', component: HomeUserComponent },
       { path: 'financial/:id', component: FinancialComponent },
       { path: 'showFinancial/:id', component: ShowFinancialComponent },
+      // route to issue component 
+      { path: 'issue', component: IssueComponent },
+      
     ]
   },
 
