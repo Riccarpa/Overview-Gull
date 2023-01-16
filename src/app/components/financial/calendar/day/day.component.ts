@@ -1,4 +1,4 @@
-import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FinancialService } from 'src/app/services/financial/financial.service';
@@ -10,149 +10,145 @@ import { Subscription } from 'rxjs';
 })
 export class DayComponent implements OnInit {
 
-  constructor(private fb:FormBuilder,private fService:FinancialService,private toastr:ToastrService) {
-    this.clickEventSubsctiption = this.fService.getClickEvent().subscribe(()=>{
+  constructor(private fb: FormBuilder, private fService: FinancialService, private toastr: ToastrService) {
+    this.clickEventSubsctiption = this.fService.getClickEvent().subscribe(() => {
       this.save()
     })
   }
-  @Input() date : any
-  @Input() day : any
-  @Input() activities :any
-  @Output()childsData:EventEmitter<any> = new EventEmitter()
-  clickEventSubsctiption:Subscription;
-  smartWorking:any
-  patchArr:any
-  OldActivities:any
-   
-  
+  @Input() date: any
+  @Input() day: any
+  @Input() activities: any
+  @Input() projects: any
+  @Output() childsData: EventEmitter<any> = new EventEmitter()
+  clickEventSubsctiption: Subscription;
+  smartWorking: any
+  patchArr: any
+  OldActivities: any
+  isProject: boolean
+
   ngOnInit(): void {
-   this.retrieveOldActivities()
+    this.retrieveOldActivities()
   }
 
   // new acrivities Form Array
-  activitiesForm=this.fb.group({
-    activitiesArray:this.fb.array([])
+  activitiesForm = this.fb.group({
+    activitiesArray: this.fb.array([])
   })
-  get activitiesArray(){
+  get activitiesArray() {
     return this.activitiesForm.controls['activitiesArray'] as FormArray;
   }
-  addActivity(){
-    const activityForm=this.fb.group({
-      activity_id:[],
-      hours_spent:[],
-      activity_type:['generic']
+  addActivity() {
+    const activityForm = this.fb.group({
+      activity_id: [],
+      hours_spent: [],
+      activity_type: [] // generic or project 
     })
     this.activitiesArray.push(activityForm);
   }
-  deleteActivity(i){
+  deleteActivity(i) {
     this.activitiesArray.removeAt(i)
   }
-  
+
   // catch smartWorking value
-  smartAssign(e){
-    if(e.target.checked==true){
+  smartAssign(e) {
+    if (e.target.checked == true) {
       this.smartWorking = 1
-    }else{
+    } else {
       this.smartWorking = 0;
     }
   }
-  
+
   // emit activity data for parent component
-  
-  save(){
+
+  save() {
     for (let i = 0; i < this.activitiesArray.value.length; i++) {
       const element = this.activitiesArray.value[i];
       element.activity_id = parseInt(element.activity_id)
     }
-    
-    
+
+
     this.patchArr = {
       "day": this.date,
-      "smartworking":this.smartWorking== undefined ?  this.day.smartworking : this.smartWorking,
-      "activity_days_array":[... this.OldActivities,...this.activitiesArray.value]
-    }  
-    
-    if(this.patchArr.activity_days_array.length !== 0){
+      "smartworking": this.smartWorking == undefined ? this.day.smartworking : this.smartWorking,
+      "activity_days_array": [... this.OldActivities, ...this.activitiesArray.value]
+    }
+
+    if (this.patchArr.activity_days_array.length !== 0) {
       for (let i = 0; i < this.patchArr.activity_days_array.length; i++) {
         let element = this.patchArr.activity_days_array[i];
-        if(element.hours_spent==0){
-          this.patchArr.activity_days_array.splice(i,1)
+        if (element.hours_spent == 0) {
+          this.patchArr.activity_days_array.splice(i, 1)
           i--
         }
       }
       this.childsData.emit(this.patchArr)
     }
-    
+
   }
-  
- 
-  
+
+
+
   // prepare patch array with old activities
-  retrieveOldActivities(){
+  retrieveOldActivities() {
     let oldActivities = [];
     for (let i = 0; i < this.day.activity_days_array.length; i++) {
       let e = this.day.activity_days_array[i];
+
       let obj = {
-        "hours_spent":e.hours_spent,
-        "activity_type": 'generic',
-        "activity_id":e.activity_id 
+        "hours_spent": e.hours_spent,
+        "activity_type": e.activity_type == 'App\\Activity' ? 'generic' : 'project',// set activity type
+        "activity_id": e.activity_id
       }
       oldActivities.push(obj)
-      
+
     }
     this.patchArr = [{
       "day": this.date,
-      "smartworking":this.smartWorking | this.day.smartworking,
-      "activity_days_array":oldActivities
+      "smartworking": this.smartWorking | this.day.smartworking,
+      "activity_days_array": oldActivities
     }]
 
     this.OldActivities = oldActivities
   }
 
-// detect changes and set new values for oldActivities 
+  // detect changes and set new values for oldActivities 
 
-onSelectChange(select,j){
-  
-  for (let i = 0; i < this.OldActivities.length; i++) {
-    const element = this.OldActivities[i];
-    if(i==j){
-      element.activity_id = select
+  onSelectChange(idValue, index, event) {
+    this.isProject = event.target.selectedOptions[0].dataset.type == 'project' ? true : false
+
+    for (let i = 0; i < this.OldActivities.length; i++) {
+      const element = this.OldActivities[i];
+      if (i == index) {
+        element.activity_id = idValue
+        element.activity_type = this.isProject ? 'project' : 'generic'
+      }
+    }
+
+  }
+  onInputChange(input, j) {
+
+    for (let i = 0; i < this.OldActivities.length; i++) {
+      const element = this.OldActivities[i];
+      if (i == j) {
+        element.hours_spent = input
+      }
     }
   }
-  
-}
-onInputChange(input,j){
- 
-  for (let i = 0; i < this.OldActivities.length; i++) {
-    const element = this.OldActivities[i];
-    if(i==j){
-      element.hours_spent = input
+
+  deleteOldActivity(j) {
+
+    for (let i = 0; i < this.OldActivities.length; i++) {
+      const element = this.OldActivities[i];
+      if (i == j) {
+        this.OldActivities.splice(i, 1)
+      }
     }
-  }
-}
-
-deleteOldActivity(j){
-
-  for (let i = 0; i < this.OldActivities.length; i++) {
-    const element = this.OldActivities[i];
-    if(i==j){
-     this.OldActivities.splice(i, 1)
+    for (let i = 0; i < this.day.activity_days_array.length; i++) {
+      const element = this.day.activity_days_array[i];
+      if (i == j) {
+        this.day.activity_days_array.splice(i, 1)
+      }
     }
+
   }
-  for (let i = 0; i < this.day.activity_days_array.length; i++) {
-    const element = this.day.activity_days_array[i];
-    if(i==j){
-     this.day.activity_days_array.splice(i, 1)
-    }
-  }
-  
-}
-
-
-
-
-
-
- 
-
 }

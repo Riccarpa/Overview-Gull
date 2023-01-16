@@ -41,6 +41,7 @@
     <app-day
       (childsData)="childsData($event)"
       [activities]="activities"
+      [projects]="projects"
       [day]="day"
       *ngFor="let day of days; let j = index"
       [date]="j + 1"

@@ -31,7 +31,8 @@ export class FinancialComponent implements OnInit {
   monthAndYear:any
   allActivities:Array<Object>
   isSaved=false
-   isAdmin:boolean
+  isAdmin:boolean
+  projects:any
  
 
   ngOnInit(): void {
@@ -48,6 +49,13 @@ export class FinancialComponent implements OnInit {
     this.aService.getActivities().subscribe((res:any)=>{
       this.activities = res.data;
      
+    },(error)=>{
+      this.toastr.error(error.error.message);
+    })
+
+    this.uService.getUserProject().subscribe((res:any)=>{
+      this.projects = res.data;
+
     },(error)=>{
       this.toastr.error(error.error.message);
     })
