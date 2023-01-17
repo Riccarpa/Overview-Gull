@@ -116,7 +116,7 @@ export class IssueDetailComponent implements OnInit {
   }
 
   changePriority(e, arrayId, issue) {
-    console.log(e, arrayId, issue);
+  
     let priority = e.id
 
     this.formIssue.patchValue({
@@ -223,7 +223,7 @@ export class IssueDetailComponent implements OnInit {
     if (this.file) {
       this.projectService.addFileToIssue(this.file, this.issue.id).subscribe(
         res => {
-          console.log(this.issue);
+      
           console.log(res);
           
         }, error => {

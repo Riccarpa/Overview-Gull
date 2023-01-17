@@ -59,7 +59,9 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
           localStorage.clear();
           this.router.navigate(['login'])
         }else if(error.status === 401){
+          localStorage.clear();
           this.toastr.warning('Non hai i permessi necessari per questa operazione', 'Warning', { timeOut: 3000, closeButton: true, progressBar: true });
+          this.router.navigate(['login'])
         }
         return throwError(error)
       })
@@ -71,7 +73,5 @@ export class ReqInterceptInterceptor implements HttpInterceptor {
       return next.handle(request.clone({ setHeaders: headerImg2 })).pipe(
       )
     }
-      
-    
   }
 }

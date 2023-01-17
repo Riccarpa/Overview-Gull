@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { el } from 'date-fns/locale';
+import Holidays from 'date-holidays';
 import { ToastrService } from 'ngx-toastr';
 import { format } from 'path';
 import { element } from 'protractor';
@@ -17,52 +18,60 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class FinancialComponent implements OnInit {
 
-  constructor(private inter:ReqInterceptInterceptor,private toastr:ToastrService,private fService:FinancialService,private uService:UserService,private route:ActivatedRoute,private aService:ActivitiesService, private fb: FormBuilder) {
+  constructor(private inter: ReqInterceptInterceptor, private toastr: ToastrService, private fService: FinancialService, private uService: UserService, private route: ActivatedRoute, private aService: ActivitiesService, private fb: FormBuilder) {
     this.allActivities = []
-   }
+    // let hd = new Holidays('IT') todo: da fare in futuro
+    // let holidays = hd.getHolidays(this.year)
+    // let holidayDates = []
+    // holidays.forEach(element => {
+    //   holidayDates.push(element.date)
+    // });
+    // console.log(holidays, "holidays");
+  }
+
   id = this.route.snapshot.paramMap.get('id');
-  user:any
-  activities:any
-  monthlyLogs:any
-  month:any
-  year:any
-  currMonthLog:any
-  days:any
-  monthAndYear:any
-  allActivities:Array<Object>
-  isSaved=false
-  isAdmin:boolean
-  projects:any
-  dayIds:any[] = [] // array of day ids
+  user: any
+  activities: any
+  monthlyLogs: any
+  month: any
+  year: any
+  currMonthLog: any
+  days: any
+  monthAndYear: any
+  allActivities: Array<Object>
+  isSaved = false
+  isAdmin: boolean
+  projects: any
+  dayIds: any[] = [] // array of day ids
   bulkActivities = this.fb.group({
     activity_id: [],
     hours_spent: [8],
-    activity_type: [] 
+    activity_type: []
   })
- 
+
 
   ngOnInit(): void {
-    this.month=new Date().getMonth() +1
-    this.year=new Date().getFullYear()
+    this.month = new Date().getMonth() + 1
+    this.year = new Date().getFullYear()
 
-    this.uService.retrieveUser(this.id).subscribe((res:any)=>{
+    this.uService.retrieveUser(this.id).subscribe((res: any) => {
       this.user = res.data;
-      
-    },(error)=>{
+
+    }, (error) => {
       this.toastr.error(error.error.message);
     })
 
-    this.aService.getActivities().subscribe((res:any)=>{
+    this.aService.getActivities().subscribe((res: any) => {
       this.activities = res.data;
-     
-    },(error)=>{
+
+    }, (error) => {
       this.toastr.error(error.error.message);
     })
 
-    this.uService.getUserProject().subscribe((res:any)=>{
+    this.uService.getUserProject().subscribe((res: any) => {
       this.projects = res.data;
 
-    },(error)=>{
+    }, (error) => {
       this.toastr.error(error.error.message);
     })
 
@@ -70,114 +79,146 @@ export class FinancialComponent implements OnInit {
       this.isAdmin = false
       this.fService.getUserMonthlyLogs().subscribe((res) => {
         this.monthlyLogs = res.data;
-        
+
         this.getCurrMonthLog();
       })
-    }else{
+    } else {
       this.isAdmin = true
-      this.fService.getMonthlyLogs(this.id).subscribe((res)=>{
+      this.fService.getMonthlyLogs(this.id).subscribe((res) => {
         this.monthlyLogs = res.data;
-     
+
         this.getCurrMonthLog();
       })
     }
   }
-  
-  
-  getCurrMonthLog(){
-  
-    if(this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month] ){
-      this.currMonthLog =  this.monthlyLogs[this.year][this.month]
-    
-      this.days =  this.monthlyLogs[this.year][this.month].daily_logs_array
-    
-    }else{
-      if(this.month<10){
+
+  isWeekend() {
+    this.days?.forEach(day => {
+      let newDate = new Date(day.date)
+      if (newDate.getDay() == 0 || newDate.getDay() == 6) {
+        return true
+      } else {
+        return false
+      }
+    });
+  }
+
+  selectAll(event) {
+    if (event.target.checked) {
+      
+      this.days?.forEach(day => {
+        let newDte = new Date(day.date)
+        if (newDte.getDay() !== 0 && newDte.getDay() !== 6) {
+          this.dayIds.push(day.id)
+        }
+      });
+      this.fService.selectAllDaysEvent(this.dayIds)
+    } else {
+      this.dayIds = []
+      this.fService.selectAllDaysEvent(this.dayIds)
+    }
+  }
+
+  getCurrMonthLog() {
+
+    if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
+      this.currMonthLog = this.monthlyLogs[this.year][this.month]
+
+      this.days = this.monthlyLogs[this.year][this.month].daily_logs_array
+
+    } else {
+      if (this.month < 10) {
         var date = `${this.year.toString()}-0${this.month.toString()} `
-      }else{
+      } else {
         var date = `${this.year.toString()}-${this.month.toString()} `
       }
-     
+
       if (!this.isAdmin) {
-        this.fService.createMonthlyLog(parseInt(this.id),date).subscribe((res)=>{
+        this.fService.createMonthlyLog(parseInt(this.id), date).subscribe((res) => {
           this.currMonthLog = res.data;
-          this.days =  res.data.daily_logs_array
+          this.days = res.data.daily_logs_array
           this.fService.getUserMonthlyLogs().subscribe((res) => {
             this.monthlyLogs = res.data;
-          })},(error)=>{
-          this.toastr.error(error.error.message);})
-     
-      }else{
-        this.fService.createMonthlyLogforAdmin(parseInt(this.id),date).subscribe((res)=>{
+          })
+        }, (error) => {
+          this.toastr.error(error.error.message);
+        })
+
+      } else {
+        this.fService.createMonthlyLogforAdmin(parseInt(this.id), date).subscribe((res) => {
           this.currMonthLog = res.data;
-          this.days =  res.data.daily_logs_array
+          this.days = res.data.daily_logs_array
           this.fService.getMonthlyLogs(this.id).subscribe((res) => {
             this.monthlyLogs = res.data;
-          })},(error)=>{
-          this.toastr.error(error.error.message);})
-       
+          })
+        }, (error) => {
+          this.toastr.error(error.error.message);
+        })
       }
     }
   }
-  
 
-  prevMonth(){
+
+
+
+  prevMonth() {
     this.days = null
-    if(this.month<=1){
-      this.month=12
-      this.year = this.year -1
-    }else{
+    if (this.month <= 1) {
+      this.month = 12
+      this.year = this.year - 1
+    } else {
 
-      this.month =this.month-1
+      this.month = this.month - 1
     }
     this.getCurrMonthLog();
   }
-  nextMonth(){
+  nextMonth() {
     this.days = null
 
-    if(this.month>=12){
-      this.month=1
-      this.year= this.year +1
-    }else{
-        this.month= this.month+1
-      }
+    if (this.month >= 12) {
+      this.month = 1
+      this.year = this.year + 1
+    } else {
+      this.month = this.month + 1
+    }
     this.getCurrMonthLog();
   }
 
   // child activities data trigger and catcher
-  
-  save(){
+
+  save() {
     this.fService.sendClickEvent();
     this.isSaved = true
+    this.confirm()
   }
-  childsData(data:object){
+  childsData(data: object) {
     this.allActivities.push(data)
   }
 
-  isChecked(id:number){ // check if day is checked 
-    if(!this.dayIds.includes(id)){
+  isChecked(id: number) { // check if day is checked 
+    if (!this.dayIds.includes(id)) {
       this.dayIds.push(id)
-    }else{
-      this.dayIds.splice(this.dayIds.indexOf(id),1)
+    } else {
+      this.dayIds.splice(this.dayIds.indexOf(id), 1)
     }
   }
 
-   // all activities patch 
-   
-  confirm(){
-    this.fService.patchActivities(this.currMonthLog.id,this.allActivities).subscribe((res)=>{
-      this.toastr.success('Activities saved succefully', 'Success!', {progressBar: true});
+  // all activities patch 
+
+  confirm() {
+    this.fService.patchActivities(this.currMonthLog.id, this.allActivities).subscribe((res) => {
+      this.toastr.success('Activities saved succefully', 'Success!', { progressBar: true });
       setTimeout(() => {
         window.location.reload()
       }, 1500);
-    },(error)=>{
+    }, (error) => {
       this.allActivities = []
       this.isSaved = false
       this.toastr.error(error.error.message);
     })
   }
 
-  onSelectChange(event:any){ // bulk activities patch 
+  onSelectChange(event: any) { // bulk activities patch 
     this.bulkActivities.patchValue({
       activity_id: event.target.value,
       hours_spent: 8,
@@ -186,8 +227,8 @@ export class FinancialComponent implements OnInit {
   }
 
   // send array of day ids and bulk activities value to service subject 
-  bulkSave(){
-    this.fService.addClickEvent(this.dayIds,this.bulkActivities.value);
+  bulkSave() {
+    this.fService.addClickEvent(this.dayIds, this.bulkActivities.value);
     this.dayIds = []
   }
 }

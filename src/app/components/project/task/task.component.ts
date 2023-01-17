@@ -96,7 +96,7 @@ export class TaskComponent implements OnInit {
     // funziona con gli id e non con i nomi e cognomi
     a = c.assigne_name
     b = d.assigne_name
-    console.log(a, b);
+
 
     return a < b ? -1 : a > b ? 1 : 0;
   }
@@ -150,9 +150,9 @@ export class TaskComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('Ok');
+      
       }, () => {
-        console.log('Dismissed');
+      
       });
   }
 
@@ -197,7 +197,7 @@ export class TaskComponent implements OnInit {
           this.modalService.dismissAll();
         });
       }, () => {
-        console.log('Dismissed');
+      
       });
   }
 
@@ -222,9 +222,9 @@ export class TaskComponent implements OnInit {
     }
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('Ok');
+    
       }, () => {
-        console.log('Dismissed');
+       
       });
   }
 
@@ -280,10 +280,10 @@ export class TaskComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg' })
       .result.then(() => {
-        console.log('Ok');
+       
       }
         , () => {
-          console.log('Dismissed');
+      
           window.location.reload();
         }
       );
@@ -339,8 +339,7 @@ export class TaskComponent implements OnInit {
 
       const content = this.commentForm.value.text;
       this.taskService.postComment(this.currentTask.id, content).subscribe((res) => {
-        this.projectService.successBar('Comment sent');
-        console.log(res);
+        this.projectService.successBar('Comment sent')
 
         let msg = {
           'id': res.data?.id,

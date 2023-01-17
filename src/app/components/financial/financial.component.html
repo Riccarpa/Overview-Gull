@@ -3,54 +3,86 @@
 </h2>
 <div *ngIf="monthlyLogs" class="card">
   <div class="table-head p-4 d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center">
-      <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
-      <div class="month m-2">
-        <strong>{{ currMonthLog.month | date : "MMMM yyyy" }}</strong>
+    <div class="d-flex justify-content-center flex-grow-1">
+      <div class="d-flex align-items-center ">
+        <i class="arrow i-Arrow-Left-in-Circle" (click)="prevMonth()"></i>
+        <div class="month m-2">
+          <strong>{{ currMonthLog.month | date : "MMMM yyyy" }}</strong>
+        </div>
+        <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
       </div>
-      <i class="arrow i-Arrow-Right-in-Circle" (click)="nextMonth()"></i>
     </div>
-    <div>
-      <button
+      <div>
+      <!-- <button
         *ngIf="!isSaved"
         type="button"
         class="btn btn-primary m-1"
         (click)="save()"
       >
         Collect
-      </button>
+      </button> -->
       <button
-        *ngIf="isSaved"
+        
         type="button"
         class="btn btn-success m-1"
-        (click)="confirm()"
+        (click)="save()"
       >
         Save
       </button>
     </div>
   </div>
 
-  <div *ngIf="dayIds.length > 0" class="col-5 d-flex">
-    <button class="btn btn-primary mr-1" (click)="bulkSave()">Applica attività</button>
+  <div *ngIf="dayIds.length > 0" class="col-6 d-flex align-items-center">
     <form action="d-flex" [formGroup]="bulkActivities">
-      <select formControlName="activity_id" class="form-control" name="activity_id" id="activity_id" (change)="onSelectChange($event)">
+      <select
+        formControlName="activity_id"
+        class="form-control"
+        name="activity_id"
+        id="activity_id"
+        (change)="onSelectChange($event)"
+      >
         <option disabled class="bg-ligth">Seleziona attività</option>
         <option *ngFor="let activity of activities" [value]="activity?.id">
           {{ activity?.name }}
         </option>
         <option disabled class="bg-light">Seleziona Progetto</option>
-        <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
+        <option
+          data-type="project"
+          *ngFor="let project of projects"
+          [value]="project?.id"
+        >
           {{ project?.name }}
         </option>
       </select>
     </form>
+    <p class="ml-4 mb-0">
+      <strong
+        >Applica attività Per {{ dayIds?.length }} giorni selezionati</strong
+      >
+    </p>
+    <button class="btn btn-primary mr-1 ml-2" (click)="bulkSave()">
+      Procedi
+    </button>
   </div>
 
   <div *ngIf="days" class="table-body p-4">
     <div class="table-body-head d-flex align-items-center">
-      <span class="col">Date</span>
-      <span class="col">Activity and Hours</span>
-      <span class="col text-center">SmartWorking</span>
+      <div class="col-4 pl-0">
+        <div class="m-0">
+          <label class="checkbox checkbox-primary m-0">
+            <input
+              id="selectAll"
+              (change)="selectAll($event)"
+              type="checkbox"
+              name="selectAll"
+            />
+            <span class="checkmark"></span>
+            <strong>Date</strong>
+          </label>
+        </div>
+      </div>
+      <span class="col-4 pl-5"><strong>Activity and Hours</strong></span>
+      <span class="col-4 text-center"><strong>SmartWorking</strong></span>
       <!-- <span class="col">Actions</span> -->
     </div>
     <hr />

@@ -1,20 +1,23 @@
-<div class="d-flex align-items-center">
+<div class="d-flex align-items-center py-4" [ngClass]="{'bg-holiday' :  isWeekendDirective(day.date) == true}">
   <span>
-    <div class="col mb-3 justify-content-center d-flex">
-    <label class="checkbox checkbox-primary">
-      <input
-        id="bulkCheckbox"
-        (change)="addDayToParentArray($event)"
-        type="checkbox"
-      />
-      <span class="checkmark"></span>
-    </label>
-  </div>
+    <div class="col-4 mb-3 justify-content-center d-flex">
+      <label class="checkbox checkbox-primary">
+        <input
+          id="bulkCheckbox"
+          (change)="addDayToParentArray($event)"
+          type="checkbox"
+          [checked]="dayIds.includes(day.id)"
+        />
+        <span class="checkmark"></span>
+      </label>
+    </div>
   </span>
-  <span class="col"
-    ><strong>{{ day.date | date: "d EEEE" }}</strong></span
+  <span
+    class="col-2"
+    [ngClass]="{ 'text-danger': isWeekendDirective(day.date) == true }"
+    ><strong>{{ day.date | date : "d EEEE" }}</strong></span
   >
-  
+
   <!-- activities and hours -->
   <div class="col" [formGroup]="activitiesForm">
     <div formArrayName="activitiesArray">
@@ -28,11 +31,18 @@
           class="form-control mb-2"
         >
           <option selected>{{ activity.activity_name }}</option>
-          <option *ngFor="let activity of activities" [value]="activity.id">
+          <option *ngFor="let activity of activities" [value]="activity.id" [type]="'generic'">
             {{ activity.name }}
           </option>
-          <option class="bg-light" *ngIf="projects" disabled value="">Seleziona Progetto</option>
-          <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
+          <option class="bg-light" *ngIf="projects" disabled value="">
+            Seleziona Progetto
+          </option>
+          <option
+            data-type="project"
+            *ngFor="let project of projects"
+            [value]="project?.id"
+            [type]="'project'"
+          >
             {{ project?.name }}
           </option>
         </select>
@@ -57,16 +67,34 @@
         <div [formGroup]="activityForm">
           <div class="d-flex align-items-center position-relative">
             <!-- activity input -->
-            <select formControlName="activity_id" class="form-control mb-2">
-              <option disabled class="bg-light" >Seleziona attività</option>
-              <option *ngFor="let activity of activities" [value]="activity.id">
+            <select #selectValue (change)="checkType($event, i)" formControlName="activity_id" class="form-control mb-2">
+              <option disabled class="bg-light">Seleziona attività</option>
+              <option *ngFor="let activity of activities" [value]="activity.id" [type]="'generic'">
                 {{ activity.name }}
               </option>
-              <option class="bg-light" *ngIf="projects" disabled value="">Seleziona Progetto</option>
-              <option data-type="project" *ngFor="let project of projects" [value]="project?.id">
+              <option class="bg-light" *ngIf="projects" disabled value="">
+                Seleziona Progetto
+              </option>
+              <option
+                data-type="project"
+                *ngFor="let project of projects"
+                [value]="project?.id"
+                [type]="'project'"
+              >
                 {{ project?.name }}
               </option>
             </select>
+            <!-- input in display none per activity_type -->
+            <input
+            *ngIf="selectValue.value"
+              formControlName="activity_type"
+              type="text"
+              name="activity_type"
+              id="activity_type"
+              class="form-control mb-2 ml-2 w-50"
+              [value]="selectValue.selectedOptions[0].type"
+              hidden
+            />
             <!-- hours input -->
             <input
               formControlName="hours_spent"

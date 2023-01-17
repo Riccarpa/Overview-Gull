@@ -38,7 +38,7 @@ export class IssueComponent implements OnInit {
     } else if (this.project == undefined && this.pService.currentProject == undefined) {
       this.router.navigate(['home/project'])
     }
-    console.log(this.project);
+   
     
     
   }
@@ -46,7 +46,7 @@ export class IssueComponent implements OnInit {
   open(content) {
     this.modal.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
-        console.log(result)
+        
       })
     }
     

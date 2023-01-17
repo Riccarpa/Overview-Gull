@@ -14,7 +14,8 @@ export class FinancialService {
 
   private subject = new Subject<any>();
   private addSubject = new Subject<any>();
-  url = `${environment.apiURL}`
+  private selectAllDays = new Subject<any>();
+  url = `${environment.apiURL}`;
 
   getMonthlyLogs(id: any): Observable<any> {
     return this.http.get(`${this.url}/users/${id}/monthlyLogs`);
@@ -64,5 +65,13 @@ export class FinancialService {
 
   getAddClickEvent(): Observable<any> {
     return this.addSubject.asObservable()
+  }
+
+  selectAllDaysEvent(days: Array<number>) {
+    this.selectAllDays.next(days);
+  }
+
+  getSelectAllDaysEvent(): Observable<any> {
+    return this.selectAllDays.asObservable()
   }
 }

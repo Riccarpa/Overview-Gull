@@ -61,7 +61,7 @@ export class SprintComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('ok');
+      
       }, () => {
         
       });
@@ -113,7 +113,7 @@ export class SprintComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(() => {
-        console.log('Ok');
+       
       }, () => {
         
       });
