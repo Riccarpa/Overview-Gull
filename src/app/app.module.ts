@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -85,7 +85,8 @@ import { IssueDetailComponent } from './components/project/issues/issue-detail/i
 
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })
