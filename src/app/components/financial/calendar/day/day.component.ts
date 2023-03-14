@@ -174,8 +174,10 @@ onSelectChange(idValue, index, event) {
   for (let i = 0; i < this.OldActivities.length; i++) {
     const element = this.OldActivities[i];
     if (i == index) {
+      this.day.activity_days_array[i].activity_id = idValue
       element.activity_id = idValue
       element.activity_type = event.target.selectedOptions[0].type
+
     }
   }
 

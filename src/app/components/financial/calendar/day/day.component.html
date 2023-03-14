@@ -29,7 +29,7 @@
         <select
           (change)="onSelectChange($event.target.value, j, $event)"
           class="form-control mb-2"
-          [ngClass]="{'border-info': activity.activity_name == 'Ferie', 'border-danger': activity.activity_name == 'Malattia'}"
+          [ngClass]="{'border-info': activity.activity_id == '13', 'border-danger': activity.activity_id == '14'}"
         >
           <option   selected>{{ activity.activity_name }}</option>
           <option *ngFor="let activity of activities" [value]="activity.id" [type]="'generic'">
