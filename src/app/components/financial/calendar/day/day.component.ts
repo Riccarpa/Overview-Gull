@@ -124,8 +124,8 @@ save() {
       }
     }
     
-    this.childsData.emit(this.patchArr)
   }
+  this.childsData.emit(this.patchArr)
 }
 
 addDayToParentArray(day) {

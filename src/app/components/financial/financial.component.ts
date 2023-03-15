@@ -206,6 +206,18 @@ export class FinancialComponent implements OnInit {
   // all activities patch 
 
   confirm() {
+    for (let i = 0; i < this.allActivities.length; i++) {
+      const element = this.allActivities[i];
+      for (let j = 0; j < element['activity_days_array'].length; j++) {
+        const elementt = element['activity_days_array'][j];
+        if(!elementt.hours_spent){
+          this.toastr.error('Tutte le attivita devono avere un ammontare di ore specificato');
+          this.allActivities = []
+          this.isSaved = false
+          return
+        }
+      }
+    }
     this.fService.patchActivities(this.currMonthLog.id, this.allActivities).subscribe((res) => {
       this.toastr.success('Activities saved succefully', 'Success!', { progressBar: true });
       setTimeout(() => {
