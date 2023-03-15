@@ -19,7 +19,7 @@
   >
 
   <!-- activities and hours -->
-  <div class="col" [formGroup]="activitiesForm">
+  <div class="col" [formGroup]="activitiesForm" class="d-flex align-items-center">
     <div formArrayName="activitiesArray">
       <!--show old activities -->
       <div
@@ -113,14 +113,15 @@
           </div>
         </div>
       </div>
-      <button
-        (click)="addActivity()"
-        type="button"
-        class="btn btn-sm btn-outline-primary"
-      >
-        Add
-      </button>
     </div>
+    <button
+      (click)="addActivity()"
+      type="button"
+      class="btn btn-sm btn-outline-primary  mb-2"
+      style="margin-left: 2rem"
+    >
+      Add
+    </button>
   </div>
 
   <!-- smartworking -->
