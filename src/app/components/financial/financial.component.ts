@@ -48,6 +48,9 @@ export class FinancialComponent implements OnInit {
     hours_spent: [8],
     activity_type: []
   })
+  workedDays:number = 0
+  ferie:number = 0 
+  malattia:number = 0
 
 
   ngOnInit(): void {
@@ -90,6 +93,7 @@ export class FinancialComponent implements OnInit {
         this.getCurrMonthLog();
       })
     }
+
   }
 
   isWeekend() {
@@ -123,7 +127,6 @@ export class FinancialComponent implements OnInit {
 
     if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
       this.currMonthLog = this.monthlyLogs[this.year][this.month]
-
       this.days = this.monthlyLogs[this.year][this.month].daily_logs_array
 
     } else {
@@ -156,7 +159,28 @@ export class FinancialComponent implements OnInit {
         })
       }
     }
+
+    this.assignFerieWorkedMalattia(this.currMonthLog['daily_logs_array'])
+    
   }
+
+  assignFerieWorkedMalattia(arr:any){
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+      for (let j = 0; j < element['activity_days_array'].length; j++) {
+        const elementt = element['activity_days_array'][j];
+        if(elementt.activity_id == 13){
+          this.ferie++
+        }else if(elementt.activity_id == 14){
+          this.malattia++
+        }else{
+          this.workedDays++
+        }
+      }
+    }
+  }
+
+
 
 
 

@@ -1,9 +1,61 @@
 <h2 class="mt-2 mb-4 text-center" *ngIf="monthlyLogs && isAdmin">
   <strong>Financial</strong>: {{ user.name }} {{ user.surname }}
 </h2>
+
+<div style="margin-top: 2.5rem; margin-bottom: 2rem;" class=" d-flex align-items-center" *ngIf="monthlyLogs">
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
+    <div class="card-body text-center">
+      <i class="i-Calendar mr-2"></i>
+      <div class="content">
+        <p class="text-muted mt-2 mb-0">Giorni</p>
+        <p  class="text-primary text-20 line-height-1 mb-2">
+          {{currMonthLog['daily_logs_array'].length}}        
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
+    <div class="card-body">
+        <i class="i-Gears"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Lavorati</p>
+          <p  class="text-primary text-20 line-height-1 mb-2">
+            {{workedDays}}
+          </p>
+        </div>
+
+    </div>
+  </div>
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
+    <div class="card-body">
+        <i class="i-Loading"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Ferie</p>
+          <p  class="text-primary text-20 line-height-1 mb-2">
+            {{ferie}}
+          </p>
+        </div>
+
+    </div>
+  </div>
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1">
+    <div class="card-body">
+        <i class="i-Heart"></i>
+        <div class="content">
+          <p class="text-muted mt-2 mb-0">Malattia</p>
+          <p  class="text-primary text-20 line-height-1 mb-2">
+            {{malattia}}
+          </p>
+        </div>
+
+    </div>
+  </div>
+</div>
+
 <div class="alert alert-warning" role="alert" *ngIf="currMonthLog && currMonthLog.message">
   {{currMonthLog.message}}
 </div>
+
 <div *ngIf="monthlyLogs" class="card">
   <div class="table-head p-4 d-flex align-items-center justify-content-between">
     <div class="d-flex justify-content-center flex-grow-1">
