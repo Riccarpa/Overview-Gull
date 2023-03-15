@@ -125,6 +125,10 @@ export class FinancialComponent implements OnInit {
 
   getCurrMonthLog() {
 
+    this.ferie = 0
+    this.malattia = 0
+    this.workedDays = 0
+
     if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
       this.currMonthLog = this.monthlyLogs[this.year][this.month]
       this.days = this.monthlyLogs[this.year][this.month].daily_logs_array
