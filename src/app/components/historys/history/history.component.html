@@ -8,7 +8,7 @@
         <li ngbNavItem title="today">
             <a ngbNavLink>
                 <div>
-                    <h3>Today</h3>
+                    <h3 class="text-20">Today</h3>
                 </div>
             </a>
             <ng-template ngbNavContent>
@@ -17,9 +17,9 @@
 
                       <li *ngIf="dataToday.length"
                           class="d-flex justify-content-between w-100 align-items-center mb-4 px-4">
-                          <span class="text-20 w-33">EVENTO</span>
-                          <span class="text-20 w-33">DATA </span>
-                          <span class="text-20 w-33">AGGIORNAMENTO</span>
+                          <span class=" w-33">EVENTO</span>
+                          <span class=" w-33">DATA </span>
+                          <span class=" w-33">AGGIORNAMENTO</span>
                       </li>
                       <li *ngFor="let event of dataToday"
                           class="py-2 px-4 d-flex align-items-center w-100 justify-content-between border-left border-secondary position-relative ">
@@ -56,8 +56,8 @@
         <!-- lista mensile -->
         <li ngbNavItem title="month">
             <a ngbNavLink>
-                <div class="">
-                    <h3>Month</h3>
+                <div >
+                    <h3 class="text-20">Month</h3>
                 </div>
             </a>
             <ng-template ngbNavContent>
@@ -68,9 +68,9 @@
 
                         <li *ngIf="dataMonth.length"
                             class="d-flex justify-content-between w-100 align-items-center mb-4 px-4">
-                            <span class="text-20 w-33">EVENTO</span>
-                            <span class="text-20 w-33">DATA </span>
-                            <span class="text-20 w-33">AGGIORNAMENTO</span>
+                            <span class=" w-33">EVENTO</span>
+                            <span class=" w-33">DATA </span>
+                            <span class=" w-33">AGGIORNAMENTO</span>
                         </li>
                         <li *ngFor="let event of dataMonth"
                             class="py-2 px-4 d-flex align-items-center w-100 justify-content-between border-left border-secondary position-relative ">
