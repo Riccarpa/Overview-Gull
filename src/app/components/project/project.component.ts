@@ -20,6 +20,7 @@ import { ProjectService } from "src/app/services/project/project.service";
 import { UserService } from "src/app/services/user/user.service";
 import { ProductService } from "src/app/shared/services/product.service";
 import { environment } from "src/environments/environment";
+import { SelectionType } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: "app-project",
@@ -39,6 +40,9 @@ export class ProjectComponent implements OnInit {
   user: any; //utente loggato
   userRetrive: any; // retrive user loggato
   url = environment.apiURL2;
+
+  //row selection
+  selectionType = SelectionType;
 
   constructor(
     private modalService: NgbModal,
@@ -180,6 +184,18 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  //Toggle between table and card view
+  isTableDisplayed = this.service.isTableDisplayed;
+  toggleTable(){
+    this.service.toggleTable();
+    this.isTableDisplayed = this.service.isTableDisplayed;
+  }
+
+  //row selection
+  onSelect({ selected }) {
+    this. updateProject(selected[0].id);
+  }
+
   // take file
   uploadImg(event: any) {
     this.imageSelect = event.target.files[0];
@@ -237,6 +253,16 @@ export class ProjectComponent implements OnInit {
 
   back() {
     this.route.navigate(["home/client"]);
+  }
+
+  //Tooltip Text
+  tooltipText(data : any){
+    let string = '';
+
+    for (let i = 0; i < data.length; i++) {
+      string += `${data[i].name} ${data[i].surname} \n`;
+    }
+    return string;
   }
 
   ngOnDestroy() { }

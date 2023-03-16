@@ -117,41 +117,37 @@ export class UpdateProjectComponent implements OnInit {
       if (this.interc.takeRole().role !== 1) { // se !admin
         this.arrayUsersIds = this.project.user_details
       }
-
-      if (this.interc.takeRole().role == 1) { //se admin
-        if (this.users.length == 0) {
-          // get Users
-          this.userService.getUsers().subscribe((res) => {
-  
-            this.users = res.data
-  
-            for (let j = 0; j < this.users?.length; j++) {
-              let u = this.users[j];
-              for (let i = 0; i < this.project?.user_ids.length; i++) {
-                let e = this.project.user_ids[i];
-                
-                if (e == u.id) {
-  
-                  this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
-                }
-              }
-            }
-            console.log(this.arrayUsersIds)
-          })
-        }
-        if (this.clients === undefined) {
-          // get Clients
-          this.clientService.getClients().subscribe((res) => {
-            this.clients = res.data
-          })
-        }
-      }
        
     })
 
 
+    if (this.interc.takeRole().role == 1) { //se admin
+      if (this.users.length == 0) {
+        // get Users
+        this.userService.getUsers().subscribe((res) => {
 
+          this.users = res.data
 
+          for (let j = 0; j < this.users?.length; j++) {
+            let u = this.users[j];
+
+            for (let i = 0; i < this.project?.user_ids.length; i++) {
+              let e = this.project.user_ids[i];
+              if (e === u.id) {
+
+                this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+              }
+            }
+          }
+        })
+      }
+      if (this.clients === undefined) {
+        // get Clients
+        this.clientService.getClients().subscribe((res) => {
+          this.clients = res.data
+        })
+      }
+    }
   }
 
   delProject(id: number) { // delete proj ADMIN

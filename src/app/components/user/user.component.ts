@@ -99,7 +99,6 @@ export class UserComponent implements OnInit {
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
         this.modalService.dismissAll(res.data.name)
-        this.route.navigate(["home/user/", res.data.id]);
       },(error)=>{
         this.toastr.error(error.error.message,'Error', { timeOut: 3000, closeButton: true})
       })

@@ -1,9 +1,9 @@
 <!-- Title -->
 
-<div class="title row mb-4">
+<div class="title flex-nowrap row mb-4">
   <h2 class="col-md-4">Users</h2>
   <!-- serch on data-table -->
-  <div class="col-md-4 col-sm-12">
+  <div class="col-md-4 col-sm-5">
     <div class="form-group">
       <input
         id="text"
@@ -188,12 +188,12 @@
   <div class="col-md-12">
     <div class="card o-hidden">
       <ngx-datatable
-        style="height: 500px; box-shadow: none"
+        style="height: calc(100vh - 180px - 3rem); box-shadow: none"
         class="material fullscreen"
         [columnMode]="'force'"
         [headerHeight]="50"
         [footerHeight]="50"
-        [rowHeight]="60"
+        [rowHeight]="70"
         [scrollbarV]="true"
         [rows]="filteredUsers"
       >

@@ -9,7 +9,7 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './shared/inmemory-db/inmemory-db.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { SharedComponentsModule } from './shared/components/shared-components.module';
@@ -78,6 +78,7 @@ import { IssueDetailComponent } from './components/project/issues/issue-detail/i
     NgxEchartsModule,
     NgxDatatableModule,
     NgbModule,
+    NgbTooltipModule,
     ImageCropperModule,
     CommonModule,
     NgSelectModule,

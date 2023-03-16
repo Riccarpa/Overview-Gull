@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { Issue } from 'src/app/models/issue.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +24,7 @@ export class ProjectService {
   project: Project[]
   clients: Client[]
   users: User[]
+  isTableDisplayed = { status: true, title: "Display Cards"}//Toggle table
 
   constructor(
     private http: HttpClient, 
@@ -41,6 +43,17 @@ export class ProjectService {
 
 
     return this.http.get(url)
+  }
+
+  //Toggle between table and card view
+  toggleTable(){
+    this.isTableDisplayed.status = !this.isTableDisplayed.status
+
+    if (this.isTableDisplayed.status) {
+      this.isTableDisplayed.title = "Display Cards"
+    } else {
+      this.isTableDisplayed.title = "Display Table"
+    }
   }
 
   //patch progetto
