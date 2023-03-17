@@ -229,6 +229,7 @@ export class ProjectComponent implements OnInit {
 
   // modale di creazione
   openCreateModal(content: any) {
+    this.projectForm.reset();
     this.modalService
       .open(content, { ariaLabelledBy: "modal-basic-title", centered: true })
       .result.then(

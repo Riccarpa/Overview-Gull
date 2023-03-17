@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -20,8 +21,17 @@ import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-inter
 })
 export class UserComponent implements OnInit {
 
-  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService,private clientService:ClientService,private pService:ProjectService,private interc:ReqInterceptInterceptor) { this.cropperSettings = new CropperSettings();
+  constructor(
+    private productService: ProductService,
+    private uService:UserService,
+    private route:Router, 
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private clientService:ClientService,
+    private pService:ProjectService,
+    private interc:ReqInterceptInterceptor
+  ){
+    this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
@@ -40,7 +50,7 @@ export class UserComponent implements OnInit {
   profileForm = new FormGroup({
     name: new FormControl('',Validators.required),
     surname: new FormControl('',Validators.required),
-    email: new FormControl('',Validators.required),
+    email: new FormControl('',[Validators.required,Validators.email]),
     password: new FormControl('',Validators.required),
     cost: new FormControl('',Validators.required),
     recruitment_date: new FormControl('',Validators.required),
@@ -49,8 +59,6 @@ export class UserComponent implements OnInit {
 
 
   ngOnInit(): void {
-
-   
     this.user = this.interc.takeRole()
     this.role = this.user.role
 
@@ -103,6 +111,7 @@ export class UserComponent implements OnInit {
         this.toastr.error(error.error.message,'Error', { timeOut: 3000, closeButton: true})
       })
     }
+
   }
   
   
@@ -121,12 +130,11 @@ export class UserComponent implements OnInit {
         this.profileForm.value.picture_data = base64PngWithoutIndex;
       }
     }
-    
-    
   }
 
   // modal and alerts
   open(content) {
+    this.profileForm.reset(); 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
       
@@ -139,10 +147,7 @@ export class UserComponent implements OnInit {
     });
   }
 
-  
- 
- 
-  
+   
   // filter user data table
   filerData(val) {
     if (val) {
