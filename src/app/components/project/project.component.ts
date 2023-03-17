@@ -104,14 +104,14 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  projectForm = this.fb.group({
-    name: new FormControl("", Validators.required),
-    status: new FormControl(""),
-    start_date: new FormControl(""),
-    end_date: new FormControl(""),
-    progress: new FormControl(""),
-    revenue: new FormControl(),
-    client_id: new FormControl(""),
+  projectForm = new FormGroup({
+    name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    status: new FormControl(null),
+    start_date: new FormControl(null),
+    end_date: new FormControl(null),
+    progress: new FormControl(null),
+    revenue: new FormControl(null),
+    client_id: new FormControl(null),
     user_ids: new FormControl([]),
     logo: new FormControl([]),
   });
@@ -156,6 +156,7 @@ export class ProjectComponent implements OnInit {
   }
 
   addProject(form: any) { // solo ADMIN
+    
     let start = this.projectForm.value.start_date? Date.parse(this.projectForm.value.start_date): Date.parse(new Date().toISOString().slice(0, 10));
     let end = this.projectForm.value.end_date? Date.parse(this.projectForm.value.end_date): start;
     let diff = end >= start; //end date nn puo essere minore della start date
@@ -167,7 +168,7 @@ export class ProjectComponent implements OnInit {
       );
     } else if (!diff) {
       this.service.warningBar(
-        "End date is precedent of starrt date"
+        "End date is precedent of start date"
       );
     } else {
       this.service.addProject(newProj).subscribe((res) => {

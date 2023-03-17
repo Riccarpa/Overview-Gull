@@ -20,6 +20,7 @@
                 id="name"
                 formControlName="name"
               />
+              <p *ngIf="profileForm.get('name').invalid && profileForm.get('name').touched" class="text-danger position-absolute">First name required</p>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -30,6 +31,7 @@
                 id="surname"
                 formControlName="surname"
               />
+              <p *ngIf="profileForm.get('surname').invalid && profileForm.get('surname').touched" class="text-danger position-absolute">Last name required</p>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -41,6 +43,7 @@
                 aria-describedby="emailHelp"
                 formControlName="email"
               />
+              <p *ngIf="profileForm.get('email').invalid && profileForm.get('email').touched" class="text-danger position-absolute">Insert a valid email</p>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -78,26 +81,31 @@
                 name="recruitment_date"
                 type="date"
               />
+              <p *ngIf="profileForm.get('recruitment_date').invalid && profileForm.get('recruitment_date').touched" class="text-danger position-absolute">Select a date</p>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label for="cost">Cost</label>
               <input
                 type="number"
+                min="0"
                 class="form-control"
                 id="cost"
                 formControlName="cost"
               />
+              <p *ngIf="profileForm.get('cost').invalid && profileForm.get('cost').touched" class="text-danger position-absolute">Insert a valid amount</p>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label for="week_working_hours">Week working hours</label>
               <input
                 type="number"
+                min="0"
                 class="form-control"
                 id="week_working_hours"
                 formControlName="week_working_hours"
               />
+              <p *ngIf="profileForm.get('week_working_hours').invalid && profileForm.get('week_working_hours').touched" class="text-danger position-absolute">Insert a valid amount</p>
             </div>
 
             <div class="col-md-12">
@@ -131,11 +139,15 @@
                     Back
                   </button>
                   <btn-loading
+                    *ngIf="profileForm.valid"
                     (click)="onSubmit()"
                     btnClass="btn-primary "
                     [loading]="loading"
                     >Update</btn-loading
                   >
+                  <button *ngIf="!profileForm.valid" type="button" class="btn btn-primary" disabled>
+                    Update
+                  </button>
                 </div>
               </div>
             </div>

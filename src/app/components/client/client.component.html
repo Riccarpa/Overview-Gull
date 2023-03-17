@@ -110,7 +110,7 @@
     <form [formGroup]="clientForm">
       <div class="row">
         <div class="col-md-6 form-group mb-3">
-          <label for="name">Name</label>
+          <label for="name">*Name</label>
           <input
             type="text"
             class="form-control"
@@ -119,9 +119,10 @@
             placeholder="Inserisci nome"
             formControlName="name"
           />
+          <p *ngIf="clientForm.get('name').invalid && clientForm.get('name').touched" class="text-danger position-absolute">Name required</p>
         </div>
         <div class="col-md-6 form-group mb-3">
-          <label for="vat_number">Part.IVA</label>
+          <label for="vat_number">*Part.IVA</label>
           <input
             type="text"
             class="form-control"
@@ -130,9 +131,10 @@
             placeholder="Inserisci partita IVA"
             formControlName="vat_number"
           />
+          <p *ngIf="clientForm.get('vat_number').invalid && clientForm.get('vat_number').touched" class="text-danger position-absolute">Part.IVA required</p>
         </div>
         <div class="col-md-6 form-group mb-3">
-          <label for="business_name">Business name</label>
+          <label for="business_name">*Business Name</label>
           <input
             type="text"
             class="form-control"
@@ -141,6 +143,7 @@
             placeholder="Inserisci nome commerciale"
             formControlName="business_name"
           />
+          <p *ngIf="clientForm.get('business_name').invalid && clientForm.get('business_name').touched" class="text-danger position-absolute">Business Name required</p>
         </div>
         <div class="col-md-6 form-group mb-3">
           <label for="representatives">Representatives</label>
@@ -186,6 +189,7 @@
         type="button"
         class="btn btn-primary"
         (click)="addClient()"
+        [disabled]="!clientForm.valid"
       >
         Save
       </button>
@@ -194,6 +198,7 @@
         type="button"
         class="btn btn-primary"
         (click)="editClient()"
+        [disabled]="!clientForm.valid"
       >
         Save
       </button>

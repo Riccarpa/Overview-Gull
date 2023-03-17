@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
 import { ProductService } from 'src/app/shared/services/product.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -48,13 +47,13 @@ export class UserComponent implements OnInit {
 
 
   profileForm = new FormGroup({
-    name: new FormControl('',Validators.required),
-    surname: new FormControl('',Validators.required),
-    email: new FormControl('',[Validators.required,Validators.email]),
-    password: new FormControl('',Validators.required),
-    cost: new FormControl('',Validators.required),
-    recruitment_date: new FormControl('',Validators.required),
-    week_working_hours: new FormControl('',Validators.required),
+    name: new FormControl(null,Validators.required),
+    surname: new FormControl(null,Validators.required),
+    email: new FormControl(null,[Validators.required,Validators.email]),
+    password: new FormControl(null,[Validators.required, Validators.minLength(3)]),
+    cost: new FormControl(null,Validators.required),
+    recruitment_date: new FormControl(null,Validators.required),
+    week_working_hours: new FormControl(null,Validators.required),
   });
 
 

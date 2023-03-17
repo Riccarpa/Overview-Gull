@@ -108,23 +108,24 @@
         <div class="row flex-row-reverse">
           <!-- input name -->
           <div class="col-md-6 form-group mb-3 position-relative">
-            <label for="name">project</label>
+            <label for="name">Project</label>
             <input *ngIf="role === 1" minlength="3" maxlength="40" type="text" class="form-control" name="name"
               formControlName="name" />
             <input *ngIf="role === 2" disabled minlength="3" maxlength="40" type="text" class="form-control" name="name"
               formControlName="name" />
-            <div *ngIf="
+            <!-- <div *ngIf="
                 projectForm.get('name').invalid &&
                 projectForm.get('name').touched
               " class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
               role="alert">
               <div>inserisci un nome di almeno 3 caratteri</div>
-            </div>
+            </div> -->
+            <p *ngIf="projectForm.get('name').invalid && projectForm.get('name').touched" class="text-danger position-absolute">Insert at leat 3 characters</p>
           </div>
 
           <!-- clienti -->
           <div class="col-md-6 form-group mb-3">
-            <label for="picker1">client</label>
+            <label for="picker1">Client</label>
             <select *ngIf="role === 1" class="form-control" formControlName="client_id" name="client_id">
               <option value="" disabled>clienti</option>
               <option *ngFor="let c of clients" [value]="c.id">
@@ -137,13 +138,13 @@
 
           <!-- revenue -->
           <div class="col-md-6 form-group mb-3">
-            <label for="revenue">revenue</label>
+            <label for="revenue">Revenue</label>
             <input disabled min="0" class="form-control" type="number" name="revenue" formControlName="revenue" />
           </div>
 
           <!-- progress -->
           <div class="col-md-6 form-group mb-3">
-            <label for="picker1">progress</label>
+            <label for="picker1">Progress</label>
             <input *ngIf="role === 1" type="number" min="0" class="form-control" formControlName="progress"
               name="progress" />
             <input *ngIf="role === 2" disabled type="number" min="0" class="form-control" formControlName="progress"
@@ -152,21 +153,21 @@
 
           <!-- end-date -->
           <div class="col-md-6 form-group mb-3">
-            <label for="picker1">end date</label>
+            <label for="picker1">End date</label>
             <input *ngIf="role === 1" type="date" class="form-control" formControlName="end_date" />
             <input *ngIf="role === 2" disabled type="date" class="form-control" formControlName="end_date" />
           </div>
 
           <!-- start-date -->
           <div class="col-md-6 form-group mb-3">
-            <label for="picker1">start date</label>
+            <label for="picker1">Start date</label>
             <input *ngIf="role === 1" type="date" class="form-control" formControlName="start_date" />
             <input *ngIf="role === 2" disabled type="date" class="form-control" formControlName="start_date" />
           </div>
 
           <!-- status -->
           <div class="col-md-6 form-group mb-3">
-            <label for="status">status</label>
+            <label for="status">Status</label>
             <select *ngIf="role === 1" class="form-control" type="number" name="status" formControlName="status"
               placeholder="status">
               <option [value]="0">pending</option>
@@ -178,7 +179,7 @@
 
           <!-- collaboratori -->
           <div *ngIf="role === 1" ngbDropdown class="mega-menu col-6 align-items-center">
-            <label class="mb-1">collaborators</label>
+            <label class="mb-1">Collaborators</label>
             <button ngbDropdownToggle href="#"
               class="btn form-group col-12 border text-muted dropdown-toggle d-block form-control">
               Associa Collaborators
@@ -213,7 +214,7 @@
             </div>
           </div>
           <div class="col-6" *ngIf="role === 2">
-            <label class="d-block" for="">collaborators</label>
+            <label class="d-block" for="">Collaborators</label>
 
             <div class="m-1 btn btn-outline-primary" *ngFor="let u of arrayUsersIds">
               {{ u.name }} {{ u.surname }}
@@ -238,8 +239,11 @@
                 class="mr-4">
                 Delete
               </btn-loading>
-              <btn-loading (click)="updateProject()" btnClass=" btn-primary " [loading]="loadingUpdate">
+              <btn-loading *ngIf="projectForm.valid" (click)="updateProject()" btnClass=" btn-primary " [loading]="loadingUpdate">
                 Update</btn-loading>
+                <button *ngIf="!projectForm.valid" type="button" class="btn btn-primary" disabled>
+                  Update
+                </button>
             </div>
           </div>
         </div>

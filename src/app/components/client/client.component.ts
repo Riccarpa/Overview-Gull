@@ -53,10 +53,10 @@ export class ClientComponent implements OnInit {
   }
 
   clientForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    vat_number: new FormControl('', Validators.required),
-    business_name: new FormControl('', Validators.required),
-    representatives: new FormControl(''),
+    name: new FormControl(null, Validators.required),
+    vat_number: new FormControl(null, Validators.required),
+    business_name: new FormControl(null, Validators.required),
+    representatives: new FormControl(null),
   });
 
   // aggiunge un nuovo cliente

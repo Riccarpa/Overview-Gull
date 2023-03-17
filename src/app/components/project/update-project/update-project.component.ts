@@ -70,7 +70,7 @@ export class UpdateProjectComponent implements OnInit {
 
   projectForm = new FormGroup(
     {
-      name: new FormControl('', Validators.required),
+      name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
       status: new FormControl(''),
       start_date: new FormControl(''),
       end_date: new FormControl(''),

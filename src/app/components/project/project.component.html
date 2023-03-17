@@ -25,23 +25,23 @@
               <form [formGroup]="projectForm">
                 <div class="row">
                   <div class="col-md-6 form-group mb-3">
-                    <label for="name">Project</label>
-                    <input minlength="3" maxlength="40" type="text" class="form-control" formControlName="name"
-                      placeholder="* nome progetto" />
+                    <label for="name">*Project</label>
+                    <input maxlength="40" type="text" class="form-control" formControlName="name" placeholder="Project Name" />
 
-                    <div *ngIf="
+                    <!-- <div *ngIf="
                         projectForm.get('name').invalid &&
                         projectForm.get('name').touched
                       "
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
                       role="alert">
                       <div>Insert at leat 3 characters</div>
-                    </div>
+                    </div> -->
+                    <p *ngIf="projectForm.get('name').invalid && projectForm.get('name').touched" class="text-danger position-absolute">Insert at leat 3 characters</p>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">client</label>
-                    <select class="form-control" formControlName="client_id" name="client_id">
+                    <select class="form-control" formControlName="client_id" name="client_id" >
                       <option value="" selected disabled hidden>Clients</option>
                       <option *ngFor="let c of clients" [value]="c.id">
                         {{ c.name }}
@@ -117,8 +117,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary "
+        <btn-loading *ngIf="projectForm.valid" [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary"
           (click)="addProject(projectForm)">Create</btn-loading>
+          <button *ngIf="!projectForm.valid" type="button" class="btn btn-primary" disabled>
+            Create
+          </button>
       </div>
     </ng-template>
   </div>
