@@ -235,15 +235,12 @@
               </div>
             </div>
             <div class="col-6 text-right">
-              <btn-loading (click)="confirm(modalConfirm)" [loading]="loadingDelete" btnClass="btn-outline-danger "
+              <btn-loading (click)="confirm(modalConfirm)" [loading]="loadingDelete" btnClass="btn-outline-danger" [disabled]="loadingDelete"
                 class="mr-4">
                 Delete
               </btn-loading>
-              <btn-loading *ngIf="projectForm.valid" (click)="updateProject()" btnClass=" btn-primary " [loading]="loadingUpdate">
+              <btn-loading (click)="updateProject()" btnClass=" btn-primary " [loading]="loadingUpdate" [disabled]="!projectForm.valid || loadingUpdate">
                 Update</btn-loading>
-                <button *ngIf="!projectForm.valid" type="button" class="btn btn-primary" disabled>
-                  Update
-                </button>
             </div>
           </div>
         </div>
@@ -376,7 +373,7 @@
             <button type="button" class="btn btn-outline-secondary" (click)="visibleModal(); modal.dismiss('cancel')">
               Cancel
             </button>
-            <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger "
+            <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-danger " [disabled]="loading"
               (click)="visibleModal(); updateProject(); modal.close()">Ok</btn-loading>
           </div>
         </ng-template>

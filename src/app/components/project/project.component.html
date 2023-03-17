@@ -117,11 +117,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <btn-loading *ngIf="projectForm.valid" [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary"
+        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary" [disabled]="!projectForm.valid || loading"
           (click)="addProject(projectForm)">Create</btn-loading>
-          <button *ngIf="!projectForm.valid" type="button" class="btn btn-primary" disabled>
-            Create
-          </button>
       </div>
     </ng-template>
   </div>

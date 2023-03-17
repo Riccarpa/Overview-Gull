@@ -139,15 +139,12 @@
                     Back
                   </button>
                   <btn-loading
-                    *ngIf="profileForm.valid"
                     (click)="onSubmit()"
                     btnClass="btn-primary "
                     [loading]="loading"
+                    [disabled]="!profileForm.valid || loading"
                     >Update</btn-loading
                   >
-                  <button *ngIf="!profileForm.valid" type="button" class="btn btn-primary" disabled>
-                    Update
-                  </button>
                 </div>
               </div>
             </div>
