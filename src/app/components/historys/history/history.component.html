@@ -50,6 +50,9 @@
 
                       </li>
                   </ul>
+                  <div *ngIf="!dataToday.length">
+                    Non ci sono logs giornalieri
+                </div>
                 </div>
             </ng-template>
         </li>
@@ -63,6 +66,7 @@
             <ng-template ngbNavContent>
 
                 <div class=" d-flex justify-content-center cardHistory">
+
 
                     <ul *ngIf="dataMonth" class="w-80">
 
@@ -101,6 +105,11 @@
 
                         </li>
                     </ul>
+
+                    <div *ngIf="!dataMonth.length">
+                        Non ci sono logs mensili
+                    </div>
+
                 </div>
             </ng-template>
         </li>

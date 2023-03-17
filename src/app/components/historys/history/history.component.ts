@@ -24,6 +24,9 @@ export class HistoryComponent implements OnInit {
 
     this.pService.getHistory(id).subscribe((res) => {//get alla history
       let data = res
+      let dayData = []
+      let monthData = []
+
 
       for (let i = 0; i < data.length; i++) {
         let filterData = data[i];
@@ -40,16 +43,23 @@ export class HistoryComponent implements OnInit {
         }
         // filtro per data odierna e popolo array 
         if (filterData.updated_at.getDate() === this.day) {
-          this.dataToday.push(eventTask);
-          this.dataToday.reverse();
+          dayData.push(eventTask);
+          // this.dataToday.reverse();
         }
         // filtro per mese corrente e popolo array
         if (filterData.created_at.getMonth() + 1 === this.month) {
-        this.dataMonth.push(eventTask)
-        this.dataMonth.reverse();
+         monthData.push(eventTask)
+        // this.dataMonth.reverse();
         }
       }
+
+      this.dataToday = dayData.reverse()
+      this.dataMonth = monthData.reverse()
+
     })
+
+
+
   }
 
   getDiffDate(dateTask: any){
