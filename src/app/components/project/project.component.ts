@@ -20,6 +20,7 @@ import { ProjectService } from "src/app/services/project/project.service";
 import { UserService } from "src/app/services/user/user.service";
 import { ProductService } from "src/app/shared/services/product.service";
 import { environment } from "src/environments/environment";
+import { SelectionType } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: "app-project",
@@ -39,6 +40,9 @@ export class ProjectComponent implements OnInit {
   user: any; //utente loggato
   userRetrive: any; // retrive user loggato
   url = environment.apiURL2;
+
+  //row selection
+  selectionType = SelectionType;
 
   constructor(
     private modalService: NgbModal,
@@ -100,14 +104,14 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  projectForm = this.fb.group({
-    name: new FormControl("", Validators.required),
-    status: new FormControl(""),
-    start_date: new FormControl(""),
-    end_date: new FormControl(""),
-    progress: new FormControl(""),
-    revenue: new FormControl(),
-    client_id: new FormControl(""),
+  projectForm = new FormGroup({
+    name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
+    status: new FormControl(null),
+    start_date: new FormControl(null),
+    end_date: new FormControl(null),
+    progress: new FormControl(null),
+    revenue: new FormControl(null),
+    client_id: new FormControl(null),
     user_ids: new FormControl([]),
     logo: new FormControl([]),
   });
@@ -152,6 +156,7 @@ export class ProjectComponent implements OnInit {
   }
 
   addProject(form: any) { // solo ADMIN
+    
     let start = this.projectForm.value.start_date? Date.parse(this.projectForm.value.start_date): Date.parse(new Date().toISOString().slice(0, 10));
     let end = this.projectForm.value.end_date? Date.parse(this.projectForm.value.end_date): start;
     let diff = end >= start; //end date nn puo essere minore della start date
@@ -163,7 +168,7 @@ export class ProjectComponent implements OnInit {
       );
     } else if (!diff) {
       this.service.warningBar(
-        "End date is precedent of starrt date"
+        "End date is precedent of start date"
       );
     } else {
       this.service.addProject(newProj).subscribe((res) => {
@@ -178,6 +183,18 @@ export class ProjectComponent implements OnInit {
         }, 2000);
       });
     }
+  }
+
+  //Toggle between table and card view
+  isTableDisplayed = this.service.isTableDisplayed;
+  toggleTable(){
+    this.service.toggleTable();
+    this.isTableDisplayed = this.service.isTableDisplayed;
+  }
+
+  //row selection
+  onSelect({ selected }) {
+    this. updateProject(selected[0].id);
   }
 
   // take file
@@ -213,6 +230,7 @@ export class ProjectComponent implements OnInit {
 
   // modale di creazione
   openCreateModal(content: any) {
+    this.projectForm.reset();
     this.modalService
       .open(content, { ariaLabelledBy: "modal-basic-title", centered: true })
       .result.then(
@@ -237,6 +255,16 @@ export class ProjectComponent implements OnInit {
 
   back() {
     this.route.navigate(["home/client"]);
+  }
+
+  //Tooltip Text
+  tooltipText(data : any){
+    let string = '';
+
+    for (let i = 0; i < data.length; i++) {
+      string += `${data[i].name} ${data[i].surname} \n`;
+    }
+    return string;
   }
 
   ngOnDestroy() { }

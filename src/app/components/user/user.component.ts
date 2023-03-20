@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
 import { ProductService } from 'src/app/shared/services/product.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { ClientService } from 'src/app/services/client/client.service';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-intercept.interceptor';
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -20,8 +20,17 @@ import { ReqInterceptInterceptor } from 'src/app/services/interceptors/req-inter
 })
 export class UserComponent implements OnInit {
 
-  constructor(private productService: ProductService,private uService:UserService,private route:Router, private modalService: NgbModal,
-    private toastr: ToastrService,private clientService:ClientService,private pService:ProjectService,private interc:ReqInterceptInterceptor) { this.cropperSettings = new CropperSettings();
+  constructor(
+    private productService: ProductService,
+    private uService:UserService,
+    private route:Router, 
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private clientService:ClientService,
+    private pService:ProjectService,
+    private interc:ReqInterceptInterceptor
+  ){
+    this.cropperSettings = new CropperSettings();
     this.cropperSettings.cropperDrawSettings.lineDash = true;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.data = {};
@@ -38,19 +47,17 @@ export class UserComponent implements OnInit {
 
 
   profileForm = new FormGroup({
-    name: new FormControl('',Validators.required),
-    surname: new FormControl('',Validators.required),
-    email: new FormControl('',Validators.required),
-    password: new FormControl('',Validators.required),
-    cost: new FormControl('',Validators.required),
-    recruitment_date: new FormControl('',Validators.required),
-    week_working_hours: new FormControl('',Validators.required),
+    name: new FormControl(null,Validators.required),
+    surname: new FormControl(null,Validators.required),
+    email: new FormControl(null,[Validators.required,Validators.email]),
+    password: new FormControl(null,[Validators.required, Validators.minLength(3)]),
+    cost: new FormControl(null,Validators.required),
+    recruitment_date: new FormControl(null,Validators.required),
+    week_working_hours: new FormControl(null,Validators.required),
   });
 
 
   ngOnInit(): void {
-
-   
     this.user = this.interc.takeRole()
     this.role = this.user.role
 
@@ -99,11 +106,11 @@ export class UserComponent implements OnInit {
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
         this.modalService.dismissAll(res.data.name)
-        this.route.navigate(["home/user/", res.data.id]);
       },(error)=>{
         this.toastr.error(error.error.message,'Error', { timeOut: 3000, closeButton: true})
       })
     }
+
   }
   
   
@@ -122,12 +129,11 @@ export class UserComponent implements OnInit {
         this.profileForm.value.picture_data = base64PngWithoutIndex;
       }
     }
-    
-    
   }
 
   // modal and alerts
   open(content) {
+    this.profileForm.reset(); 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
       
@@ -140,10 +146,7 @@ export class UserComponent implements OnInit {
     });
   }
 
-  
- 
- 
-  
+   
   // filter user data table
   filerData(val) {
     if (val) {

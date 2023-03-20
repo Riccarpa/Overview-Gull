@@ -1,12 +1,13 @@
 <div class="d-flex justify-content-between w-100 mb-5">
   <h2 class="ml-2">Projects</h2>
+  <button class="btn btn-success mr-2 mt-1" (click)="toggleTable()">{{isTableDisplayed.title}}</button>
 
   <!-- se admin creazione progetto-->
   <div *appRole="role == 1">
     <button class="btn btn-success mr-2 mt-1" (click)="openCreateModal(modalConfirm)">
       New project
     </button>
-
+    
     <!-- modale di creazione -->
     <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
@@ -24,23 +25,23 @@
               <form [formGroup]="projectForm">
                 <div class="row">
                   <div class="col-md-6 form-group mb-3">
-                    <label for="name">Project</label>
-                    <input minlength="3" maxlength="40" type="text" class="form-control" formControlName="name"
-                      placeholder="* nome progetto" />
+                    <label for="name">*Project</label>
+                    <input maxlength="40" type="text" class="form-control" formControlName="name" placeholder="Project Name" />
 
-                    <div *ngIf="
+                    <!-- <div *ngIf="
                         projectForm.get('name').invalid &&
                         projectForm.get('name').touched
                       "
                       class="_alert b bg-warning d-flex align-items-center rounded border-danger p-1 position-absolute"
                       role="alert">
                       <div>Insert at leat 3 characters</div>
-                    </div>
+                    </div> -->
+                    <p *ngIf="projectForm.get('name').invalid && projectForm.get('name').touched" class="text-danger position-absolute">Insert at leat 3 characters</p>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">client</label>
-                    <select class="form-control" formControlName="client_id" name="client_id">
+                    <select class="form-control" formControlName="client_id" name="client_id" >
                       <option value="" selected disabled hidden>Clients</option>
                       <option *ngFor="let c of clients" [value]="c.id">
                         {{ c.name }}
@@ -116,7 +117,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary "
+        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary" [disabled]="!projectForm.valid || loading"
           (click)="addProject(projectForm)">Create</btn-loading>
       </div>
     </ng-template>
@@ -131,7 +132,7 @@
 </div>
 
 <!-- main container visualizzazione admin/PM-->
-<section class="d-flex align-items-stretch flex-wrap">
+<section *ngIf="!isTableDisplayed.status" class="d-flex align-items-stretch flex-wrap">
   <!-- card project -->
   <div *ngFor="let proj of projects | filterProject: idClient" class="col-lg-6 col-md-12 mb-4">
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
@@ -301,3 +302,97 @@
     </div>
   </div>
 </section>
+
+<!-- Projects data-table -->
+<div *ngIf="isTableDisplayed.status" class="row mb-5">
+  <div class="col-md-12">
+    <div class="card o-hidden">
+      <ngx-datatable
+        style="height: calc(100vh - 200px - 3rem); box-shadow: none"
+        class="material fullscreen"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="70"
+        [scrollbarV]="true"
+        [rows]="projects"
+        [selectionType]="selectionType.single"
+        (select)="onSelect($event)"
+      >
+        <ngx-datatable-column [maxWidth]="120">
+          <ng-template ngx-datatable-header-template> Project Logo </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <img
+              *ngIf="row.logo"
+              height="32px"
+              width="32px"
+              style="border-radius: 4px"
+              src="{{ url }}{{ row.logo }}"
+              alt=""
+            />
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="name">
+          <ng-template ngx-datatable-header-template>Project Name</ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="revenue" [maxWidth]="200">
+          <ng-template ngx-datatable-header-template> Revenue </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template> Client </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div>
+              <img
+              *ngIf="row.client_details.logo"
+                height="32px"
+                width="32px"
+                style="border-radius: 4px"
+                src="{{ url }}{{ row.client_details.logo }}"
+                alt=""
+              />
+              {{row.client_details.name}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template> Collaborators </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <ul class="overflow">
+              <span *ngIf="row.user_details.length <= 2">
+                <li *ngFor="let u of row.user_details; let i=index">
+                  <span>{{ u.name }} {{ u.surname }}</span>
+                </li>
+              </span>
+              <span *ngIf="row.user_details.length > 2" placement="bottom" container="body" [ngbTooltip]="tooltipText(row.user_details)">
+                <button type="button" class="btn btn-secondary" style="--bs-btn-font-size: 16px; padding: 2px 4px 0" disabled>{{row.user_details.length}} Collaboratori</button>
+              </span>
+            </ul>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template> Progress </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div>{{row.progress}}&percnt;</div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [maxWidth]="200">
+          <ng-template ngx-datatable-header-template> Status </ng-template>
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <tr [ngSwitch]="row.status">
+              <td *ngSwitchCase="0" class="text-warning font-weight-bold">
+                pending
+              </td>
+              <td *ngSwitchCase="1" class="text-success font-weight-bold">
+                open
+              </td>
+              <td *ngSwitchCase="2" class="text-danger font-weight-bold">
+                close
+              </td>
+            </tr>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</div>

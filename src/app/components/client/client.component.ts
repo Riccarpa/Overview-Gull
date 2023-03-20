@@ -53,10 +53,10 @@ export class ClientComponent implements OnInit {
   }
 
   clientForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    vat_number: new FormControl('', Validators.required),
-    business_name: new FormControl('', Validators.required),
-    representatives: new FormControl(''),
+    name: new FormControl(null, Validators.required),
+    vat_number: new FormControl(null, Validators.required),
+    business_name: new FormControl(null, Validators.required),
+    representatives: new FormControl(null),
   });
 
   // aggiunge un nuovo cliente
@@ -71,12 +71,6 @@ export class ClientComponent implements OnInit {
       this.clientService.addClient(newClient.name, newClient.vat_number, newClient.business_name, newClient.representatives, newClient.logo_data)
         .subscribe(() => {
           this.modalService.dismissAll();
-          this.clientForm.setValue({
-            name: '',
-            vat_number: '',
-            business_name: '',
-            representatives: '',
-          });
           this.data.image = '';
           this.getClients();
           this.toastr.success('Client added successfully')
@@ -126,18 +120,10 @@ export class ClientComponent implements OnInit {
       });
   }
 
-
-  
-
   // richiama la modale per aggiungere il cliente
   openModalAddClient(content: any) {
     this.titleModal = "Aggiungi Cliente";
-    this.clientForm.setValue({
-      name: '',
-      vat_number: '',
-      business_name: '',
-      representatives: '',
-    });
+    this.clientForm.reset();
     this.data.image = '';
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })

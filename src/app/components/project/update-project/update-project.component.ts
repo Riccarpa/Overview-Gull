@@ -70,7 +70,7 @@ export class UpdateProjectComponent implements OnInit {
 
   projectForm = new FormGroup(
     {
-      name: new FormControl('', Validators.required),
+      name: new FormControl(null, [Validators.required, Validators.minLength(3)]),
       status: new FormControl(''),
       start_date: new FormControl(''),
       end_date: new FormControl(''),
@@ -92,7 +92,7 @@ export class UpdateProjectComponent implements OnInit {
     //retrive del progetto singolo
     this.service.getProject(this.idProject).subscribe((res) => {
       this.project = res.data
-
+      
       if (this.project.logo) {
         this.project.logo = `${this.project.logo}?r=${this.service.randomNumber()}`
       }
@@ -116,42 +116,37 @@ export class UpdateProjectComponent implements OnInit {
 
       if (this.interc.takeRole().role !== 1) { // se !admin
         this.arrayUsersIds = this.project.user_details
-      }
 
-      if (this.interc.takeRole().role == 1) { //se admin
+      } else if (this.interc.takeRole().role == 1) { //se admin
         if (this.users.length == 0) {
           // get Users
           this.userService.getUsers().subscribe((res) => {
   
             this.users = res.data
-  
             for (let j = 0; j < this.users?.length; j++) {
               let u = this.users[j];
+             
               for (let i = 0; i < this.project?.user_ids.length; i++) {
                 let e = this.project.user_ids[i];
-                
-                if (e == u.id) {
   
+                if (e === u.id) {
                   this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
                 }
               }
             }
-            console.log(this.arrayUsersIds)
           })
         }
-        if (this.clients === undefined) {
-          // get Clients
-          this.clientService.getClients().subscribe((res) => {
-            this.clients = res.data
-          })
-        }
-      }
-       
+        
+      }  
     })
 
-
-
-
+    if (this.clients === undefined) {
+      // get Clients
+      this.clientService.getClients().subscribe((res) => {
+        this.clients = res.data
+      })
+    }
+ 
   }
 
   delProject(id: number) { // delete proj ADMIN

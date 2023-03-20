@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user.model';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
@@ -54,16 +54,15 @@ export class UpdateUserComponent implements OnInit {
         this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.pService.randomNumber()}`
       }
       this.profileForm = new FormGroup({
-        name: new FormControl(this.user.name),
-        surname: new FormControl(this.user.surname),
+        name: new FormControl(this.user.name, Validators.required),
+        surname: new FormControl(this.user.surname, Validators.required),
         role: new FormControl(this.user.role),
         serial_number: new FormControl(this.user.serial_number),
-        email: new FormControl(this.user.email),
+        email: new FormControl(this.user.email, [Validators.required, Validators.email]),
         cost: new FormControl(this.user.cost),
-        recruitment_date: new FormControl(this.user. recruitment_date),
-        week_working_hours: new FormControl(this.user.week_working_hours),
+        recruitment_date: new FormControl(this.user. recruitment_date, Validators.required),
+        week_working_hours: new FormControl(this.user.week_working_hours, Validators.required),
       })
-     
     })
   }
   

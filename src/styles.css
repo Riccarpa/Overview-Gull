@@ -67,4 +67,14 @@
     border: none;
 }
 
+.datatable-row-center.datatable-row-group:hover{
+    cursor: pointer;
+}
+
+.tooltip-inner {
+    white-space: pre-wrap;
+}
+/* .tooltip {
+    z-index: 99;
+} */
 
