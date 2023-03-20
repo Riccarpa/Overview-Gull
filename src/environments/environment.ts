@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   title: 'Dev Environment',
-  apiURL: 'https://apps.h2app.it/overview_dev/api',
-  apiURL2: 'https://apps.h2app.it/overview_dev'
+  apiURL: 'https://apps.h2app.it/overviewdev/api',
+  apiURL2: 'https://apps.h2app.it/overviewdev'
 
 };
 
