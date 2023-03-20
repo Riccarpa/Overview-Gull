@@ -81,27 +81,33 @@ export class ProjectComponent implements OnInit {
           this.client.logo = `${this.client.logo
             }?r=${this.service.randomNumber()}`;
         }
+        this.projects = this.client['projects']
+        this.clientService.idClient = null
       });
-    }
-    
-    if (this.role === 0) { // se collaboratore 
-      this.getUserProjects();
-      this.userService.retrieveUser(this.user.id).subscribe((res) => {
-        if (res) {
-          this.userRetrive = res.data;
-        }
-      });
-    } else {
-      this.getAllProjects();
-      if (this.role === 1){ // se admin
+    }else{
 
-        //get di tutti gli user da userService
-        this.getAllUsers();
+      if (this.role === 0) { // se collaboratore 
+        this.getUserProjects();
+        this.userService.retrieveUser(this.user.id).subscribe((res) => {
+          if (res) {
+            this.userRetrive = res.data;
+          }
+        });
+      } else {
+        this.getAllProjects();
+        if (this.role === 1){ // se admin
   
-        //get di tutti i client dal clientService
-        this.getAllClients();
+          //get di tutti gli user da userService
+          this.getAllUsers();
+    
+          //get di tutti i client dal clientService
+          this.getAllClients();
+        }
       }
     }
+    
+
+    
   }
 
   projectForm = new FormGroup({

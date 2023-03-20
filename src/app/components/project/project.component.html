@@ -1,6 +1,7 @@
 <div class="d-flex justify-content-between w-100 mb-5">
   <h2 class="ml-2">Projects</h2>
-  <button class="btn btn-success mr-2 mt-1" (click)="toggleTable()">{{isTableDisplayed.title}}</button>
+  
+  <button *ngIf="projects.length" class="btn btn-success mr-2 mt-1" (click)="toggleTable()">{{isTableDisplayed.title}}</button>
 
   <!-- se admin creazione progetto-->
   <div *appRole="role == 1">
@@ -304,7 +305,7 @@
 </section>
 
 <!-- Projects data-table -->
-<div *ngIf="isTableDisplayed.status" class="row mb-5">
+<div *ngIf="isTableDisplayed.status && projects.length" class="row mb-5">
   <div class="col-md-12">
     <div class="card o-hidden">
       <ngx-datatable
