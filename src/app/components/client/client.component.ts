@@ -84,7 +84,7 @@ export class ClientComponent implements OnInit {
   editClient() {
     if (this.clientForm.status == 'INVALID') {
       this.toastr.warning('Name,P.iva and businness name are required')
-      this.data.image = `https://apps.h2app.it/overview/${this.client.logo}?time=${new Date()}`;
+      this.data.image = `https://apps.h2app.it/overview_dev/${this.client.logo}?time=${new Date()}`;
     } else {
       const client = this.clientForm.value;
       this.clientService.updateClient(client.name, client.vat_number, client.business_name, client.representatives, client.logo_data)
@@ -150,7 +150,7 @@ export class ClientComponent implements OnInit {
         representatives: this.client.representatives,
       });
       if (this.client.logo) {
-        this.data.image = `https://apps.h2app.it/overview/${this.client.logo}?time=${new Date()}`;
+        this.data.image = `https://apps.h2app.it/overview_dev/${this.client.logo}?time=${new Date()}`;
       } else {
         this.data.image = '';
       }
