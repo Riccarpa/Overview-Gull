@@ -150,6 +150,10 @@ export class ProjectService {
   // patch update issue `${this.baseUrl}/issues/${id}`
   updateIssue(issue: Issue,status:number,priority:any): Observable<any> {
 
+    if(priority == null){
+      priority = 0
+    }
+
     let body = {
       "name": issue.name,
       "description": issue.description,
