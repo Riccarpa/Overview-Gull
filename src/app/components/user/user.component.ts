@@ -106,6 +106,7 @@ export class UserComponent implements OnInit {
     }else{
       this.uService.addUser(this.profileForm.value).subscribe(res=>{
         this.modalService.dismissAll(res.data.name)
+        this.route.navigate(["home/user/", res.data.id]);
       },(error)=>{
         this.toastr.error(error.error.message,'Error', { timeOut: 3000, closeButton: true})
       })
@@ -133,10 +134,8 @@ export class UserComponent implements OnInit {
 
   // modal and alerts
   open(content) {
-    this.profileForm.reset(); 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     .result.then((result) => {
-      
     }, (reason) => {
       if(reason){
       
