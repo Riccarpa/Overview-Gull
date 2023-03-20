@@ -39,7 +39,7 @@ export class IssueDetailComponent implements OnInit {
     name: [''],
     description: [''],
     status: [''],
-    // priority: [''],
+    priority: [''],
   })
 
   commentForm = this.fb.group({
@@ -70,7 +70,7 @@ export class IssueDetailComponent implements OnInit {
   ]
 
   priority = [
-    // { id: 0, viewValue: 'Nullo' },
+    { id: 0, viewValue: 'Nullo' },
     { id: 1, viewValue: 'Bassa' },
     { id: 2, viewValue: 'Media' },
     { id: 3, viewValue: 'Alta' },
@@ -87,6 +87,7 @@ export class IssueDetailComponent implements OnInit {
         name: this.issue.name,
         description: this.issue.description,
         status: this.issue.status,
+        priority:this.issue['priority']
       })
       if (this.issue.user.picture && this.issue.user.picture.includes('.png')) {
         this.issue.user.picture = `${environment.apiURL2}/images/users/${this.issue.user.id}.png?r=${this.projectService.randomNumber()}`
@@ -99,7 +100,7 @@ export class IssueDetailComponent implements OnInit {
   changeStatus(e, arrayId, issue) {
     let status = e.id
 
-    this.projectService.updateIssue(issue, status).subscribe(
+    this.projectService.updateIssue(issue, status,issue.priority).subscribe(
       res => {
         this.issue.name = res.data.name
         this.issue.status = res.data.status
@@ -123,19 +124,18 @@ export class IssueDetailComponent implements OnInit {
       name: issue?.name,
       description: issue?.description,
       status: issue?.status,
-      // priority: priority,
+      priority: priority,
     })
 
-    //todo da cancellare solo per debug
-    // this.issue['priority'] = priority
+    this.issue['priority'] = priority
 
-    // this.projectService.updateIssue(issue, priority).subscribe(
-    //   res => {
-    //     this.issue.name = res.data.name
-    //     this.issue.status = res.data.status
-    //     this.issue.description = res.data.description
-    //     this.issue.priority = res.data.priority
-    //   })
+    this.projectService.updateIssue(issue,issue.status,priority).subscribe(
+      res => {
+        this.issue.name = res.data.name
+        this.issue.status = res.data.status
+        this.issue.description = res.data.description
+        this.issue['priority'] = res.data.priority
+      })
   }
 
   // reset input value to last value
@@ -159,7 +159,7 @@ export class IssueDetailComponent implements OnInit {
 
   updateName() {
     // this.issue.description = this.formIssue.value.description
-    this.projectService.updateIssue(this.issue, this.issue.status).subscribe(
+    this.projectService.updateIssue(this.issue, this.issue.status,this.priority).subscribe(
       res => {
         this.issue.description = res.data.description
         this.issue.name = res.data.name

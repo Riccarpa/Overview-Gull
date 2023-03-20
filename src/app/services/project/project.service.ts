@@ -135,12 +135,13 @@ export class ProjectService {
   }
 
   // patch update issue `${this.baseUrl}/issues/${id}`
-  updateIssue(issue: Issue,status:number): Observable<any> {
+  updateIssue(issue: Issue,status:number,priority:any): Observable<any> {
 
     let body = {
       "name": issue.name,
       "description": issue.description,
       "status": status,
+      "priority":priority
     }
     return this.http.patch(`${this.baseUrl}/issues/${issue.id}`, body)
   }
