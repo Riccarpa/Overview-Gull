@@ -64,14 +64,14 @@
                 'bg_medium': issue.priority == 2,
                 'bg_high': issue.priority == 3,
                 'bg_blocker': issue.priority == 4
-            }" class="custom col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 px-2" 
+            }" class="custom col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 px-2 " 
             [items]="priority" 
             [searchable]="false" 
             [clearable]="false"
             [readonly]="user?.role == 0 || issue.user.id !== user.id"
             bindLabel="viewValue" 
             bindValue="id" 
-             
+            formControlName="priority"
             >
 
             <ng-template ng-option-tmp let-item="item" let-index="index">

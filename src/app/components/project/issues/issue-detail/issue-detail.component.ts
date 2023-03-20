@@ -69,6 +69,7 @@ export class IssueDetailComponent implements OnInit {
     },
   ]
 
+
   priority = [
     { id: 0, viewValue: 'Nullo' },
     { id: 1, viewValue: 'Bassa' },
@@ -95,6 +96,9 @@ export class IssueDetailComponent implements OnInit {
         this.issue.user.picture = `${environment.apiURL2}/images/users/${this.issue.user.id}.jpg?r=${this.projectService.randomNumber()}`
       }
     }
+
+
+    
   }
 
   changeStatus(e, arrayId, issue) {
@@ -106,7 +110,6 @@ export class IssueDetailComponent implements OnInit {
         this.issue.status = res.data.status
         this.issue.description = res.data.description
       }, error => {
-        console.log(error);
         this.formIssue.patchValue({
           name: issue?.name,
           description: issue?.description,
@@ -207,7 +210,6 @@ export class IssueDetailComponent implements OnInit {
     }else {
       this.projectService.addCommentToIssue(this.commentForm.value, this.issue.id).subscribe(
         res => {
-          console.log(res);
           this.issue.comments.push(res.data)
           this.fixImg()
           this.commentForm.patchValue({
