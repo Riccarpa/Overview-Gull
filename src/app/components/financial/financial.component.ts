@@ -51,6 +51,7 @@ export class FinancialComponent implements OnInit {
   workedDays:number = 0
   ferie:number = 0 
   malattia:number = 0
+  workDays:number = 0
 
 
   ngOnInit(): void {
@@ -97,15 +98,20 @@ export class FinancialComponent implements OnInit {
   }
 
   isWeekend() {
+    console.log(this.days)
     this.days?.forEach(day => {
       let newDate = new Date(day.date)
       if (newDate.getDay() == 0 || newDate.getDay() == 6) {
         return true
       } else {
+        this.workDays++
         return false
       }
     });
+
+    
   }
+  
 
   selectAll(event) {
     if (event.target.checked) {
@@ -163,6 +169,7 @@ export class FinancialComponent implements OnInit {
         })
       }
     }
+    this.isWeekend()
 
     this.assignFerieWorkedMalattia(this.currMonthLog['daily_logs_array'])
     
@@ -175,10 +182,14 @@ export class FinancialComponent implements OnInit {
         const elementt = element['activity_days_array'][j];
         if(elementt.activity_id == 13){
           this.ferie++
+          break
         }else if(elementt.activity_id == 14){
           this.malattia++
+          break
         }else{
           this.workedDays++
+          break
+
         }
       }
     }
