@@ -231,8 +231,8 @@ export class UpdateProjectComponent implements OnInit {
   // associa user al peogetto
   addUserToProject(user: any) {
 
-    let int = parseInt(user.percent)//parse della percentuale
-    user.percent = int //valorizzo
+    let int = parseInt(user.percent);//parse della percentuale
+    user.percent = int; //valorizzo
 
     if (this.arrayUsersIds.length == 0) {
       this.arrayUsersIds.push(user)
@@ -259,6 +259,17 @@ export class UpdateProjectComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  //Disabilita bottone di user già associati
+  disableBtn(userId: any){
+    for (let i = 0; i < this.arrayUsersIds.length; i++) {
+      let e = this.arrayUsersIds[i];
+
+      if (e.id === userId) {
+        return true;
+      } 
     }
   }
 

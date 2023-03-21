@@ -190,8 +190,8 @@
                   <p class="text-primary text--cap border-bottom-primary d-inline-block">
                     Collaborators
                   </p>
-                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
-                    <div *ngFor="let u of users"
+                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-start">
+                    <!-- <div *ngFor="let u of users"
                       class="col-md-5 col-sm-12 col-lg-4 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
                       <div>
                         <label for="picker1 text-24">{{ u.name }} {{ u.surname }}</label>
@@ -207,7 +207,20 @@
                             })
                           " class="text-success ml-1 mr-4 i-Add text-24"></i>
                       </div>
-                    </div>
+                    </div> -->
+                    <button *ngFor="let u of users" type="button" class="btn btn-dark m-2 d-flex align-items-center" (click)="addUserToProject({
+                      id: u.id,
+                      cost: u.cost}, $event)" [disabled]="disableBtn(u.id)">
+                      <!-- <i (click)="
+                            addUserToProject({
+                              id: u.id,
+                              cost: u.cost,
+                              percent: percent.value
+                            })
+                          " class="text-light ml-1 mr-4 i-Yes text-24 m-0"></i> -->
+                          
+                      {{ u.name }} {{ u.surname }} {{u.btn_disabled}}
+                    </button>
                   </div>
                 </div>
               </div>
