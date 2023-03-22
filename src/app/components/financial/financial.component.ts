@@ -134,6 +134,7 @@ export class FinancialComponent implements OnInit {
     this.ferie = 0
     this.malattia = 0
     this.workedDays = 0
+    this.workDays = 0
 
     if (this.monthlyLogs[this.year] && this.monthlyLogs[this.year][this.month]) {
       this.currMonthLog = this.monthlyLogs[this.year][this.month]
