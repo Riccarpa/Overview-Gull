@@ -20,6 +20,7 @@ import { FilterClientPipe } from './pipes/associateClient/filter-client.pipe';
 import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TagInputModule } from 'ngx-chips';
 
 import { LoginComponent } from './components/login/login.component';
 import { ClientComponent } from './components/client/client.component';
@@ -82,7 +83,7 @@ import { IssueDetailComponent } from './components/project/issues/issue-detail/i
     ImageCropperModule,
     CommonModule,
     NgSelectModule,
-
+    TagInputModule
 
   ],
   providers: [

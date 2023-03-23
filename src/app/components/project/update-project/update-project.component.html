@@ -178,54 +178,36 @@
           </div>
 
           <!-- collaboratori -->
-          <div *ngIf="role === 1" ngbDropdown class="mega-menu col-6 align-items-center">
+          <div class="col-6">
             <label class="mb-1">Collaborators</label>
-            <button ngbDropdownToggle href="#"
-              class="btn form-group col-12 border text-muted dropdown-toggle d-block form-control">
-              Associa Collaborators
-            </button>
+            <div class="card mb-4">
+              <div class="card-body">
+                <tag-input [formControl]="collaboratorTags"
+                  (onSelect)="onSelect($event)" (onAdd)="onAdd($event)" (onRemove)="onRemove($event)"
+                  theme='primary' [placeholder]="'Search Collaborator'" [secondaryPlaceholder]="'Search Collaborator'" [onlyFromAutocomplete]="true">
+                  <tag-input-dropdown [focusFirstElement]="true" [autocompleteItems]=" autocompletes">
+                  </tag-input-dropdown>
+                </tag-input>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div *ngIf="role === 1" ngbDropdown #collabDrop="ngbDropdown" class="mega-menu col-6 align-items-center">
+            <label class="mb-1">Collaborators</label>
+            <input class="form-control me-2" type="search" formControlName="searchInput" (keyup)="searchUser(collabDrop)" ngbDropdownAnchor placeholder="Add Collaborators" aria-label="Search">
             <div ngbDropdownMenu perfectScrollbar>
               <div class="row">
-                <div class="col-12">
-                  <p class="text-primary text--cap border-bottom-primary d-inline-block">
-                    Collaborators
-                  </p>
-                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-start">
-                    <!-- <div *ngFor="let u of users"
-                      class="col-md-5 col-sm-12 col-lg-4 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
-                      <div>
-                        <label for="picker1 text-24">{{ u.name }} {{ u.surname }}</label>
-                        <input type="number" min="0" #percent name="percent" class="form-control"
-                          placeholder="percent" />
-                      </div>
-                      <div>
-                        <i (click)="
-                            addUserToProject({
-                              id: u.id,
-                              cost: u.cost,
-                              percent: percent.value
-                            })
-                          " class="text-success ml-1 mr-4 i-Add text-24"></i>
-                      </div>
-                    </div> -->
+                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-start">     
                     <button *ngFor="let u of users" type="button" class="btn btn-dark m-2 d-flex align-items-center" (click)="addUserToProject({
                       id: u.id,
                       cost: u.cost}, $event)" [disabled]="disableBtn(u.id)">
-                      <!-- <i (click)="
-                            addUserToProject({
-                              id: u.id,
-                              cost: u.cost,
-                              percent: percent.value
-                            })
-                          " class="text-light ml-1 mr-4 i-Yes text-24 m-0"></i> -->
                           
                       {{ u.name }} {{ u.surname }} {{u.btn_disabled}}
                     </button>
                   </div>
-                </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="col-6" *ngIf="role === 2">
             <label class="d-block" for="">Collaborators</label>
 

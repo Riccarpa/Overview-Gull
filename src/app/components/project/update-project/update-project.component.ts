@@ -27,7 +27,9 @@ export class UpdateProjectComponent implements OnInit {
   loadingDelete: boolean;
   cropperSettings: CropperSettings;
   data: any;
-  role:number
+  role:number;
+  autocompletes = [];
+
   // variabili visibilitá campi modale
   modal_progress:false
   modal_revenue:false
@@ -78,9 +80,14 @@ export class UpdateProjectComponent implements OnInit {
       revenue: new FormControl(''),
       client_id: new FormControl(''),
       user_ids: new FormControl(),
-      logo: new FormControl([])
+      logo: new FormControl([]),
+      //searchInput: new FormControl('')
     }
   )
+
+  collaboratorTags = new FormControl([
+    /* {display: 'Bangladesh', value: 'BD'} */
+  ]);
 
   ngOnInit(): void {
 
@@ -107,12 +114,15 @@ export class UpdateProjectComponent implements OnInit {
         revenue: new FormControl(this.project.revenue),
         client_id: new FormControl(this.project.client_id),
         user_ids: new FormControl(this.project.user_ids),
-        logo: new FormControl(this.project.logo)
+        logo: new FormControl(this.project.logo),
+        //searchInput: new FormControl('')
 
       })
 
       this.associateUser = this.project.user_ids.length //calcolo del numero di utenti associati al progetto
       this.associateClient = this.project.client_details //cliente progetto
+
+      
 
       if (this.interc.takeRole().role !== 1) { // se !admin
         this.arrayUsersIds = this.project.user_details
@@ -125,19 +135,24 @@ export class UpdateProjectComponent implements OnInit {
             this.users = res.data
             for (let j = 0; j < this.users?.length; j++) {
               let u = this.users[j];
+
+              this.autocompletes.push(`${u.name} ${u.surname}`);
              
               for (let i = 0; i < this.project?.user_ids.length; i++) {
                 let e = this.project.user_ids[i];
+                
   
                 if (e === u.id) {
                   this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+
+                  this.collaboratorTags.value.push({display: `${u.name} ${u.surname}`, value: u.id})
                 }
               }
             }
+            
           })
         }
-        
-      }  
+      } 
     })
 
     if (this.clients === undefined) {
@@ -271,6 +286,28 @@ export class UpdateProjectComponent implements OnInit {
         return true;
       } 
     }
+  }
+
+  //Cerca user
+  searchUser(dropdown : any){
+
+    let search = this.projectForm.value.searchInput;
+    dropdown.open();
+    if(search.length > 0){
+      
+    }
+  }
+
+  public onSelect(item) {
+    console.log(item);
+  }
+
+  onAdd(event : Event){
+    console.log("on add")
+  }
+
+  onRemove(event : Event){
+    console.log("on remove")
   }
 
   // modale cards
