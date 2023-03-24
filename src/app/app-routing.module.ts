@@ -11,6 +11,7 @@ import { HomeUserComponent } from './components/user/homeUser/home-user/home-use
 import { FinancialComponent } from './components/financial/financial.component';
 import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
 import { IssueComponent } from './components/project/issues/issue/issue.component';
+import { TrelloComponent } from './components/trello/trello.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'homeUser/:id', component: HomeUserComponent },
       { path: 'financial/:id', component: FinancialComponent },
       { path: 'showFinancial/:id', component: ShowFinancialComponent },
+      { path: 'trello/:id', component: TrelloComponent },
       // route to issue component 
       { path: 'issue', component: IssueComponent },
       

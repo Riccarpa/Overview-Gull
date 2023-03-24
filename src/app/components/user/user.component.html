@@ -234,17 +234,17 @@
               type="button"
               routerLink="{{ row.id }}"
               class="btn btn-sm btn-outline-primary m-1"
-            >
-              Edit
-            </button>
-
+            >Edit</button>
             <button
               type="button"
               (click)="goToFinancial(row.id)"
               class="btn btn-sm btn-outline-primary m-1"
-            >
-              Financial
-            </button>
+            >Financial</button>
+            <button
+              type="button"
+              (click)="goToTrello(row.id)"
+              class="btn btn-sm btn-outline-primary m-1"
+            >Trello</button>
 
             <!-- <button
               type="button"

@@ -21,6 +21,7 @@ import { FilterProjectPipe } from './pipes/filterProject/filter-project.pipe';
 import { FilterUsersPipe } from './pipes/associateUsers/filter-users.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TagInputModule } from 'ngx-chips';
+import { DragAndDropModule } from 'angular-draggable-droppable';
 
 import { LoginComponent } from './components/login/login.component';
 import { ClientComponent } from './components/client/client.component';
@@ -37,9 +38,7 @@ import { HistoryComponent } from './components/historys/history/history.componen
 import { ShowFinancialComponent } from './components/financial/show-financial/show-financial.component';
 import { IssueComponent } from './components/project/issues/issue/issue.component';
 import { IssueDetailComponent } from './components/project/issues/issue-detail/issue-detail.component';
-
-
-
+import { TrelloComponent } from './components/trello/trello.component';
 
 
 
@@ -64,7 +63,8 @@ import { IssueDetailComponent } from './components/project/issues/issue-detail/i
     HistoryComponent,
     ShowFinancialComponent,
     IssueComponent,
-    IssueDetailComponent
+    IssueDetailComponent,
+    TrelloComponent
    
   ],
   imports: [
@@ -83,8 +83,8 @@ import { IssueDetailComponent } from './components/project/issues/issue-detail/i
     ImageCropperModule,
     CommonModule,
     NgSelectModule,
-    TagInputModule
-
+    TagInputModule,
+    DragAndDropModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ReqInterceptInterceptor, multi: true },
