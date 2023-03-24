@@ -64,7 +64,6 @@ export class UserService {
      return this.http.patch(`${this.url}/${id}`, body);
   }
   updateImage(picture:any,id:any){
-    
     let body = {
       "picture_data" : picture
      };
@@ -73,4 +72,15 @@ export class UserService {
   deleteUser(id:any){
     return this.http.delete(`${this.url}/${id}`);
   }
+
+
+  deleteImage(): Observable<any>{
+    let imagePath = '/assets/images/download.png'
+    return this.http.get(imagePath,{ responseType: 'blob' })
+
+  }
+
+  
+
+
 }

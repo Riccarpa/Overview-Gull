@@ -20,8 +20,9 @@ export class UpdateUserComponent implements OnInit {
   constructor(private uService:UserService,private route:ActivatedRoute,private location:Location, private fb: FormBuilder,
     private toastr: ToastrService, private modalService: NgbModal,private router:Router,private pService:ProjectService) {
       this.cropperSettings = new CropperSettings();
-      this.cropperSettings.cropperDrawSettings.lineDash = true;
-      this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
+      this.cropperSettings.rounded = true
+      this.cropperSettings.showCenterMarker = false
+      this.cropperSettings.markerSizeMultiplier = 0.5
       this.data = {};
      }
   
@@ -53,6 +54,7 @@ export class UpdateUserComponent implements OnInit {
       }else{
         this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.pService.randomNumber()}`
       }
+      
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name, Validators.required),
         surname: new FormControl(this.user.surname, Validators.required),
@@ -122,6 +124,21 @@ export class UpdateUserComponent implements OnInit {
     
     
   }
+
+  deleteImg(){
+    this.uService.deleteImage().subscribe(res =>{
+      const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String: string = reader.result as string;
+          this.uService.updateImage(base64String.replace('data:image/png;base64,', ''),this.user.id).subscribe(res=>{
+            this.user.picture =  `${environment.apiURL2}/images/users/${this.user.id}.png?r=${this.pService.randomNumber()}`
+            this.toastr.success('Image removed successfully')
+            })
+        };
+        reader.readAsDataURL(res);
+    })}
+  
+
   
   
   // modals

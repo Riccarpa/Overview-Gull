@@ -109,20 +109,25 @@
             </div>
 
             <div class="col-md-12">
-              <div>
-                <button
-                  class="btn btn-outline-primary btn-rounded mr-3"
-                  (click)="open(modalCropper)"
-                >
-                  Update logo
-                </button>
-                <img
-                  *ngIf="user.picture"
-                  class="rounded-circle"
-                  src="{{ user.picture }}"
-                  [width]="cropperSettings.croppedWidth"
-                  [height]="cropperSettings.croppedHeight"
-                />
+              <div class="d-flex align-items-cemter ">
+                <div>
+                  <button
+                    class="btn btn-outline-primary btn-rounded mr-3"
+                    (click)="open(modalCropper)"
+                  >
+                    Update logo
+                  </button>
+                </div>
+                <div class="position-relative">
+                  <img
+                    *ngIf="user.picture"
+                    class="rounded-circle"
+                    src="{{ user.picture }}"
+                    [width]="cropperSettings.croppedWidth"
+                    [height]="cropperSettings.croppedHeight"
+                  />
+                  <i (click)="deleteImg()" style="position:absolute; bottom: 0; right: 0;cursor: pointer;" class="text-20 text-danger  i-Close"></i>
+                </div>
               </div>
             </div>
 
@@ -216,7 +221,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <img-cropper [image]="data" [settings]="cropperSettings"></img-cropper
+    <img-cropper [image]="data"   [settings]="cropperSettings"></img-cropper
     ><br />
   </div>
   <div class="modal-footer">
