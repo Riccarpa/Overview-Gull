@@ -183,31 +183,15 @@
             <div class="card mb-4">
               <div class="card-body">
                 <tag-input [formControl]="collaboratorTags"
-                  (onSelect)="onSelect($event)" (onAdd)="onAdd($event)" (onRemove)="onRemove($event)"
-                  theme='primary' [placeholder]="'Search Collaborator'" [secondaryPlaceholder]="'Search Collaborator'" [onlyFromAutocomplete]="true">
-                  <tag-input-dropdown [focusFirstElement]="true" [autocompleteItems]=" autocompletes">
+                  (onAdd)="addUserToProject($event)" (onRemove)="removeUserToProject($event)"
+                  theme='primary' [placeholder]="'Add Collaborator'" [secondaryPlaceholder]="'Add Collaborator'" [onlyFromAutocomplete]="true">
+                  <tag-input-dropdown [focusFirstElement]="true" [autocompleteItems]="userAutocompletes">
                   </tag-input-dropdown>
                 </tag-input>
               </div>
             </div>
           </div>
 
-          <!-- <div *ngIf="role === 1" ngbDropdown #collabDrop="ngbDropdown" class="mega-menu col-6 align-items-center">
-            <label class="mb-1">Collaborators</label>
-            <input class="form-control me-2" type="search" formControlName="searchInput" (keyup)="searchUser(collabDrop)" ngbDropdownAnchor placeholder="Add Collaborators" aria-label="Search">
-            <div ngbDropdownMenu perfectScrollbar>
-              <div class="row">
-                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-start">     
-                    <button *ngFor="let u of users" type="button" class="btn btn-dark m-2 d-flex align-items-center" (click)="addUserToProject({
-                      id: u.id,
-                      cost: u.cost}, $event)" [disabled]="disableBtn(u.id)">
-                          
-                      {{ u.name }} {{ u.surname }} {{u.btn_disabled}}
-                    </button>
-                  </div>
-              </div>
-            </div>
-          </div> -->
           <div class="col-6" *ngIf="role === 2">
             <label class="d-block" for="">Collaborators</label>
 
@@ -218,17 +202,7 @@
 
           <!-- button update-delete -->
           <div *ngIf="role === 1" class="col-12 d-flex align-items-center mt-3">
-            <div class="col-6">
-              <div class="d-flex flex-wrap align-items-center" *ngIf="role === 1">
-                <div class="ml-1 btn btn-outline-secondary d-flex align-items-center pl-2 mb-1"
-                  *ngFor="let u of arrayUsersIds">
-                  <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
-                    {{ user.name }} {{ user.surname }}
-                  </p>
-                  <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
-                </div>
-              </div>
-            </div>
+            <div class="col-6"></div>
             <div class="col-6 text-right">
               <btn-loading (click)="confirm(modalConfirm)" [loading]="loadingDelete" btnClass="btn-outline-danger" [disabled]="loadingDelete"
                 class="mr-4">
