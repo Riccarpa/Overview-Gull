@@ -13,6 +13,8 @@ import { SprintComponent } from '../sprint/sprint.component';
 import { $ } from 'protractor';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-task',
@@ -32,6 +34,7 @@ export class TaskComponent implements OnInit {
     private sprintService: SprintService) { }
 
   ngOnInit(): void {
+
 
     for (let i = 0; i < this.sprint.tasks.length; i++) {
 
@@ -280,11 +283,8 @@ export class TaskComponent implements OnInit {
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true, size: 'lg' })
       .result.then(() => {
-       
-      }
-        , () => {
-      
-          window.location.reload();
+      }, () => {
+          // window.location.reload();
         }
       );
 
@@ -373,6 +373,17 @@ export class TaskComponent implements OnInit {
     let input = document.getElementById('message') as HTMLInputElement;
     input.value = '';
   }
+
+
+  checkDateIsPast(date: Date,status:Number): boolean {
+    let dateFormatted = moment(date).format("YYYY-MM-DD")
+    const currentDate = moment().format("YYYY-MM-DD");
+    if(dateFormatted < currentDate || status == 2 ){
+      return true ;
+    }
+  }
+
+
 }
 
 
