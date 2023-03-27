@@ -1,6 +1,4 @@
-<p>trello works!</p>
-
-<div
+<!-- <div
   mwlDraggable
   dropData="foo"
   dragActiveClass="drag-active"
@@ -33,11 +31,171 @@
   <span [hidden]="!droppedData2"
     >Item dropped here with data: "{{ droppedData2 }}"!</span
   >
+</div> -->
+
+
+<div class="row p-3 d-flex flex-wrap">
+  <div class="col card p-0 mx-3" style="min-height: 300px; background-color: gold;" mwlDroppable (drop)="onDrop($event, 0)" dragOverClass="drop-over-active">
+    <div class="card-header">TO DO</div>
+    <div class="card-body">
+
+      <div class="card mb-3 topindex" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        dropData="foo"
+        dragActiveClass="drag-active"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        [hidden]="!droppedData[0]"
+      >
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+
+    </div> 
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="open(modalTask)">Add</button>
+    </div>
+  </div>
+  <div class="col card p-0 mx-3" style="min-height: 300px; background-color: yellowgreen;" mwlDroppable (drop)="onDrop($event, 1)" dragOverClass="drop-over-active">
+    <div class="card-header">DOING</div>
+    <div class="card-body">
+
+      <div class="card mb-3 topindex" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        dropData="foo"
+        dragActiveClass="drag-active"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        [hidden]="!droppedData[1]"
+      >
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+
+    </div> 
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="open(modalTask)">Add</button>
+    </div>
+  </div>
+  <div class="col card p-0 mx-3" style="min-height: 300px; background-color: tomato;" mwlDroppable (drop)="onDrop($event, 2)" dragOverClass="drop-over-active">
+    <div class="card-header">DONE</div>
+    <div class="card-body">
+
+      <div class="card mb-3 topindex" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        dropData="foo"
+        dragActiveClass="drag-active"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        [hidden]="!droppedData[2]"
+      >
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="open(modalTask)">Add</button>
+    </div> 
+  </div>
+  <div class="col card p-0 mx-3" style="min-height: 300px; background-color: deepskyblue;" mwlDroppable (drop)="onDrop($event, 3)" dragOverClass="drop-over-active">
+    <div class="card-header">TO DO</div>
+    <div class="card-body">
+
+      <div class="card mb-3 topindex" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        dropData="foo"
+        dragActiveClass="drag-active"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        [hidden]="!droppedData[3]"
+      >
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+      <div class="card mb-3 topindex" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        dropData="foo"
+        dragActiveClass="drag-active"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        [hidden]="!droppedData[3]"
+      >
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="open(modalTask)">Add</button>
+    </div> 
+  </div>
 </div>
 
-<div class="floating-toolbar floating-toolbar-1">
-  Floating toolbar, drop here too!
-</div>
-<div class="floating-toolbar floating-toolbar-2">
-  Floating toolbar, can't drop here!
-</div>
+<!-- new task card modal -->
+<ng-template #modalTask let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create new task</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <div class="card-body">
+        <form [formGroup]="taskForm">
+          <div class="row">
+            <div class="col-md-12 form-group mb-3">
+              <label for="title">*Title</label>
+              <input
+                formControlName="title"
+                type="text"
+                class="form-control form-control"
+                id="title"
+                placeholder="Task title"
+              />
+              <p *ngIf="taskForm.get('title').invalid && taskForm.get('title').touched" class="text-danger position-absolute">Title required</p>
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label for="description">Description</label>
+              <input
+                formControlName="description"
+                type="text"
+                class="form-control form-control"
+                id="description"
+                placeholder="Type a description"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!taskForm.valid">
+      Create
+    </button>
+  </div>
+</ng-template>
+
