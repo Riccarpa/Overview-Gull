@@ -140,7 +140,7 @@ export class UpdateProjectComponent implements OnInit {
       }  
     })
 
-    if (this.clients === undefined) {
+    if (this.clients === undefined && this.role == 1) {
       // get Clients
       this.clientService.getClients().subscribe((res) => {
         this.clients = res.data

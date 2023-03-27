@@ -72,8 +72,8 @@ export class ProjectComponent implements OnInit {
   ngOnInit() {
     this.user = this.interc.takeRole();
     this.role = this.user.role;
-
-    if (this.clientService.idClient) {
+    
+    if (this.clientService.idClient && this.role == 1) {
       this.idClient = this.clientService.idClient;
       this.clientService.getClient(this.idClient).subscribe((res) => {
         this.client = res.data;

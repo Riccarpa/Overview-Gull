@@ -63,7 +63,7 @@
             }} -->
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column [width]="100">
+        <ngx-datatable-column [width]="100" *ngIf="user.role == 1">
           <ng-template ngx-datatable-header-template>Actions</ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
             <button (click)="openModalEditTask(row.id, modalBasic, filteredTasks)" class="btn bg-transparent mr-2 p-0">
