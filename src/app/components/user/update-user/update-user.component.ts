@@ -136,7 +136,8 @@ export class UpdateUserComponent implements OnInit {
             })
         };
         reader.readAsDataURL(res);
-    })}
+        this.modalService.dismissAll()    })
+  }
   
 
   

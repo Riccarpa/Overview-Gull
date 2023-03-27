@@ -126,7 +126,7 @@
                     [width]="cropperSettings.croppedWidth"
                     [height]="cropperSettings.croppedHeight"
                   />
-                  <i (click)="deleteImg()" style="position:absolute; bottom: 0; right: 0;cursor: pointer;" class="text-20 text-danger  i-Close"></i>
+                  <i (click)="open(deleteImgModal)" style="position:absolute; bottom: 0; right: 0;cursor: pointer;" class="text-20 text-danger  i-Close"></i>
                 </div>
               </div>
             </div>
@@ -227,6 +227,50 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="updateImg()">
       Save
+    </button>
+  </div>
+</ng-template>
+
+<!-- deleting image modal -->
+<ng-template #deleteImgModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Profile image deletion</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close button"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong
+        >Are you sure you want to delete the profile image?</strong
+      >
+    </p>
+    <p>
+      The image wil deleted and a placeholder image will be added
+      
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel')"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      ngbAutofocus
+      class="btn btn-danger"
+      (click)="deleteImg()"
+    >
+      Ok
     </button>
   </div>
 </ng-template>
