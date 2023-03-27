@@ -49,12 +49,15 @@ export class UpdateUserComponent implements OnInit {
   retrieveUser(){
     this.uService.retrieveUser(this.id).subscribe((res:any)=>{
       this.user = res.data;
-      if(this.user.picture && this.user.picture.includes('.png') ){
-        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.png?r=${this.pService.randomNumber()}`
-      }else{
-        this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.pService.randomNumber()}`
-      }
-      
+            if(this.user.picture == null){
+              this.deleteImg()
+            }else{
+              if(this.user.picture && this.user.picture.includes('.png') ){
+                this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.png?r=${this.pService.randomNumber()}`
+              }else{
+                this.user.picture = `${environment.apiURL2}/images/users/${res.data.id}.jpg?r=${this.pService.randomNumber()}`
+              }
+            }
       this.profileForm = new FormGroup({
         name: new FormControl(this.user.name, Validators.required),
         surname: new FormControl(this.user.surname, Validators.required),
@@ -132,7 +135,6 @@ export class UpdateUserComponent implements OnInit {
           const base64String: string = reader.result as string;
           this.uService.updateImage(base64String.replace('data:image/png;base64,', ''),this.user.id).subscribe(res=>{
             this.user.picture =  `${environment.apiURL2}/images/users/${this.user.id}.png?r=${this.pService.randomNumber()}`
-            this.toastr.success('Image removed successfully')
             })
         };
         reader.readAsDataURL(res);

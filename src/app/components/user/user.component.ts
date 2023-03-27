@@ -31,9 +31,10 @@ export class UserComponent implements OnInit {
     private interc:ReqInterceptInterceptor
   ){
     this.cropperSettings = new CropperSettings();
-    this.cropperSettings.cropperDrawSettings.lineDash = true;
-    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-    this.data = {};
+      this.cropperSettings.rounded = true
+      this.cropperSettings.showCenterMarker = false
+      this.cropperSettings.markerSizeMultiplier = 0.5
+      this.data = {};
   }
   
   role:number
