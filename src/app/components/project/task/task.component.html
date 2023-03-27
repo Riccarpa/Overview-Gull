@@ -63,13 +63,13 @@
             }} -->
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column [width]="100" *ngIf="user.role == 1">
+        <ngx-datatable-column [width]="100" >
           <ng-template ngx-datatable-header-template>Actions</ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
             <button (click)="openModalEditTask(row.id, modalBasic, filteredTasks)" class="btn bg-transparent mr-2 p-0">
               <i class="text-20 i-Pen-5"></i>
             </button>
-            <button (click)="deleteTask(row.id, modalConfirm)" class="btn bg-transparent text-danger ml-2 p-0">
+            <button (click)="deleteTask(row.id, modalConfirm)" *ngIf="user.role == 1" class="btn bg-transparent text-danger ml-2 p-0">
               <i class="text-20 i-Close"></i>
             </button>
           </ng-template>
@@ -90,12 +90,12 @@
   <div class="modal-body">
     <form [formGroup]="taskForm">
       <div class="row">
-        <div class="col-md-12 form-group mb-3">
+        <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="name">Task name</label>
           <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
             formControlName="name" />
         </div>
-        <div class="col-md-12 form-group mb-3">
+        <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="assignee_id">Assignee</label>
           <select class="form-control" type="number" name="assignee_id" formControlName="assignee_id">
             <option [value]="null">nessuno</option>
@@ -104,7 +104,7 @@
             </option>
           </select>
         </div>
-        <div class="col-md-12 form-group mb-3">
+        <div  class="col-md-12 form-group mb-3">
           <label for="status">Status</label>
           <select class="form-control" type="number" name="status" formControlName="status">
             <option [value]="0">Open</option>
@@ -112,15 +112,15 @@
             <option [value]="2">Completed</option>
           </select>
         </div>
-        <div class="col-md-12 form-group mb-3">
+        <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="start_date">Start date</label>
           <input type="date" class="form-control" id="start_date" name="start_date" formControlName="start_date" />
         </div>
-        <div class="col-md-12 form-group mb-3">
+        <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="end_date">End date</label>
           <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date" />
         </div>
-        <div class="col-md-12 form-group mb-3">
+        <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="effort">Effort</label>
           <input type="number" class="form-control" id="effort" name="effort" placeholder="Inserisci effort"
             formControlName="effort" />
