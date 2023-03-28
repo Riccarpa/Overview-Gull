@@ -9,6 +9,8 @@
   </button>
 </div>
 
+
+
 <!-- table task -->
 <div class="row mb-5">
   <div class="col-md-12">
@@ -78,6 +80,14 @@
     </div>
   </div>
 </div>
+
+
+<ul id="items">
+    <li *ngFor="let item of filteredTasks" id="{{item.id}}" >{{item.name}}</li>
+</ul>
+
+
+
 
 <!-- modale aggiunta/modifica task -->
 <ng-template #modalBasic let-modal>

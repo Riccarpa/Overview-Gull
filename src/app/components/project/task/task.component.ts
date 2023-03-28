@@ -14,6 +14,8 @@ import { $ } from 'protractor';
 import { PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
+import Sortable from 'sortablejs';
+
 
 
 @Component({
@@ -33,8 +35,34 @@ export class TaskComponent implements OnInit {
     private projectService: ProjectService,
     private sprintService: SprintService) { }
 
-  ngOnInit(): void {
+    el:HTMLElement
+    sortable:any
 
+    rows = [
+      { name: 'John', id: 1 },
+      { name: 'Mary', id: 2 },
+      { name: 'Peter', id: 3 },
+    ];
+    
+    columns = [
+      { prop: 'name', name: 'Name' },
+      { prop: 'age', name: 'Age' }
+    ];
+    
+    ngOnInit(): void {
+      this.el  = document.getElementById('items');
+      // this.sortable = Sortable.create(this.el);
+       var sortable = new Sortable(this.el, {
+          animation: 150,
+          dataIdAttr: 'id',
+          ghostClass: 'task-ghost',
+          dragClass: 'task-drag',
+          onEnd: function (event) {
+            var newOrder = sortable.toArray();
+            console.log(newOrder);
+          }
+      });
+      
 
     for (let i = 0; i < this.sprint.tasks.length; i++) {
 
@@ -79,6 +107,8 @@ export class TaskComponent implements OnInit {
     end_date: new FormControl(''),
     effort: new FormControl('',),
   });
+
+
 
 
 
