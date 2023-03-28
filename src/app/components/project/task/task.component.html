@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tbody id="items">
-            <tr *ngFor="let row of filteredTasks" id="{{ row.id }}">
+            <tr *ngFor="let row of filteredTasks" id="{{ row.id }}" (drop)="patchOrder()">
               <td class="d-flex justify-content-between " >
                 <span>{{ row.name }}</span>
                 <span style="width: 60px;" (click)="openChatModal(modalChat, row)">

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild,DoCheck } from '@angular/core';
 import { Sprint } from 'src/app/models/sprint.model';
 import { Task } from 'src/app/models/task.model';
 import { User } from 'src/app/models/user.model';
@@ -35,34 +35,23 @@ export class TaskComponent implements OnInit {
     private projectService: ProjectService,
     private sprintService: SprintService) { }
 
-    el:HTMLElement
-    sortable:any
 
-    rows = [
-      { name: 'John', id: 1 },
-      { name: 'Mary', id: 2 },
-      { name: 'Peter', id: 3 },
-    ];
-    
-    columns = [
-      { prop: 'name', name: 'Name' },
-      { prop: 'age', name: 'Age' }
-    ];
+
     
     ngOnInit(): void {
-      this.el  = document.getElementById('items');
-      // this.sortable = Sortable.create(this.el);
-       var sortable = new Sortable(this.el, {
-          animation: 150,
-          dataIdAttr: 'id',
-          ghostClass: 'task-ghost',
-          dragClass: 'task-drag',
-          onEnd: function (event) {
-            var newOrder = sortable.toArray();
-            console.log(newOrder);
-          }
+
+      var sortable = new Sortable(document.getElementById('items'), {
+        animation: 150,
+        dataIdAttr: 'id',
+        ghostClass: 'task-ghost',
+        dragClass: 'task-drag',
+        onEnd: function (event) {
+          var newOrder = sortable.toArray();
+          localStorage.setItem('taskOrder',JSON.stringify(newOrder))
+        }
       });
       
+
 
     for (let i = 0; i < this.sprint.tasks.length; i++) {
 
@@ -78,6 +67,8 @@ export class TaskComponent implements OnInit {
 
     this.user = localStorage.getItem('user');
     this.user = JSON.parse(this.user);
+
+    
   }
 
   @Input() sprint: any;
@@ -108,9 +99,7 @@ export class TaskComponent implements OnInit {
     effort: new FormControl('',),
   });
 
-
-
-
+  taskOrder:any
 
   // creare un comparatore per ordinare i task in base alla end_date con formato dd/mm/yyyy 
   compare(a, b, c, d) {
@@ -411,6 +400,15 @@ export class TaskComponent implements OnInit {
     if(dateFormatted < currentDate || status == 2 ){
       return true ;
     }
+  }
+
+
+  patchOrder(){
+    setTimeout(() => {
+      this.taskService.patchTaskOrder(JSON.parse(localStorage.getItem('taskOrder')),this.taskName).subscribe(res=>{
+        console.log(res)
+      })
+    }, 1000);
   }
 
 

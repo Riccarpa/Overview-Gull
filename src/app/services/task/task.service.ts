@@ -58,6 +58,16 @@ export class TaskService {
     return this.http.patch(url, body);
   }
 
+    // modifica task
+    patchTaskOrder(tasksIds:any,taskId:any): Observable<any> {
+      const url = `${this.url}/ciao`;
+  
+      let body = {
+        'tasksOrder':tasksIds
+      };
+      return this.http.patch(url, body);
+    }
+
   // get tasks comments(per il momento retrive quindi id del commento, TODO: cambiare in id del task)
   getTaskComments(id: any): Observable<any> {
     const url = `${this.url2}Comments/${id}`;
