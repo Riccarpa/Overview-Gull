@@ -178,41 +178,20 @@
           </div>
 
           <!-- collaboratori -->
-          <div *ngIf="role === 1" ngbDropdown class="mega-menu col-6 align-items-center">
+          <div class="col-6">
             <label class="mb-1">Collaborators</label>
-            <button ngbDropdownToggle href="#"
-              class="btn form-group col-12 border text-muted dropdown-toggle d-block form-control">
-              Associa Collaborators
-            </button>
-            <div ngbDropdownMenu perfectScrollbar>
-              <div class="row">
-                <div class="col-12">
-                  <p class="text-primary text--cap border-bottom-primary d-inline-block">
-                    Collaborators
-                  </p>
-                  <div class="col-lg-12 d-flex align-items-center flex-wrap p-0 justify-content-between">
-                    <div *ngFor="let u of users"
-                      class="col-md-5 col-sm-12 col-lg-4 flex-grow-1 flex-fill form-group m-0 mb-2 d-flex align-items-end p-0">
-                      <div>
-                        <label for="picker1 text-24">{{ u.name }} {{ u.surname }}</label>
-                        <input type="number" min="0" #percent name="percent" class="form-control"
-                          placeholder="percent" />
-                      </div>
-                      <div>
-                        <i (click)="
-                            addUserToProject({
-                              id: u.id,
-                              cost: u.cost,
-                              percent: percent.value
-                            })
-                          " class="text-success ml-1 mr-4 i-Add text-24"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div class="card mb-4">
+              <div class="card-body">
+                <tag-input [formControl]="collaboratorTags"
+                  (onAdd)="addUserToProject($event)" (onRemove)="removeUserToProject($event)"
+                  theme='primary' [placeholder]="'Add Collaborator'" [secondaryPlaceholder]="'Add Collaborator'" [onlyFromAutocomplete]="true">
+                  <tag-input-dropdown [focusFirstElement]="true" [autocompleteItems]="userAutocompletes">
+                  </tag-input-dropdown>
+                </tag-input>
               </div>
             </div>
           </div>
+
           <div class="col-6" *ngIf="role === 2">
             <label class="d-block" for="">Collaborators</label>
 
@@ -223,17 +202,7 @@
 
           <!-- button update-delete -->
           <div *ngIf="role === 1" class="col-12 d-flex align-items-center mt-3">
-            <div class="col-6">
-              <div class="d-flex flex-wrap align-items-center" *ngIf="role === 1">
-                <div class="ml-1 btn btn-outline-secondary d-flex align-items-center pl-2 mb-1"
-                  *ngFor="let u of arrayUsersIds">
-                  <p class="m-0" *ngFor="let user of users | filterUsers: u.id">
-                    {{ user.name }} {{ user.surname }}
-                  </p>
-                  <i (click)="removeUserToProject(u.id)" class="text-24 i-Close-Window ml-2"></i>
-                </div>
-              </div>
-            </div>
+            <div class="col-6"></div>
             <div class="col-6 text-right">
               <btn-loading (click)="confirm(modalConfirm)" [loading]="loadingDelete" btnClass="btn-outline-danger" [disabled]="loadingDelete"
                 class="mr-4">

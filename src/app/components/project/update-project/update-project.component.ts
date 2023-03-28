@@ -27,7 +27,9 @@ export class UpdateProjectComponent implements OnInit {
   loadingDelete: boolean;
   cropperSettings: CropperSettings;
   data: any;
-  role:number
+  role:number;
+  userAutocompletes = [];
+
   // variabili visibilitá campi modale
   modal_progress:false
   modal_revenue:false
@@ -82,6 +84,10 @@ export class UpdateProjectComponent implements OnInit {
     }
   )
 
+  collaboratorTags = new FormControl([
+    /* {display: 'Bangladesh', value: 'BD'} */
+  ]);
+
   ngOnInit(): void {
 
     this.role = this.interc.takeRole().role //prendo il ruolo dall'interceptor 
@@ -114,6 +120,7 @@ export class UpdateProjectComponent implements OnInit {
       this.associateUser = this.project.user_ids.length //calcolo del numero di utenti associati al progetto
       this.associateClient = this.project.client_details //cliente progetto
 
+
       if (this.interc.takeRole().role !== 1) { // se !admin
         this.arrayUsersIds = this.project.user_details
 
@@ -125,19 +132,38 @@ export class UpdateProjectComponent implements OnInit {
             this.users = res.data
             for (let j = 0; j < this.users?.length; j++) {
               let u = this.users[j];
+
+              //Collaborators autocomplete
+              this.userAutocompletes.push(
+                {
+                  display: `${u.name} ${u.surname}`, 
+                  value: {
+                    id: u.id,
+                    cost: u.cost
+                  }
+                });
              
               for (let i = 0; i < this.project?.user_ids.length; i++) {
                 let e = this.project.user_ids[i];
+                
   
                 if (e === u.id) {
                   this.arrayUsersIds.push({ id: e, cost: u.cost, percent: NaN })
+
+                  this.collaboratorTags.value.push({
+                    display: `${u.name} ${u.surname}`, 
+                    value: {
+                      id: u.id,
+                      cost: u.cost
+                    }
+                  });
                 }
               }
             }
+            
           })
         }
-        
-      }  
+      } 
     })
 
     if (this.clients === undefined && this.role == 1) {
@@ -146,7 +172,6 @@ export class UpdateProjectComponent implements OnInit {
         this.clients = res.data
       })
     }
- 
   }
 
   delProject(id: number) { // delete proj ADMIN
@@ -217,7 +242,9 @@ export class UpdateProjectComponent implements OnInit {
   }
 
   // dissocia user dal progetto
-  removeUserToProject(id: number) {
+  removeUserToProject(userValue: any) {
+    let id = userValue.value.id;
+
     for (let i = 0; i < this.arrayUsersIds.length; i++) {
       const e = this.arrayUsersIds[i];
       if (e.id === id) {// se trova doppione elimina 
@@ -229,10 +256,15 @@ export class UpdateProjectComponent implements OnInit {
   }
 
   // associa user al peogetto
-  addUserToProject(user: any) {
+  addUserToProject(userValue: any) {
+    let user = { 
+      id: userValue.value.id,
+      cost: userValue.value.cost,
+      percent: null
+    }
 
-    let int = parseInt(user.percent)//parse della percentuale
-    user.percent = int //valorizzo
+    let int = parseInt(user.percent);//parse della percentuale
+    user.percent = int; //valorizzo
 
     if (this.arrayUsersIds.length == 0) {
       this.arrayUsersIds.push(user)
@@ -244,7 +276,7 @@ export class UpdateProjectComponent implements OnInit {
 
         if (e.id !== user.id && i == this.arrayUsersIds.length - 1) { //se ha finito di ciclare e non trova id allora pusha
           this.arrayUsersIds.push(user)
-         this.toastr.success('user aggiunto con successo.')
+          this.toastr.success('user aggiunto con successo.')
           break
         } else if (e.id === user.id) { // se trova un doppione 
 

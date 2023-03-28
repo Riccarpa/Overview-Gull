@@ -1,0 +1,87 @@
+
+<div class="row p-3 d-flex flex-wrap" style="height: calc(100vh - 80px - 32px - 32px);">
+  <div *ngFor="let table of tables; let i = index" class="col card p-0 mx-3" style="max-height:100%" [style]="table.color" mwlDroppable (drop)="onDrop($event, i)" dragOverClass="drop-over-active">
+    <div class="card-header">{{table.name}}</div>
+    <div class="card-body" style="max-height: 100%; overflow-y: auto;">
+
+      <div *ngFor="let task of table.tasks; let taskId = index" class="card mb-3" 
+        style="max-width: 18rem;" 
+        mwlDraggable
+        mwlDroppable
+        dropData="{{i}},{{taskId}}"
+        dragActiveClass="drag-active"
+        (dragging)="onDragging(true)"
+        (dragEnd)="task.isDragging = false"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        (drop)="onDrop2()"
+        
+      >
+        <div class="card-header">
+          <h5>{{task.title}}</h5>
+          <p>{{task.isDragging}}</p>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{task.description}}</p>
+        </div>
+      </div>
+
+    </div> 
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="open(modalTask, i)">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- new task card modal -->
+<ng-template #modalTask let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create new task</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <div class="card-body">
+        <form [formGroup]="taskForm">
+          <div class="row">
+            <div class="col-md-12 form-group mb-3">
+              <label for="title">*Title</label>
+              <input
+                formControlName="title"
+                type="text"
+                class="form-control form-control"
+                id="title"
+                placeholder="Task title"
+              />
+              <p *ngIf="taskForm.get('title').invalid && taskForm.get('title').touched" class="text-danger position-absolute">Title required</p>
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label for="description">Description</label>
+              <textarea 
+                class="form-control" 
+                formControlName="description" 
+                placeholder="Type a description" 
+                id="description" 
+                style="height: 100px"
+              ></textarea>
+              
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!taskForm.valid">
+      Create
+    </button>
+  </div>
+</ng-template>
+
