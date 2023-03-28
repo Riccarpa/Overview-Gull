@@ -4,7 +4,7 @@
     <input type="checkbox" [formControl]="searchControl" />
     <span class="slider"></span>
   </label>
-  <button class="btn btn-success px-3 " (click)="openModalAddTask(modalBasic)">
+  <button class="btn btn-success px-3" (click)="openModalAddTask(modalBasic)">
     New task
   </button>
 </div>
@@ -15,7 +15,75 @@
 <div class="row mb-5">
   <div class="col-md-12">
     <div class="card o-hidden">
-      <ngx-datatable style="min-height: 300px; box-shadow: none" class="material fullscreen " [columnMode]="'force'"
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Assignee</th>
+              <th>End date</th>
+              <th>State</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="items">
+            <tr *ngFor="let row of filteredTasks" id="{{ row.id }}">
+              <td class="d-flex justify-content-between " >
+                <span>{{ row.name }}</span>
+                <span style="width: 60px;" (click)="openChatModal(modalChat, row)">
+                  <button class="btn bg-transparent ml-2 p-0">
+                    <i class="text-20 i-Speach-Bubble-3" style="color: blue"></i>
+                    <span
+                      *ngIf="row.comments?.length > 0"
+                      class="badge badge-pill badge-primary mr-1"
+                      >{{ row.comments.length }}
+                    </span>
+                  </button>
+                </span>
+              </td>
+              <td>{{ getAssignee(row.assignee_id) }}</td>
+              <td>
+                <div
+                  [ngClass]="{
+                    'text-danger': checkDateIsPast(row.end_date, row.status)
+                  }"
+                >
+                  {{ row.end_date | date : "dd-MM-yyyy" }}
+                </div>
+              </td>
+              <td>
+                <span
+                  class="rounded-circle d-inline-block"
+                  [ngClass]="{
+                    red: row.status == 0,
+                    green: row.status == 2,
+                    orange: row.status == 1
+                  }"
+                  style="height: 10px; width: 10px"
+                ></span>
+                {{ getStatus(row.status) }}
+              </td>
+              <td>
+                <button
+                  (click)="openModalEditTask(row.id, modalBasic, filteredTasks)"
+                  class="btn bg-transparent mr-2 p-0"
+                >
+                  <i class="text-20 i-Pen-5"></i>
+                </button>
+                <button
+                  (click)="deleteTask(row.id, modalConfirm)"
+                  *ngIf="user.role == 1"
+                  class="btn bg-transparent text-danger ml-2 p-0"
+                >
+                  <i class="text-20 i-Close"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="no-data" style="display: none">No data to display</div>
+      </div>
+      <!-- <ngx-datatable style="min-height: 300px; box-shadow: none" class="material fullscreen " [columnMode]="'force'"
         [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="filteredTasks">
         <ngx-datatable-column name="name" [width]="200">
           <ng-template ngx-datatable-header-template>Task name</ng-template>
@@ -56,13 +124,6 @@
               orange: row.status == 1
             }" style="height: 10px; width: 10px"></span>
             {{ getStatus(row.status) }}
-            <!-- {{
-            getDate(
-            row.status,
-            row.start_date | date: "dd-MM-yyyy",
-            row.end_date | date: "dd-MM-yyyy"
-            )
-            }} -->
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column [width]="100" >
@@ -76,16 +137,10 @@
             </button>
           </ng-template>
         </ngx-datatable-column>
-      </ngx-datatable>
+      </ngx-datatable> -->
     </div>
   </div>
 </div>
-
-
-<ul id="items">
-    <li *ngFor="let item of filteredTasks" id="{{item.id}}" >{{item.name}}</li>
-</ul>
-
 
 
 
@@ -93,7 +148,12 @@
 <ng-template #modalBasic let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{ titleModal }}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -102,21 +162,37 @@
       <div class="row">
         <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="name">Task name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Inserisci nome"
-            formControlName="name" />
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            placeholder="Inserisci nome"
+            formControlName="name"
+          />
         </div>
         <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="assignee_id">Assignee</label>
-          <select class="form-control" type="number" name="assignee_id" formControlName="assignee_id">
+          <select
+            class="form-control"
+            type="number"
+            name="assignee_id"
+            formControlName="assignee_id"
+          >
             <option [value]="null">nessuno</option>
             <option *ngFor="let c of collaborators" [value]="c.id">
               {{ c.name }} {{ c.surname }}
             </option>
           </select>
         </div>
-        <div  class="col-md-12 form-group mb-3">
+        <div class="col-md-12 form-group mb-3">
           <label for="status">Status</label>
-          <select class="form-control" type="number" name="status" formControlName="status">
+          <select
+            class="form-control"
+            type="number"
+            name="status"
+            formControlName="status"
+          >
             <option [value]="0">Open</option>
             <option [value]="1">In progress</option>
             <option [value]="2">Completed</option>
@@ -124,25 +200,53 @@
         </div>
         <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="start_date">Start date</label>
-          <input type="date" class="form-control" id="start_date" name="start_date" formControlName="start_date" />
+          <input
+            type="date"
+            class="form-control"
+            id="start_date"
+            name="start_date"
+            formControlName="start_date"
+          />
         </div>
         <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="end_date">End date</label>
-          <input type="date" class="form-control" id="end_date" name="end_date" formControlName="end_date" />
+          <input
+            type="date"
+            class="form-control"
+            id="end_date"
+            name="end_date"
+            formControlName="end_date"
+          />
         </div>
         <div *ngIf="user.role == 1" class="col-md-12 form-group mb-3">
           <label for="effort">Effort</label>
-          <input type="number" class="form-control" id="effort" name="effort" placeholder="Inserisci effort"
-            formControlName="effort" />
+          <input
+            type="number"
+            class="form-control"
+            id="effort"
+            name="effort"
+            placeholder="Inserisci effort"
+            formControlName="effort"
+          />
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button *ngIf="titleModal == 'Aggiungi Task'" type="button" class="btn btn-primary" (click)="addTask()">
+    <button
+      *ngIf="titleModal == 'Aggiungi Task'"
+      type="button"
+      class="btn btn-primary"
+      (click)="addTask()"
+    >
       Save
     </button>
-    <button *ngIf="titleModal == 'Modifica Task'" type="button" class="btn btn-primary" (click)="editTask()">
+    <button
+      *ngIf="titleModal == 'Modifica Task'"
+      type="button"
+      class="btn btn-primary"
+      (click)="editTask()"
+    >
       Save
     </button>
   </div>
@@ -152,8 +256,13 @@
 <ng-template #modalConfirm let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-title">Delete Task</h4>
-    <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-      (click)="modal.dismiss('Cross click')">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close button"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -161,10 +270,19 @@
     <p><strong>Are you sure you want to delete the selected task ?</strong></p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel')"
+    >
       Back
     </button>
-    <button type="button" ngbAutofocus class="btn btn-danger" (click)="modal.close('Ok')">
+    <button
+      type="button"
+      ngbAutofocus
+      class="btn btn-danger"
+      (click)="modal.close('Ok')"
+    >
       Ok
     </button>
   </div>
@@ -172,55 +290,109 @@
 
 <!-- modale chat -->
 <ng-template #modalChat let-modal class="vh">
-  <div class="d-flex align-items-center pl-3 pr-3 pt-2 vh  o-hidden box-shadow-1 chat-topbar">
+  <div
+    class="d-flex align-items-center pl-3 pr-3 pt-2 vh o-hidden box-shadow-1 chat-topbar"
+  >
     <h3>Task name: {{ taskName }}</h3>
   </div>
-  <div [perfectScrollbar]="{suppressScrollX: true}" class="chat-content rtl-ps-none px-4 py-5 vh" *ngIf="chatCollection">
+  <div
+    [perfectScrollbar]="{ suppressScrollX: true }"
+    class="chat-content rtl-ps-none px-4 py-5 vh"
+    *ngIf="chatCollection"
+  >
     <div *ngFor="let chat of chatCollection; let i = index" class="mb-4">
-
-      <div *ngIf="chat.user?.id === user?.id" class="d-flex align-items-center user mb-4">
-        <img src="{{chat.user?.picture}}" [alt]="chat.user?.name" class="avatar-sm rounded-circle mr-3">
+      <div
+        *ngIf="chat.user?.id === user?.id"
+        class="d-flex align-items-center user mb-4"
+      >
+        <img
+          src="{{ chat.user?.picture }}"
+          [alt]="chat.user?.name"
+          class="avatar-sm rounded-circle mr-3"
+        />
         <div class="message userMessage flex-grow-1">
           <div class="d-flex align-items-center">
-            <p class="del mb-1 text-title text-16 flex-grow-1">Tu
-              <a class="ml-4 upd" (click)="updateComment(chat,chat?.text, i)">modifica</a> |
-              <a class="" (click)="deleteComment(chat.id,i)">elimina</a>
+            <p class="del mb-1 text-title text-16 flex-grow-1">
+              Tu
+              <a class="ml-4 upd" (click)="updateComment(chat, chat?.text, i)"
+                >modifica</a
+              >
+              |
+              <a class="" (click)="deleteComment(chat.id, i)">elimina</a>
             </p>
-            <span class="text-small text-muted">{{chat.created_at | date}}</span>
+            <span class="text-small text-muted">{{
+              chat.created_at | date
+            }}</span>
           </div>
-          <p class="m-0">{{chat.text}}</p>
+          <p class="m-0">{{ chat.text }}</p>
         </div>
       </div>
 
-      <div *ngIf="chat.user?.id !== user?.id" class="d-flex align-items-center mb-4">
-        <div class="message  flex-grow-1">
+      <div
+        *ngIf="chat.user?.id !== user?.id"
+        class="d-flex align-items-center mb-4"
+      >
+        <div class="message flex-grow-1">
           <div class="d-flex align-items-center">
-            <p class="mb-1 text-title text-16 flex-grow-1">{{chat.user?.name}}</p>
-            <span class="text-small text-muted">{{chat.created_at | date}}</span>
+            <p class="mb-1 text-title text-16 flex-grow-1">
+              {{ chat.user?.name }}
+            </p>
+            <span class="text-small text-muted">{{
+              chat.created_at | date
+            }}</span>
           </div>
-          <p class="m-0">{{chat.text}}</p>
+          <p class="m-0">{{ chat.text }}</p>
         </div>
-        <img src="{{chat.user?.picture}}" [alt]="chat.user?.name" class="avatar-sm rounded-circle ml-3">
+        <img
+          src="{{ chat.user?.picture }}"
+          [alt]="chat.user?.name"
+          class="avatar-sm rounded-circle ml-3"
+        />
       </div>
     </div>
   </div>
 
-  <div class="pl-3 pr-3 pt-3 pb-3 box-shadow-1 chat-input-area" *ngIf="chatCollection">
-    <form [formGroup]="commentForm" class="inputForm" >
+  <div
+    class="pl-3 pr-3 pt-3 pb-3 box-shadow-1 chat-input-area"
+    *ngIf="chatCollection"
+  >
+    <form [formGroup]="commentForm" class="inputForm">
       <div class="form-group">
-        <textarea class="form-control form-control-rounded" formControlName="text" placeholder="Type your message"
-          name="message" id="message" cols="30" rows="3"></textarea>
+        <textarea
+          class="form-control form-control-rounded"
+          formControlName="text"
+          placeholder="Type your message"
+          name="message"
+          id="message"
+          cols="30"
+          rows="3"
+        ></textarea>
       </div>
       <div class="d-flex">
         <div class="flex-grow-1"></div>
-        <button *ngIf="!send_update" type="submit" class="btn btn-icon btn-rounded btn-primary mr-2" (click)="sendMessage($event)">
+        <button
+          *ngIf="!send_update"
+          type="submit"
+          class="btn btn-icon btn-rounded btn-primary mr-2"
+          (click)="sendMessage($event)"
+        >
           <i class="i-Paper-Plane"></i>
         </button>
-        <button *ngIf="send_update" class="btn btn-icon btn-rounded btn-outline-danger mr-2" type="button" (click)="dismiss()">
+        <button
+          *ngIf="send_update"
+          class="btn btn-icon btn-rounded btn-outline-danger mr-2"
+          type="button"
+          (click)="dismiss()"
+        >
           <!-- <i class="i-Arrow-X-Right"></i> -->
           X
         </button>
-        <button *ngIf="send_update" type="submit" class="btn btn-icon btn-rounded btn-warning mr-2" (click)="sendUpdatedComment()">
+        <button
+          *ngIf="send_update"
+          type="submit"
+          class="btn btn-icon btn-rounded btn-warning mr-2"
+          (click)="sendUpdatedComment()"
+        >
           <i class="i-Paper-Plane"></i>
         </button>
       </div>
