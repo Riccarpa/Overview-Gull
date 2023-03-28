@@ -18,12 +18,34 @@ export class TrelloComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  droppedData = [
-    'foo',
-    '',
-    '',
-    ''
-  ]
+  tables = [
+    {
+      name: 'TO DO',
+      color: 'background-color: gold',
+      tasks: [
+        {title: 'Fare la spesa', description: 'Some quick example text to build on the card title and make up the bulk of the card\'s content', isDragging: false},
+        {title: 'Task 1', description: 'Some quick example text', isDragging: false},
+        {title: 'Task 20', description: 'Build on the card title and make up the bulk of the card\'s content', isDragging: false}
+      ]
+    },
+    {
+      name: 'DOING',
+      color: 'background-color: yellowgreen',
+      tasks: []
+    },
+    {
+      name: 'DONE',
+      color: 'background-color: tomato',
+      tasks: []
+    },
+    {
+      name: 'IDEAS',
+      color: 'background-color: deepskyblue',
+      tasks: []
+    }
+  ];
+
+  currentTable = 0;
 
   taskForm = new FormGroup({
     title: new FormControl(null,Validators.required),
@@ -31,26 +53,32 @@ export class TrelloComponent implements OnInit {
   });
   
 
-  onDrop({ dropData }: any, id: number): void {
-    for(let i = 0; i < this.droppedData.length; i++){
-      this.droppedData[i] = '';
-    }
+  onDrop({dropData}: any, droppedTable: number): void {
+    let data = dropData.split(',')
+    let tableId = data[0];
+    let taskId = data[1];
+    
+    let task = this.tables[tableId].tasks.splice(taskId, 1);
 
-    this.droppedData[id] = dropData;
+    this.tables[droppedTable].tasks.push(task[0]);
+    
+    console.log(task[0])
+    
+  }
+
+  onDrop2(){
+    console.log('hello')
+  }
+
+  onDragging(isDragging : any){
+    console.log(isDragging)
   }
 
   // modal and alerts
-  open(content) {
+  open(content, id : number) {
     this.taskForm.reset(); 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
-    .result.then((result) => {
-      
-    }, (reason) => {
-      if(reason){
-      
-        this.toastr.success(`User ${reason} created successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
-      }
-    });
+    this.currentTable = id;
   }
 
   onSubmit(){
@@ -60,17 +88,15 @@ export class TrelloComponent implements OnInit {
      
     }else{
       this.modalService.dismissAll()
-      this.toastr.warning('hello', 'Warning', { timeOut: 3000, closeButton: true});
+      this.tables[this.currentTable].tasks.push({
+        title: this.taskForm.value.title,
+        description: this.taskForm.value.description,
+        isDragging: false
+      })
+    
+      this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
     }
 
   }
-
-  // onDrop2({ dropData }: any): void {
-  //   this.droppedData2 = dropData;
-  //   setTimeout(() => {
-  //     this.droppedData2 = '';
-  //   }, 2000);
-  // }
-
 
 }
