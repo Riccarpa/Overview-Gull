@@ -19,10 +19,10 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Assignee</th>
-              <th>End date</th>
-              <th>State</th>
+              <th (click)="sortTable('name')">Name</th>
+              <th (click)="sortTable('assignee_id')">Assignee</th>
+              <th (click)="sortTable('end_date')">End date</th>
+              <th (click)="sortTable('status')">State</th>
               <th>Action</th>
             </tr>
           </thead>

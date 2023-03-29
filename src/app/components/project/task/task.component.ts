@@ -411,6 +411,20 @@ export class TaskComponent implements OnInit {
     }, 1000);
   }
 
+    sortTable(column: string) {
+    this.filteredTasks.sort((a, b) => {
+      const valA = a[column];
+      const valB = b[column];
+      if (valA < valB) {
+        return -1;
+      } else if (valA > valB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  
+}
 
 }
 
