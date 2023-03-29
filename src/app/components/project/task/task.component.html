@@ -12,11 +12,11 @@
 
 
 <!-- table task -->
-<div *ngIf="tasks.length" class="row mb-5">
+<div class="row mb-5">
   <div class="col-md-12">
     <div class="card o-hidden">
       <div class="table-container">
-        <table>
+        <table  >
           <thead>
             <tr>
               <th (click)="sortTable('name')">Name</th>
@@ -81,63 +81,8 @@
             </tr>
           </tbody>
         </table>
-        <div class="no-data" style="display: none">No data to display</div>
       </div>
-      <!-- <ngx-datatable style="min-height: 300px; box-shadow: none" class="material fullscreen " [columnMode]="'force'"
-        [headerHeight]="50" [rowHeight]="60" [scrollbarV]="false" [rows]="filteredTasks">
-        <ngx-datatable-column name="name" [width]="200">
-          <ng-template ngx-datatable-header-template>Task name</ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <a class="h_link_chat" >
-              <span>
-                {{ row.name }}
-              </span>
-              <div (click)="openChatModal(modalChat,row)">
-                <button class="btn bg-transparent ml-2 p-0">
-                  <i class="text-20 i-Speach-Bubble-3" style="color: blue"></i>
-                  <span *ngIf="row.comments?.length > 0"
-                    class="badge badge-pill badge-primary  mr-1">{{row.comments.length}}
-                  </span>
-                </button>
-              </div>
-            </a>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="assignee_id" [comparator]="compareAssignee">
-          <ng-template ngx-datatable-header-template>Assignee</ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row">
-            {{ getAssignee(row.assignee_id) }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="end_date" [comparator]="compare">
-          <ng-template ngx-datatable-header-template>End Date</ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row" >
-            <div [ngClass]="{'text-danger': checkDateIsPast(row.end_date,row.status)}"  >{{ row.end_date | date:'dd-MM-yyyy'  }}</div>
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column [width]="300" name="status">
-          <ng-template ngx-datatable-header-template>State</ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <span class="rounded-circle d-inline-block" [ngClass]="{
-              red: row.status == 0,
-              green: row.status == 2,
-              orange: row.status == 1
-            }" style="height: 10px; width: 10px"></span>
-            {{ getStatus(row.status) }}
-          </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column [width]="100" >
-          <ng-template ngx-datatable-header-template>Actions</ng-template>
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <button (click)="openModalEditTask(row.id, modalBasic, filteredTasks)" class="btn bg-transparent mr-2 p-0">
-              <i class="text-20 i-Pen-5"></i>
-            </button>
-            <button (click)="deleteTask(row.id, modalConfirm)" *ngIf="user.role == 1" class="btn bg-transparent text-danger ml-2 p-0">
-              <i class="text-20 i-Close"></i>
-            </button>
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable> -->
+     
     </div>
   </div>
 </div>
