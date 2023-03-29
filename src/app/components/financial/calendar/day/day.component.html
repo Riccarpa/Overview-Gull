@@ -1,5 +1,5 @@
 <div class="row flex-nowrap align-items-center py-4" [ngClass]="{'bg-holiday' :  isWeekendDirective(day.date) == true}">
-  <div class="col-4 d-flex align-items-center ">
+  <div class="col-md-4 col-3 d-flex align-items-center ">
     <span>
       <div class="mb-3 justify-content-center d-flex">
         <label class="checkbox checkbox-primary">
@@ -14,14 +14,16 @@
       </div>
     </span>
     <span
-      
       [ngClass]="{ 'text-danger': isWeekendDirective(day.date) == true }"
-      ><strong>{{ day.date | date : "d EEEE" }}</strong></span
+      >
+      <strong class="d-block d-sm-none">{{ day.date | date : "d " }}</strong>
+      <strong class="d-none d-md-block ">{{ day.date | date : "d EEEE " }}</strong>
+      </span
     >
   </div>
 
   <!-- activities and hours -->
-  <div  [formGroup]="activitiesForm" class="d-flex align-items-center col-4 mb-3 justify-content-center">
+  <div  [formGroup]="activitiesForm" class="d-md-flex align-items-center col-md-4 col-6 mb-3 ">
     <div formArrayName="activitiesArray">
       <!--show old activities -->
       <div
@@ -127,7 +129,7 @@
   </div>
 
   <!-- smartworking -->
-  <div  class="col-4 mb-3 justify-content-center d-flex">
+  <div  class="col-md-4 col-3 mb-3 justify-content-center d-flex">
     <label class="checkbox checkbox-primary">
       <input
         (change)="smartAssign($event)"
