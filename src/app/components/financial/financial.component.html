@@ -2,9 +2,9 @@
   <strong>Financial</strong>: {{ user.name }} {{ user.surname }}
 </h2>
 
-<div style="margin-top: 2.5rem; margin-bottom: 2rem;" class=" d-flex align-items-center" *ngIf="monthlyLogs">
+<div style="margin-top: 2.5rem; margin-bottom: 2rem;" class=" d-flex align-items-center flex-wrap" *ngIf="monthlyLogs">
   <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
-    <div class="card-body text-center">
+    <div class="card-body text-center mt-2">
       <i class="i-Calendar mr-2"></i>
       <div class="content">
         <p class="text-muted mt-2 mb-0">Giorni</p>
@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4 mt-2">
     <div class="card-body">
         <i class="i-Gears"></i>
         <div class="content">
@@ -26,7 +26,7 @@
 
     </div>
   </div>
-  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4">
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mr-4 mt-2">
     <div class="card-body">
         <i class="i-Loading"></i>
         <div class="content">
@@ -38,7 +38,7 @@
 
     </div>
   </div>
-  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1">
+  <div class="card card-icon-bg card-icon-bg-primary flex-grow-1 mt-2">
     <div class="card-body">
         <i class="i-Heart"></i>
         <div class="content">
@@ -68,14 +68,7 @@
       </div>
     </div>
       <div>
-      <!-- <button
-        *ngIf="!isSaved"
-        type="button"
-        class="btn btn-primary m-1"
-        (click)="save()"
-      >
-        Collect
-      </button> -->
+
       <button
         
         type="button"
@@ -87,7 +80,7 @@
     </div>
   </div>
 
-  <div *ngIf="dayIds.length > 0" class="col-6 d-flex align-items-center">
+  <div *ngIf="dayIds.length > 0" class="col-12 d-flex align-items-center ">
     <form action="d-flex" [formGroup]="bulkActivities">
       <select
         formControlName="activity_id"
@@ -110,9 +103,9 @@
         </option>
       </select>
     </form>
-    <p class="ml-4 mb-0">
+    <p class="ml-4 mb-0 flex-grow-1">
       <strong
-        >Applica attività Per {{ dayIds?.length }} giorni selezionati</strong
+        > {{ dayIds?.length }} giorni selezionati</strong
       >
     </p>
     <button class="btn btn-primary mr-1 ml-2" (click)="bulkSave()">
