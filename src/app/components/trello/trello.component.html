@@ -1,24 +1,31 @@
-
-<div class="row p-3 d-flex flex-wrap" style="height: calc(100vh - 80px - 32px - 32px);">
-  <div *ngFor="let table of tables; let i = index" class="col card p-0 mx-3" style="max-height:100%" [style]="table.color" mwlDroppable (drop)="onDrop($event, i)" dragOverClass="drop-over-active">
+<div>
+  <button class="btn btn-primary" (click)="saveTasks()">Save</button>
+</div>
+<div class="row p-3 d-flex flex-wrap" style="height: calc(100vh - 80px - (32px * 2) - 34px);">
+  <div *ngFor="let table of tables; let i = index" 
+    class="col card p-0 mx-3" 
+    style="max-height:100%" 
+    [style]="table.color" 
+    mwlDroppable 
+    (drop)="onDrop($event, i)" 
+    dragOverClass="drop-over-active"
+    (click)="openTask()"
+  >
     <div class="card-header">{{table.name}}</div>
     <div class="card-body" style="max-height: 100%; overflow-y: auto;">
 
-      <div *ngFor="let task of table.tasks; let taskId = index" class="card mb-3" 
+      <div *ngFor="let task of table.tasks; let taskId = index" class="card mb-3" [class]="task.isDragging ? 'drag-active' : ''"
         style="max-width: 18rem;" 
         mwlDraggable
         mwlDroppable
         dropData="{{i}},{{taskId}}"
-        dragActiveClass="drag-active"
-        (dragging)="onDragging(true)"
-        (dragEnd)="task.isDragging = false"
+        (dragStart)="onDragging(i, taskId)"
+        (dragEnd)="onDragging(i, taskId)"
         [touchStartLongPress]="{ delay: 300, delta: 30 }"
-        (drop)="onDrop2()"
-        
+        (dragOver)="dragOverCard = taskId"
       >
         <div class="card-header">
           <h5>{{task.title}}</h5>
-          <p>{{task.isDragging}}</p>
         </div>
         <div class="card-body">
           <p class="card-text">{{task.description}}</p>
@@ -71,7 +78,30 @@
                 id="description" 
                 style="height: 100px"
               ></textarea>
-              
+            </div>
+
+            <div class="col-md-6 form-group">
+              <label for="">Checklist</label>
+              <label class="checkbox checkbox-outline-success">
+                  <input type="checkbox" checked>
+                  <span>Success</span>
+                  <span class="checkmark"></span>
+              </label>
+              <label class="checkbox checkbox-outline-warning">
+                  <input type="checkbox" checked>
+                  <span>Warning</span>
+                  <span class="checkmark"></span>
+              </label>
+              <label class="checkbox checkbox-outline-danger">
+                  <input type="checkbox">
+                  <span>Danger</span>
+                  <span class="checkmark"></span>
+              </label>
+              <label class="checkbox checkbox-outline-info">
+                  <input type="checkbox">
+                  <span>Info</span>
+                  <span class="checkmark"></span>
+              </label>
             </div>
           </div>
         </form>
