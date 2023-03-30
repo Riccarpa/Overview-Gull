@@ -23,16 +23,33 @@ export class TrelloComponent implements OnInit {
   ) { }
 
   id = this.route.snapshot.paramMap.get('id');
-  user: any
+  user: any;
+  titleModal: string;
+  isCreatingTask = false;
 
   tables = [
     {
       name: 'TO DO',
       color: 'background-color: gold',
       tasks: [
-        {title: 'Fare la spesa', description: 'Some quick example text to build on the card title and make up the bulk of the card\'s content', isDragging: false},
-        {title: 'Task 1', description: 'Some quick example text', isDragging: false},
-        {title: 'Task 20', description: 'Build on the card title and make up the bulk of the card\'s content', isDragging: false}
+        {
+          title: 'Fare la spesa', 
+          description: 'Some quick example text to build on the card title and make up the bulk of the card\'s content', 
+          checkList: [],
+          isDragging: false
+        },
+        {
+          title: 'Task 1', 
+          description: 'Some quick example text',
+          checkList: [], 
+          isDragging: false
+        },
+        {
+          title: 'Task 20', 
+          description: 'Build on the card title and make up the bulk of the card\'s content', 
+          checkList: [],
+          isDragging: false
+        }
       ]
     },
     {
@@ -70,15 +87,11 @@ export class TrelloComponent implements OnInit {
     // })
 
   }
-
-  // taskForm = new FormGroup({
-  //   title: new FormControl(null,Validators.required),
-  //   description: new FormControl(null)
-  // });
   
   taskForm = this.fb.group({
     title: [null, Validators.required],
     description: [null],
+    newCheckbox: [null],
     checklist: this.fb.array([])
   });
 
@@ -111,34 +124,75 @@ export class TrelloComponent implements OnInit {
   }
 
   // modal and alerts
-  open(content, id : number) {
+  openCreateTask(content, id : number) {
+    this.isCreatingTask = true;
     this.taskForm.reset(); 
+    this.checklist.clear();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     this.currentTable = id;
   }
 
-  onSubmit(){
+  openEditTask(content, id : number, taskId : number){
+    this.openCreateTask(content, id);
+    this.isCreatingTask = false;
+
+    this.taskForm.setValue({
+      title: this.tables[id].tasks[taskId].title,
+      description: this.tables[id].tasks[taskId].description,
+      newCheckbox: null,
+      checklist: []
+    });
+
+    let taskChecksArray = this.tables[id].tasks[taskId].checkList;
+    for (let i = 0; i < taskChecksArray.length; i++) {
+
+      const checkForm = this.fb.group({
+        name: taskChecksArray[i].name,
+        isChecked: taskChecksArray[i].name.isChecked
+      })
+      this.checklist.push(checkForm)
+    }
+  }
+
+  saveTask(){
    
     if(this.taskForm.status == 'INVALID'){
       this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true});
      
     }else{
       this.modalService.dismissAll()
+      let checklist = [];
+      for (let i = 0; i < this.checklist.controls.length; i++) {
+        let checkControl = this.checklist.controls[i];
+        checklist.push({
+          name: checkControl.value.name,
+          isChecked: checkControl.value.isChecked
+        })
+      }
       this.tables[this.currentTable].tasks.push({
         title: this.taskForm.value.title,
         description: this.taskForm.value.description,
+        checkList: checklist,
         isDragging: false
       })
+
+      console.log(this.tables);
     
       this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
     }
 
-    const checkform = this.fb.group({
-      title: ['']
-    })
-    this.checklist.push(checkform)
-    console.log(this.taskForm)
+  }
 
+  addCheckbox(){
+    console.log(this.taskForm.value.newCheckbox);
+    const checkForm = this.fb.group({
+      name: [this.taskForm.value.newCheckbox],
+      isChecked: [false]
+    })
+    this.checklist.push(checkForm)
+    console.log(this.taskForm.controls)
+
+    /* this.personForm.setControl('nationality', this.formBuilder.control('', [Validators.required])); */ 
   }
 
   saveTasks(){

@@ -18,6 +18,7 @@
         style="max-width: 18rem;" 
         mwlDraggable
         mwlDroppable
+        (click)="openEditTask(modalTask, i, taskId)"
         dropData="{{i}},{{taskId}}"
         (dragStart)="onDragging(i, taskId)"
         (dragEnd)="onDragging(i, taskId)"
@@ -34,7 +35,7 @@
 
     </div> 
     <div class="card-footer">
-      <button class="btn btn-primary" (click)="open(modalTask, i)">Add Task</button>
+      <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
     </div>
   </div>
 </div>
@@ -42,7 +43,7 @@
 <!-- new task card modal -->
 <ng-template #modalTask let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Create new task</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{isCreatingTask ? 'Create new task' : 'Edit task'}}</h4>
     <button
       type="button"
       class="close"
@@ -80,14 +81,23 @@
               ></textarea>
             </div>
 
-            <div class="col-md-6 form-group">
+            <div class="col-md-12 form-group">
               <label for="">Checklist</label>
-              <label class="checkbox checkbox-outline-success">
-                  <input type="checkbox" checked>
-                  <span>Success</span>
+              <p *ngIf="checklist.controls.length == 0">Non ci sono elementi</p>
+              <ng-container *ngFor="let checkForm of checklist.controls; let n = index">
+                <label class="checkbox checkbox-outline-success" [formGroup]="checkForm">
+                  <input type="checkbox" formControlName="isChecked">
+                  <span>{{checkForm.value.name}}</span>
                   <span class="checkmark"></span>
-              </label>
-              <label class="checkbox checkbox-outline-warning">
+                </label>
+              </ng-container>
+
+              <div class="d-flex mt-3">
+                <input type="text" class="form-control" placeholder="Add element" formControlName="newCheckbox">
+                <button type="button" class="btn btn-primary mx-2" (click)="addCheckbox()">Add</button>
+              </div>
+              
+              <!-- <label class="checkbox checkbox-outline-warning">
                   <input type="checkbox" checked>
                   <span>Warning</span>
                   <span class="checkmark"></span>
@@ -101,7 +111,7 @@
                   <input type="checkbox">
                   <span>Info</span>
                   <span class="checkmark"></span>
-              </label>
+              </label> -->
             </div>
           </div>
         </form>
@@ -109,8 +119,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!taskForm.valid">
-      Create
+    <button type="button" class="btn btn-primary" (click)="saveTask()" [disabled]="!taskForm.valid">
+      {{isCreatingTask ? 'Create' : 'Edit'}}
     </button>
   </div>
 </ng-template>
