@@ -17,9 +17,9 @@ export class ClientComponent implements OnInit {
 
   constructor(private clientService: ClientService, private router: Router, private modalService: NgbModal,private toastr:ToastrService) {
     this.cropperSettings = new CropperSettings();
-    this.cropperSettings.cropperDrawSettings.lineDash = true;
-    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-
+    this.cropperSettings.rounded = true
+    this.cropperSettings.showCenterMarker = false
+    this.cropperSettings.markerSizeMultiplier = 0.5
     this.data = {};
   }
 

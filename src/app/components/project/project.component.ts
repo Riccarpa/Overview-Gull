@@ -55,10 +55,11 @@ export class ProjectComponent implements OnInit {
     private toastr: ToastrService,
     private interc: ReqInterceptInterceptor
   ) {
-    this.cropperSettings = new CropperSettings();
-    this.cropperSettings.cropperDrawSettings.lineDash = true;
-    this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
-    this.data = {};
+     this.cropperSettings = new CropperSettings();
+      this.cropperSettings.rounded = true
+      this.cropperSettings.showCenterMarker = false
+      this.cropperSettings.markerSizeMultiplier = 0.5
+      this.data = {};
   }
 
   projects: any[] = [];
