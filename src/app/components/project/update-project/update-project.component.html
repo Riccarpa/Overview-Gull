@@ -1,6 +1,6 @@
 <!-- header page -->
 <div *ngIf="project">
-  <div class="card card-profile-1 mb-4 d-flex flex-row justify-content-start">
+  <div class="card card-profile-1 mb-4 d-flex flex-row flex-wrap justify-content-start">
     <div class="card-body text-center d-flex flex-row align-items-center">
       <div (click)="openModalImg(modalCropper)" class="avatar box-shadow-2 m-0 mr-2 pointer">
         <img *ngIf="project.logo == null" src="assets/images/project.png" alt="" />
@@ -105,7 +105,7 @@
       </div>
 
       <form [formGroup]="projectForm">
-        <div class="row flex-row-reverse">
+        <div class="row ">
           <!-- input name -->
           <div class="col-md-6 form-group mb-3 position-relative">
             <label for="name">Project</label>
@@ -178,9 +178,9 @@
           </div>
 
           <!-- collaboratori -->
-          <div class="col-6">
+          <div class="col-lg-6 col-md-12">
             <label class="mb-1">Collaborators</label>
-            <div class="card mb-4">
+            <div class="card mb-4 ">
               <div class="card-body">
                 <tag-input [formControl]="collaboratorTags"
                   (onAdd)="addUserToProject($event)" (onRemove)="removeUserToProject($event)"
@@ -192,7 +192,7 @@
             </div>
           </div>
 
-          <div class="col-6" *ngIf="role === 2">
+          <div class="col-lg-6 col-md-12" *ngIf="role === 2">
             <label class="d-block" for="">Collaborators</label>
 
             <div class="m-1 btn btn-outline-primary" *ngFor="let u of arrayUsersIds">
@@ -201,16 +201,13 @@
           </div>
 
           <!-- button update-delete -->
-          <div *ngIf="role === 1" class="col-12 d-flex align-items-center mt-3">
-            <div class="col-6"></div>
-            <div class="col-6 text-right">
+          <div *ngIf="role === 1" class="col-12 d-flex align-items-center justify-content-md-start justify-content-sm-between  mt-3">
               <btn-loading (click)="confirm(modalConfirm)" [loading]="loadingDelete" btnClass="btn-outline-danger" [disabled]="loadingDelete"
                 class="mr-4">
                 Delete
               </btn-loading>
               <btn-loading (click)="updateProject()" btnClass=" btn-primary " [loading]="loadingUpdate" [disabled]="!projectForm.valid || loadingUpdate">
                 Update</btn-loading>
-            </div>
           </div>
         </div>
         <!-- modal delete -->
