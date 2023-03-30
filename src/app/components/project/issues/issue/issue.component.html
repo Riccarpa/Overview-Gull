@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
-        <div class="card card-icon-bg card-icon-bg-primary mb-4">
-            <div class="card-body">
+        <div style="overflow-x: scroll;" class="card card-icon-bg card-icon-bg-primary mb-4">
+            <div class="card-body " >
                 <div class="card-title mb-3 d-flex justify-content-between align-items-center w-100">
                     <h3>Project name: {{project?.name}} </h3>
                     <button class="btn btn-success px-3" (click)="open(modalCreate)" >
@@ -9,15 +9,15 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="project?.issues.length" class="card-body pb-0 row">
-                <div class="d-flex align-items-center justify-content-between col-12 text-center">
-                    <div class="col-lg-5 col-md-4 col-sm-4 mb-1 mr-1 py-2 px-2 text-left">
-                        <h3 class="text-18">This Month</h3>
+            <div *ngIf="project?.issues.length" class="card-body pb-2 w-100 d-none d-md-block ">
+                <div class="w-100 w-md-100 d-flex align-items-center text-center">
+                    <div class="text-16 col-4 text-left pl-0">
+                        This Month
                     </div>
-                    <div class="col-lg-1 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Owner</div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Status</div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Date</div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 mb-1 mr-1 py-2 nowrap text-18">Priority</div>
+                    <div class="col-2 text-16  ">Owner</div>
+                    <div class="col-2 text-16 ">Status</div>
+                    <div class="col-2 text-16 ">Date</div>
+                    <div class="col-2 text-16 ">Priority</div>
                 </div>
             </div>
             <div *ngIf="project"  [perfectScrollbar]="{suppressScrollX: true}" class="pb-4">

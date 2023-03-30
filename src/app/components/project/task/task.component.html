@@ -28,7 +28,7 @@
           </thead>
           <tbody id="items">
             <tr *ngFor="let row of filteredTasks" id="{{ row.id }}" (drop)="patchOrder()">
-              <td class="d-flex justify-content-between " >
+              <td class="d-flex flex-wrap justify-content-between " >
                 <span>{{ row.name }}</span>
                 <span style="width: 60px;" (click)="openChatModal(modalChat, row)">
                   <button class="btn bg-transparent ml-2 p-0">
@@ -40,6 +40,7 @@
                     </span>
                   </button>
                 </span>
+                
               </td>
               <td>{{ getAssignee(row.assignee_id) }}</td>
               <td>
