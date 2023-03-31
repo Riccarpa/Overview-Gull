@@ -26,6 +26,10 @@ export class TrelloComponent implements OnInit {
   user: any;
   titleModal: string;
   isCreatingTask = false;
+  currentTable = 0;
+  currentTask = 0;
+  dragOverCard = 0;
+  check = true;
 
   tables = [
     {
@@ -69,8 +73,14 @@ export class TrelloComponent implements OnInit {
     }
   ];
 
-  currentTable = 0;
-  dragOverCard = 0;
+  taskForm = this.fb.group({
+    title: [null, Validators.required],
+    description: [null],
+    newCheckbox: [null],
+    checklist: this.fb.array([])
+  });
+
+  trelloTable = this.fb.array([]);
 
   ngOnInit(): void {
     this.uService.retrieveUser(this.id).subscribe((res: any) => {
@@ -86,18 +96,38 @@ export class TrelloComponent implements OnInit {
     //   this.toastr.error(error.error.message);
     // })
 
+
+    for (let i = 0; i < this.tables.length; i++) {
+
+      let tableForm = this.fb.group({
+        name: [this.tables[i].name],
+        color: [this.tables[i].color],
+        tasks: this.fb.array([])
+      })
+
+      for (let n = 0; n < this.tables[i].tasks.length; n++) {
+        let task = this.tables[i].tasks[n];
+
+        let taskForm = this.fb.group({
+          title: [task.title, Validators.required],
+          description: [task.description],
+          newCheckbox: [null],
+          checklist: this.fb.array([])
+        });
+        
+        let taskControl = tableForm.get("tasks") as FormArray;
+        taskControl.push(taskForm);
+      }
+
+      this.trelloTable.push(tableForm);
+    }
+    console.log(this.trelloTable.at(0))
   }
   
-  taskForm = this.fb.group({
-    title: [null, Validators.required],
-    description: [null],
-    newCheckbox: [null],
-    checklist: this.fb.array([])
-  });
-
   get checklist(){
     return this.taskForm.controls["checklist"] as FormArray;
   }
+  
 
   onDrop({dropData}: any, droppedTable: number): void {
     let data = dropData.split(',')
@@ -115,7 +145,6 @@ export class TrelloComponent implements OnInit {
       let array = this.tables[tableId].tasks;
       array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
     }
-    
   }
 
   //Give high z-index to current dragging task card
@@ -127,6 +156,7 @@ export class TrelloComponent implements OnInit {
   openCreateTask(content, id : number) {
     this.isCreatingTask = true;
     this.taskForm.reset(); 
+ 
     this.checklist.clear();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     this.currentTable = id;
@@ -135,6 +165,9 @@ export class TrelloComponent implements OnInit {
   openEditTask(content, id : number, taskId : number){
     this.openCreateTask(content, id);
     this.isCreatingTask = false;
+
+    this.currentTable = id;
+    this.currentTask = taskId;
 
     this.taskForm.setValue({
       title: this.tables[id].tasks[taskId].title,
@@ -148,7 +181,7 @@ export class TrelloComponent implements OnInit {
 
       const checkForm = this.fb.group({
         name: taskChecksArray[i].name,
-        isChecked: taskChecksArray[i].name.isChecked
+        isChecked: taskChecksArray[i].isChecked
       })
       this.checklist.push(checkForm)
     }
@@ -161,38 +194,66 @@ export class TrelloComponent implements OnInit {
      
     }else{
       this.modalService.dismissAll()
-      let checklist = [];
-      for (let i = 0; i < this.checklist.controls.length; i++) {
-        let checkControl = this.checklist.controls[i];
-        checklist.push({
-          name: checkControl.value.name,
-          isChecked: checkControl.value.isChecked
-        })
-      }
-      this.tables[this.currentTable].tasks.push({
-        title: this.taskForm.value.title,
-        description: this.taskForm.value.description,
-        checkList: checklist,
-        isDragging: false
-      })
-
-      console.log(this.tables);
+      if (this.isCreatingTask) {
     
-      this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
-    }
+        this.tables[this.currentTable].tasks.push({
+          title: this.taskForm.value.title,
+          description: this.taskForm.value.description,
+          checkList: [],
+          isDragging: false
+        })
+      
+        this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+      } else {
 
+        let checklist = [];
+        let updatedTask;
+        for (let i = 0; i < this.checklist.controls.length; i++) {
+          let checkControl = this.checklist.controls[i];
+          checklist.push({
+            name: checkControl.value.name,
+            isChecked: checkControl.value.isChecked
+          })
+        }
+
+        updatedTask = {
+          title: this.taskForm.value.title,
+          description: this.taskForm.value.description,
+          checkList: checklist,
+          isDragging: false
+        }
+        this.tables[this.currentTable].tasks.splice(this.currentTask, 1, updatedTask);
+
+        this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+      }  
+    }
   }
 
   addCheckbox(){
-    console.log(this.taskForm.value.newCheckbox);
-    const checkForm = this.fb.group({
-      name: [this.taskForm.value.newCheckbox],
-      isChecked: [false]
-    })
-    this.checklist.push(checkForm)
-    console.log(this.taskForm.controls)
+    let string = this.taskForm.value.newCheckbox
+    console.log(string.includes("\n"))
 
-    /* this.personForm.setControl('nationality', this.formBuilder.control('', [Validators.required])); */ 
+    if (string.length > 0) {
+      let checkForm;
+      if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
+        let array = string.split("\n");
+
+        for (let i = 0; i < array.length; i++) {
+          checkForm = this.fb.group({
+            name: [array[i]],
+            isChecked: [false]
+          })
+          this.checklist.push(checkForm)    
+        }
+      } else {
+        checkForm = this.fb.group({
+          name: [string],
+          isChecked: [false]
+        })
+        this.checklist.push(checkForm)
+      }
+      this.taskForm.setControl('newCheckbox', this.fb.control(''));
+    }
   }
 
   saveTasks(){

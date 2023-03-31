@@ -38,7 +38,43 @@
       <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
     </div>
   </div>
-</div>
+  <!-- <div *ngFor="let tableForm of trelloTable.controls; let i = index" 
+    class="col card p-0 mx-3" 
+    style="max-height:100%" 
+    [style]="tableForm.value.color" 
+    mwlDroppable 
+    (drop)="onDrop($event, i)" 
+    dragOverClass="drop-over-active"
+    (click)="openTask()"
+  >
+    <div class="card-header">{{tableForm.value.name}}</div>
+    <div class="card-body" style="max-height: 100%; overflow-y: auto;">
+
+      <div *ngFor="let taskForm of tableForm.controls.tasks.controls; let taskId = index" class="card mb-3" [class]="taskForm.value.isDragging ? 'drag-active' : ''"
+        style="max-width: 18rem;" 
+        mwlDraggable
+        mwlDroppable
+        (click)="openEditTask(modalTask, i, taskId)"
+        dropData="{{i}},{{taskId}}"
+        (dragStart)="onDragging(i, taskId)"
+        (dragEnd)="onDragging(i, taskId)"
+        [touchStartLongPress]="{ delay: 300, delta: 30 }"
+        (dragOver)="dragOverCard = taskId"
+      >
+        <div class="card-header">
+          <h5>{{taskForm.value.title}}</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{taskForm.value.description}}</p>
+        </div>
+      </div>
+
+    </div> 
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
+    </div>
+  </div>
+</div> -->
 
 <!-- new task card modal -->
 <ng-template #modalTask let-modal>
@@ -81,9 +117,9 @@
               ></textarea>
             </div>
 
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group" *ngIf="!isCreatingTask">
               <label for="">Checklist</label>
-              <p *ngIf="checklist.controls.length == 0">Non ci sono elementi</p>
+              <p *ngIf="checklist.controls.length == 0" class="m-0">Non ci sono elementi</p>
               <ng-container *ngFor="let checkForm of checklist.controls; let n = index">
                 <label class="checkbox checkbox-outline-success" [formGroup]="checkForm">
                   <input type="checkbox" formControlName="isChecked">
@@ -92,10 +128,9 @@
                 </label>
               </ng-container>
 
-              <div class="d-flex mt-3">
-                <input type="text" class="form-control" placeholder="Add element" formControlName="newCheckbox">
-                <button type="button" class="btn btn-primary mx-2" (click)="addCheckbox()">Add</button>
-              </div>
+              <textarea class="form-control mt-2" formControlName="newCheckbox" placeholder="Add element" style="height: 50px"></textarea>
+              <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox()">Add</button>
+           
               
               <!-- <label class="checkbox checkbox-outline-warning">
                   <input type="checkbox" checked>
