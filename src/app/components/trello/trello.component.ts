@@ -75,12 +75,6 @@ export class TrelloComponent implements OnInit {
 
   trelloTable = this.fb.array([]);
   taskForm : any;
-  // taskForm = this.fb.group({
-  //   title: [null, Validators.required],
-  //   description: [null],
-  //   newCheckbox: [null],
-  //   checklist: this.fb.array([])
-  // });
 
   ngOnInit(): void {
     this.uService.retrieveUser(this.id).subscribe((res: any) => {
@@ -95,7 +89,6 @@ export class TrelloComponent implements OnInit {
     // }, (error) => {
     //   this.toastr.error(error.error.message);
     // })
-
 
     for (let i = 0; i < this.tables.length; i++) {
 
@@ -113,7 +106,7 @@ export class TrelloComponent implements OnInit {
           description: [task.description],
           isDragging: [false],
           newCheckbox: [null],
-          checklist: this.fb.array([])
+          checkList: this.fb.array([])
         });
 
         let taskControl = tableForm.get("tasks") as FormArray;
@@ -124,21 +117,17 @@ export class TrelloComponent implements OnInit {
             isChecked: task.checkList[v].isChecked
           })
 
-          let checkControl = taskForm.get("checklist") as FormArray;
-          checkControl.push(checkForm)
-          
+          let checkControl = taskForm.get("checkList") as FormArray;
+          checkControl.push(checkForm) 
         }
-        
         taskControl.push(taskForm);
       }
-
       this.trelloTable.push(tableForm);
     }
-    //console.log(this.trelloTable.at(0))
   }
   
-  // get checklist(){
-  //   return this.taskForm.controls["checklist"] as FormArray;
+  // get checkList(){
+  //   return this.taskForm.controls["checkList"] as FormArray;
   // }
   
 
@@ -147,57 +136,38 @@ export class TrelloComponent implements OnInit {
     let tableId = data[0];
     let taskId = data[1];
 
-    let tables =this.trelloTable.getRawValue();
     let taskArray = this.trelloTable.at(tableId).get("tasks") as FormArray;
-    let task = tables[tableId].tasks[taskId];
-
-    let taskForm = this.fb.group({
-      title: [task.title, Validators.required],
-      description: [task.description],
-      isDragging: [false],
-      newCheckbox: [null],
-      checklist: this.fb.array([])
-    });
+    let taskForm = taskArray.at(taskId)
 
     taskArray.removeAt(taskId);
 
     //If card dropped on different table
     if(droppedTable != tableId){
 
-      // let task = this.tables[tableId].tasks.splice(taskId, 1);
-      // this.tables[droppedTable].tasks.push(task[0]);
-
       let dropInArray = this.trelloTable.at(droppedTable).get("tasks") as FormArray;
       dropInArray.push(taskForm);
       
     } else {
       //Swap card order
-      // let array = this.tables[tableId].tasks;
-      // array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
-
       taskArray.insert(this.dragOverCard, taskForm);
     }
   }
 
   //Give high z-index to current dragging task card
   onDragging(tableId : any, taskId : any){
-    //this.tables[tableId].tasks[taskId].isDragging = !this.tables[tableId].tasks[taskId].isDragging;
-
     this.trelloTable.at(tableId).value.tasks.at(taskId).isDragging = !this.trelloTable.at(tableId).value.tasks.at(taskId).isDragging;
-    //console.log(this.trelloTable.getRawValue())
   }
 
   // modal and alerts
   openCreateTask(content, id : number) {
     this.isCreatingTask = true;
-    // this.taskForm.reset(); 
-    // this.checklist.clear();
+
     this.taskForm = this.fb.group({
       title: [null, Validators.required],
       description: [null],
       isDragging: [false],
       newCheckbox: [null],
-      checklist: this.fb.array([])
+      checkList: this.fb.array([])
     });
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
@@ -212,35 +182,19 @@ export class TrelloComponent implements OnInit {
     this.currentTask = taskId;
 
     let taskArray = this.trelloTable.at(id).get("tasks") as FormArray;
-    let checkArray = taskArray.at(taskId).get("checklist") as FormArray;
-
-    //let taskChecksArray = this.tables[id].tasks[taskId].checkList;
-    // let taskChecksArray = this.trelloTable.at(id).value.tasks.at(taskId).checklist;
-    
-    // let checklist = []
-    // for (let i = 0; i < taskChecksArray.length; i++) {
-
-    //   const checkForm = this.fb.group({
-    //     name: taskChecksArray[i].name,
-    //     isChecked: taskChecksArray[i].isChecked
-    //   })
-    //   checklist.push(checkForm)
-    // }
+    let checkArray = taskArray.at(taskId).get("checkList") as FormArray;
 
     this.taskForm.setValue({
       title: taskArray.at(taskId).value.title,
       description: taskArray.at(taskId).value.description,
-      isDragging: [false],
+      isDragging: taskArray.at(taskId).value.isDragging,
       newCheckbox: [null],
-      checklist: []
+      checkList: []
     });
 
     for (let i = 0; i < checkArray.length; i++) {
-      this.taskForm.controls.checklist.push(checkArray.at(i))
+      this.taskForm.controls.checkList.push(checkArray.at(i))
     }
-
-    console.log(this.taskForm)
-
   }
 
   saveTask(){
@@ -251,40 +205,15 @@ export class TrelloComponent implements OnInit {
     }else{
       this.modalService.dismissAll()
       let taskArray = this.trelloTable.at(this.currentTable).get("tasks") as FormArray;
-      if (this.isCreatingTask) {
-    
-        // this.tables[this.currentTable].tasks.push({
-        //   title: this.taskForm.value.title,
-        //   description: this.taskForm.value.description,
-        //   checkList: [],
-        //   isDragging: false
-        // })
 
+      if (this.isCreatingTask) {
         taskArray.push(this.taskForm);
       
         this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
       } else {
-
-        // let checklist = [];
-        // let updatedTask;
-        // for (let i = 0; i < this.checklist.controls.length; i++) {
-        //   let checkControl = this.checklist.controls[i];
-        //   checklist.push({
-        //     name: checkControl.value.name,
-        //     isChecked: checkControl.value.isChecked
-        //   })
-        // }
-
-        // updatedTask = {
-        //   title: this.taskForm.value.title,
-        //   description: this.taskForm.value.description,
-        //   checkList: checklist,
-        //   isDragging: false
-        // }
-        // this.tables[this.currentTable].tasks.splice(this.currentTask, 1, updatedTask);
         taskArray.removeAt(this.currentTask);
         taskArray.insert(this.currentTask, this.taskForm);
-
+        
         this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
       }  
     }
@@ -294,8 +223,7 @@ export class TrelloComponent implements OnInit {
     let string = this.taskForm.value.newCheckbox
 
     if (string.length > 0) {
-      let taskArray = this.trelloTable.at(this.currentTable).get("tasks") as FormArray;
-      let checkArray = taskArray.at(this.currentTask).get("checklist") as FormArray;
+      let checkArray = this.taskForm.get("checkList") as FormArray;
       let checkForm;
       if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
         let array = string.split("\n");
@@ -315,7 +243,6 @@ export class TrelloComponent implements OnInit {
         checkArray.push(checkForm)
       }
       this.taskForm.setControl('newCheckbox', this.fb.control(''));
-      console.log(checkArray)
     }
   }
 

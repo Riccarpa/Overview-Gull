@@ -2,41 +2,6 @@
   <button class="btn btn-primary" (click)="saveTasks()">Save</button>
 </div>
 <div class="row p-3 d-flex flex-wrap" style="height: calc(100vh - 80px - (32px * 2) - 34px);">
-  <!-- <div *ngFor="let table of tables; let i = index" 
-    class="col card p-0 mx-3" 
-    style="max-height:100%" 
-    [style]="table.color" 
-    mwlDroppable 
-    (drop)="onDrop($event, i)" 
-    dragOverClass="drop-over-active"
-  >
-    <div class="card-header">{{table.name}}</div>
-    <div class="card-body" style="max-height: 100%; overflow-y: auto;">
-
-      <div *ngFor="let task of table.tasks; let taskId = index" class="card mb-3" [class]="task.isDragging ? 'drag-active' : ''"
-        style="max-width: 18rem;" 
-        mwlDraggable
-        mwlDroppable
-        (click)="openEditTask(modalTask, i, taskId)"
-        dropData="{{i}},{{taskId}}"
-        (dragStart)="onDragging(i, taskId)"
-        (dragEnd)="onDragging(i, taskId)"
-        [touchStartLongPress]="{ delay: 300, delta: 30 }"
-        (dragOver)="dragOverCard = taskId"
-      >
-        <div class="card-header">
-          <h5>{{task.title}}</h5>
-        </div>
-        <div class="card-body">
-          <p class="card-text">{{task.description}}</p>
-        </div>
-      </div>
-
-    </div> 
-    <div class="card-footer">
-      <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
-    </div>
-  </div> -->
   <div *ngFor="let tableForm of trelloTable.controls; let i = index" 
     class="col card p-0 mx-3" 
     style="max-height:100%" 
@@ -116,9 +81,9 @@
             </div>
 
             <div class="col-md-12 form-group" *ngIf="!isCreatingTask">
-              <label for="">Checklist</label>
-              <p *ngIf="taskForm.value.checklist.length == 0" class="m-0">Non ci sono elementi</p>
-              <ng-container *ngFor="let checkForm of taskForm.controls.checklist.controls; let n = index">
+              <label for="">checkList</label>
+              <p *ngIf="taskForm.value.checkList.length == 0" class="m-0">Non ci sono elementi</p>
+              <ng-container *ngFor="let checkForm of taskForm.controls.checkList.controls; let n = index">
                 <label class="checkbox checkbox-outline-success" [formGroup]="checkForm">
                   <input type="checkbox" formControlName="isChecked">
                   <span>{{checkForm.value.name}}</span>
