@@ -105,7 +105,6 @@ export class TrelloComponent implements OnInit {
           title: [task.title, Validators.required],
           description: [task.description],
           isDragging: [false],
-          newCheckbox: [null],
           checkList: this.fb.array([])
         });
 
@@ -166,7 +165,6 @@ export class TrelloComponent implements OnInit {
       title: [null, Validators.required],
       description: [null],
       isDragging: [false],
-      newCheckbox: [null],
       checkList: this.fb.array([])
     });
 
@@ -188,13 +186,51 @@ export class TrelloComponent implements OnInit {
       title: taskArray.at(taskId).value.title,
       description: taskArray.at(taskId).value.description,
       isDragging: taskArray.at(taskId).value.isDragging,
-      newCheckbox: [null],
       checkList: []
     });
 
     for (let i = 0; i < checkArray.length; i++) {
       this.taskForm.controls.checkList.push(checkArray.at(i))
     }
+  }
+
+  //Prevent press enter from creating new line and creating an empty checkbox with spacebar
+  onKeydown(event, inputValue: any){
+    if (event.code == 'Enter') {
+      event.preventDefault();
+    } else if(event.code == 'Space' && inputValue.length == 0){
+      event.preventDefault();
+    }
+  }
+
+  addCheckbox(abc: any){
+    let string = abc.value
+
+    if (string.length > 0) {
+      let checkArray = this.taskForm.get("checkList") as FormArray;
+      let checkForm;
+      if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
+        let array = string.split("\n");
+
+        for (let i = 0; i < array.length; i++) {
+          if (array[i] != '') {
+            checkForm = this.fb.group({
+              name: [array[i]],
+              isChecked: [false]
+            })
+            checkArray.push(checkForm)  
+          }  
+        }
+      } else {
+        checkForm = this.fb.group({
+          name: [string],
+          isChecked: [false]
+        })
+        checkArray.push(checkForm)
+      }
+    }
+    abc.value = '';
+    abc.style.height = '40px';
   }
 
   saveTask(){
@@ -219,32 +255,6 @@ export class TrelloComponent implements OnInit {
     }
   }
 
-  addCheckbox(){
-    let string = this.taskForm.value.newCheckbox
-
-    if (string.length > 0) {
-      let checkArray = this.taskForm.get("checkList") as FormArray;
-      let checkForm;
-      if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
-        let array = string.split("\n");
-
-        for (let i = 0; i < array.length; i++) {
-          checkForm = this.fb.group({
-            name: [array[i]],
-            isChecked: [false]
-          })
-          checkArray.push(checkForm)    
-        }
-      } else {
-        checkForm = this.fb.group({
-          name: [string],
-          isChecked: [false]
-        })
-        checkArray.push(checkForm)
-      }
-      this.taskForm.setControl('newCheckbox', this.fb.control(''));
-    }
-  }
 
   saveTasks(){
     // this.trService.saveTasks(this.tables,this.id).subscribe(res=>{

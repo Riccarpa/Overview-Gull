@@ -30,6 +30,12 @@
         <div class="card-body">
           <p class="card-text">{{taskForm.value.description}}</p>
         </div>
+        <div class="card-footer">
+          <p class="m-0" *ngIf="taskForm.value.checkList.length > 0">
+            <i class="i-Check"></i>
+            {{taskForm.value.checkList.length}}
+          </p>
+        </div>
       </div>
 
     </div> 
@@ -81,18 +87,23 @@
             </div>
 
             <div class="col-md-12 form-group" *ngIf="!isCreatingTask">
-              <label for="">checkList</label>
+              <label for="">Checklist</label>
               <p *ngIf="taskForm.value.checkList.length == 0" class="m-0">Non ci sono elementi</p>
               <ng-container *ngFor="let checkForm of taskForm.controls.checkList.controls; let n = index">
-                <label class="checkbox checkbox-outline-success" [formGroup]="checkForm">
+                <label class="checkbox checkbox-outline-success pb-1" [formGroup]="checkForm" style="overflow-x: hidden; text-overflow: ellipsis;">
                   <input type="checkbox" formControlName="isChecked">
                   <span>{{checkForm.value.name}}</span>
                   <span class="checkmark"></span>
                 </label>
               </ng-container>
 
-              <textarea class="form-control mt-2" formControlName="newCheckbox" placeholder="Add element" style="height: 50px"></textarea>
-              <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox()">Add</button>
+              <textarea #checkboxInput class="form-control mt-2" 
+                placeholder="Add element" 
+                (keydown)="onKeydown($event, checkboxInput.value)"
+                (keyup.enter)="addCheckbox(checkboxInput)"
+                appTextareaAutoresize
+              ></textarea>
+              <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox(checkboxInput)">Add</button>
            
               
               <!-- <label class="checkbox checkbox-outline-warning">

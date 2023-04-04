@@ -39,6 +39,7 @@ import { ShowFinancialComponent } from './components/financial/show-financial/sh
 import { IssueComponent } from './components/project/issues/issue/issue.component';
 import { IssueDetailComponent } from './components/project/issues/issue-detail/issue-detail.component';
 import { TrelloComponent } from './components/trello/trello.component';
+import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
 
 
 
@@ -64,7 +65,8 @@ import { TrelloComponent } from './components/trello/trello.component';
     ShowFinancialComponent,
     IssueComponent,
     IssueDetailComponent,
-    TrelloComponent
+    TrelloComponent,
+    TextareaAutoresizeDirective
    
   ],
   imports: [
