@@ -1,19 +1,19 @@
 <div>
-  <button class="btn btn-primary" (click)="saveTasks()">Save</button>
+  <button class="btn btn-primary" (click)="saveBoard()">Save</button>
 </div>
 <div class="row p-3 d-flex flex-wrap" style="height: calc(100vh - 80px - (32px * 2) - 34px);">
-  <div *ngFor="let tableForm of trelloTable.controls; let i = index" 
+  <div *ngFor="let table of tables; let i = index" 
     class="col card p-0 mx-3" 
     style="max-height:100%" 
-    [style]="tableForm.value.color" 
+    [style]="table.color" 
     mwlDroppable 
     (drop)="onDrop($event, i)" 
     dragOverClass="drop-over-active"
   >
-    <div class="card-header">{{tableForm.value.name}}</div>
+    <div class="card-header">{{table.name}}</div>
     <div class="card-body" style="max-height: 100%; overflow-y: auto;">
 
-      <div *ngFor="let taskForm of tableForm.controls.tasks.controls; let taskId = index" class="card mb-3" [class]="taskForm.value.isDragging ? 'drag-active' : ''"
+      <div *ngFor="let task of table.tasks; let taskId = index" class="card mb-3" [class]="task.isDragging ? 'drag-active' : ''"
         style="max-width: 18rem;" 
         mwlDraggable
         mwlDroppable
@@ -25,19 +25,18 @@
         (dragOver)="dragOverCard = taskId"
       >
         <div class="card-header">
-          <h5>{{taskForm.value.title}}</h5>
+          <h5>{{task.title}}</h5>
         </div>
         <div class="card-body">
-          <p class="card-text">{{taskForm.value.description}}</p>
+          <p class="card-text">{{task.description}}</p>
         </div>
         <div class="card-footer">
-          <p class="m-0" *ngIf="taskForm.value.checkList.length > 0">
+          <p class="m-0" *ngIf="task.checkList.length > 0">
             <i class="i-Check"></i>
-            {{taskForm.value.checkList.length}}
+            {{task.checksCompleted}}/{{task.checkList.length}}
           </p>
         </div>
       </div>
-
     </div> 
     <div class="card-footer">
       <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
@@ -88,8 +87,8 @@
 
             <div class="col-md-12 form-group" *ngIf="!isCreatingTask">
               <label for="">Checklist</label>
-              <p *ngIf="taskForm.value.checkList.length == 0" class="m-0">Non ci sono elementi</p>
-              <ng-container *ngFor="let checkForm of taskForm.controls.checkList.controls; let n = index">
+              <p *ngIf="checkList.controls.length == 0" class="m-0">Non ci sono elementi</p>
+              <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
                 <label class="checkbox checkbox-outline-success pb-1" [formGroup]="checkForm" style="overflow-x: hidden; text-overflow: ellipsis;">
                   <input type="checkbox" formControlName="isChecked">
                   <span>{{checkForm.value.name}}</span>
