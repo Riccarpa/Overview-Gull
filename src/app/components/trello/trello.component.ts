@@ -26,9 +26,12 @@ export class TrelloComponent implements OnInit {
   user: any;
   titleModal: string;
   isCreatingTask = false;
+  isEditingTitle = false;
+  currentDraggingElmnt: string;
   currentTable = 0;
   currentTask = 0;
   dragOverCard = 0;
+  dragOverTable = 0;
 
   tables : any;
 
@@ -124,7 +127,7 @@ export class TrelloComponent implements OnInit {
   //   return isChecked.length
   // }
 
-  onDrop({dropData}: any, droppedTable: number): void {
+  onDrop({dropData}: any, droppedOnTable: number): void {
     // let data = dropData.split(',')
     // let tableId = data[0];
     // let taskId = data[1];
@@ -144,33 +147,47 @@ export class TrelloComponent implements OnInit {
     //   //Swap card order
     //   taskArray.insert(this.dragOverCard, taskForm);
     // }
-    let data = dropData.split(',')
-    let tableId = data[0];
-    let taskId = data[1];
+    
 
-    //If card dropped on different table
-    if(droppedTable != tableId){
-      let task = this.tables[tableId].tasks.splice(taskId, 1);
-      this.tables[droppedTable].tasks.push(task[0]);
+    //If it's a task card
+    if (this.currentDraggingElmnt == "task" && droppedOnTable != null) {
+      let data = dropData.split(',')
+      let tableId = data[0];
+      let taskId = data[1];
 
-    } else {
-      //Swap card order
-      let array = this.tables[tableId].tasks;
-      array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
+      //If card dropped on different table
+      if(droppedOnTable != tableId){
+        let task = this.tables[tableId].tasks.splice(taskId, 1);
+        this.tables[droppedOnTable].tasks.push(task[0]);
+
+      } else {
+        //Swap card order
+        let array = this.tables[tableId].tasks;
+        array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
+      }
+      //If its a table
+    } else if(this.currentDraggingElmnt == "table" && droppedOnTable == null) {
+      //Swap table order
+      let array = this.tables;
+      let taskId = dropData;
+      array[this.dragOverTable] = array.splice(taskId, 1, array[this.dragOverTable])[0];
     }
+    
   }
 
-  //Give high z-index to current dragging task card
+  //Give high z-index to current dragging element
   onDragging(tableId : any, taskId : any){
-    //this.trelloTable.at(tableId).value.tasks.at(taskId).isDragging = !this.trelloTable.at(tableId).value.tasks.at(taskId).isDragging;
-    console.log(this.tables[tableId].tasks[taskId].isDragging)
-    this.tables[tableId].tasks[taskId].isDragging = !this.tables[tableId].tasks[taskId].isDragging; 
+    if (taskId != null) {
+      this.currentDraggingElmnt = "task";
+      this.tables[tableId].tasks[taskId].isDragging = !this.tables[tableId].tasks[taskId].isDragging; 
+    } else {
+      this.currentDraggingElmnt = "table";
+      this.tables[tableId].isDragging = !this.tables[tableId].isDragging; 
+    }
   }
 
   // modal and alerts
   openCreateTask(content, id : number) {
-    // this.isCreatingTask = true;
-
     // this.taskForm = this.fb.group({
     //   title: [null, Validators.required],
     //   description: [null],
@@ -178,22 +195,15 @@ export class TrelloComponent implements OnInit {
     //   checkList: this.fb.array([])
     // });
 
-    // this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
-    // this.currentTable = id;
     this.isCreatingTask = true;
     this.taskForm.reset(); 
     this.checkList.clear();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
     this.currentTable = id;
+    this.isEditingTitle = false;
   }
 
   openEditTask(content, id : number, taskId : number){
-    // this.openCreateTask(content, id);
-    // this.isCreatingTask = false;
-
-    // this.currentTable = id;
-    // this.currentTask = taskId;
-
     // let taskArray = this.trelloTable.at(id).get("tasks") as FormArray;
     // let checkArray = taskArray.at(taskId).get("checkList") as FormArray;
 

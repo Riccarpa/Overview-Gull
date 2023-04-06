@@ -20,7 +20,12 @@ export class TrelloService {
         {
           title: 'Fare la spesa', 
           description: 'Some quick example text to build on the card title and make up the bulk of the card\'s content', 
-          checkList: [{name: 'hello', isChecked: true}, {name: 'meee', isChecked: false}], 
+          checkList: [
+            {name: 'uova', isChecked: true}, 
+            {name: 'farina', isChecked: false},
+            {name: 'burro', isChecked: false},
+            {name: 'sedano', isChecked: false}
+          ], 
         },
         {
           title: 'Task 1', 
