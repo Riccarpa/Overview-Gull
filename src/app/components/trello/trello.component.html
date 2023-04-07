@@ -37,21 +37,95 @@
         (dragOver)="dragOverCard = taskId"
       >
         <div class="card-header">
-          <h5>{{task.title}}</h5>
+          <h5 class="m-0">{{task.title}}</h5>
         </div>
         <div class="card-body">
           <p class="card-text">{{task.description}}</p>
         </div>
-        <div class="card-footer">
-          <p class="m-0" *ngIf="task.checkList.length > 0">
+        <div class="card-footer" *ngIf="task.checkList.length > 0">
+          <p class="m-0">
             <i class="i-Check"></i>
             {{task.checksCompleted}}/{{task.checkList.length}}
           </p>
         </div>
       </div>
+
+      <!-- Add Task -->
+      <div *ngIf="!table.isCreatingTask" 
+        class="card mb-3 pointer bckgr-transparent" 
+        style="max-width: 18rem;" 
+        (click)="table.isCreatingTask = true"
+      >
+        <div class="card-body py-2">
+          <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Task</p>  
+        </div>
+      </div>
+      <div *ngIf="table.isCreatingTask" class="card mb-3 pointer" style="max-width: 18rem;">
+        <div class="card-body py-2">
+          <input
+          [(ngModel)]="newTaskTitle"
+          type="text"
+          class="form-control"
+          id="title"
+          placeholder="Task title"
+          (keydown.enter)="addTask(i)"
+          (focusout)="newTaskTitle == '' ? table.isCreatingTask = false : addTask(i)"
+        />
+        </div>
+        <div class="card-footer">
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="table.isCreatingTask = false; newTaskTitle = ''"
+          >
+            <span>&times;</span>
+          </button>
+          <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTaskTitle == ''">
+            Add Task
+          </button>
+        </div>
+      </div>
     </div> 
-    <div class="card-footer">
+    <!-- <div class="card-footer">
       <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
+    </div> -->
+  </div>
+
+  <!-- Add table -->
+  <div *ngIf="!isCreatingTable" 
+    class="card p-0 mx-2 pointer bckgr-transparent" 
+    style="max-height:100%; min-width: 300px; max-width: 300px;"
+    (click)="isCreatingTable = true"
+  >
+    <div class="card-body py-2">
+      <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Table</p>  
+    </div>
+  </div>
+  <div *ngIf="isCreatingTable" class="card mb-3 pointer" style="max-width: 18rem;">
+    <div class="card-body py-2">
+      <input
+      [(ngModel)]="newTableTitle"
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="Table title"
+      (keydown.enter)="addTask(i)"
+      (focusout)="newTableTitle == '' ? isCreatingTable = false : addTask(i)"
+    />
+    </div>
+    <div class="card-footer">
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="isCreatingTable = false; newTableTitle = ''"
+      >
+        <span>&times;</span>
+      </button>
+      <!-- <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTableTitle == ''">
+        Add Table
+      </button> -->
     </div>
   </div>
 </div>
@@ -60,7 +134,7 @@
 <ng-template #modalTask let-modal>
   <form [formGroup]="taskForm">
     <div class="modal-header" style="padding-left: 2rem;">
-      <h4 *ngIf="!isEditingTitle" class="modal-title" (click)="isEditingTitle = true" id="modal-basic-title">{{isCreatingTask ? 'Create new task' : taskForm.value.title}}</h4>
+      <h4 *ngIf="!isEditingTitle" class="modal-title" (click)="isEditingTitle = true" id="modal-basic-title">{{taskForm.value.title}}</h4>
       <input
         *ngIf="isEditingTitle"
         formControlName="title"
@@ -68,6 +142,7 @@
         class="form-control"
         id="title"
         placeholder="Task title"
+        (keydown.enter)="isEditingTitle = false"
       />
       <button
         type="button"
@@ -149,8 +224,8 @@
     </div>
   </form> 
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="saveTask()" [disabled]="!taskForm.valid">
-      {{isCreatingTask ? 'Create' : 'Edit'}}
+    <button type="button" class="btn btn-primary" (click)="updateTask()" [disabled]="!taskForm.valid">
+      Edit
     </button>
   </div>
 </ng-template>

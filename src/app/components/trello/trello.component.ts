@@ -24,8 +24,7 @@ export class TrelloComponent implements OnInit {
 
   id = this.route.snapshot.paramMap.get('id');
   user: any;
-  titleModal: string;
-  isCreatingTask = false;
+  isCreatingTable = false;
   isEditingTitle = false;
   currentDraggingElmnt: string;
   currentTable = 0;
@@ -42,6 +41,8 @@ export class TrelloComponent implements OnInit {
     description: [null],
     checkList: this.fb.array([])
   });
+
+  newTaskTitle = '';
 
   get checkList(){
     return this.taskForm.controls["checkList"] as FormArray;
@@ -110,28 +111,8 @@ export class TrelloComponent implements OnInit {
     //   this.trelloTable.push(tableForm);
     // }
   }
-  
-  
-  // getIsChecked(tableId : any, taskId : any){
-
-  //   let table = this.trelloTable.getRawValue();
-  //   let checkList = table[tableId].tasks[taskId].checkList;
-  //   let isChecked = [];
-
-  //   for (let i = 0; i < checkList.length; i++) {
-  //     if (checkList[i].isChecked) {
-  //       isChecked.push(checkList[i])
-  //     }
-  //   }
-    
-  //   return isChecked.length
-  // }
 
   onDrop({dropData}: any, droppedOnTable: number): void {
-    // let data = dropData.split(',')
-    // let tableId = data[0];
-    // let taskId = data[1];
-
     // let taskArray = this.trelloTable.at(tableId).get("tasks") as FormArray;
     // let taskForm = taskArray.at(taskId)
 
@@ -187,21 +168,6 @@ export class TrelloComponent implements OnInit {
   }
 
   // modal and alerts
-  openCreateTask(content, id : number) {
-    // this.taskForm = this.fb.group({
-    //   title: [null, Validators.required],
-    //   description: [null],
-    //   isDragging: [false],
-    //   checkList: this.fb.array([])
-    // });
-
-    this.isCreatingTask = true;
-    this.taskForm.reset(); 
-    this.checkList.clear();
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
-    this.currentTable = id;
-    this.isEditingTitle = false;
-  }
 
   openEditTask(content, id : number, taskId : number){
     // let taskArray = this.trelloTable.at(id).get("tasks") as FormArray;
@@ -217,8 +183,11 @@ export class TrelloComponent implements OnInit {
     // for (let i = 0; i < checkArray.length; i++) {
     //   this.taskForm.controls.checkList.push(checkArray.at(i))
     // }
-    this.openCreateTask(content, id);
-    this.isCreatingTask = false;
+    this.taskForm.reset(); 
+    this.checkList.clear();
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+
+    this.isEditingTitle = false;
 
     this.currentTable = id;
     this.currentTask = taskId;
@@ -281,7 +250,26 @@ export class TrelloComponent implements OnInit {
     input.style.height = '40px';
   }
 
-  saveTask(){
+  addTask(tableId : number){
+    let taskArray = this.tables[tableId].tasks;
+    this.tables[tableId].isCreatingTask = false;
+
+    if (this.newTaskTitle != '') {
+      this.taskForm.setValue({
+        title: [this.newTaskTitle],
+        description: [null],
+        checkList: []
+      });
+  
+      let formData = this.taskForm.getRawValue();
+      taskArray.push(formData);
+      this.newTaskTitle = '';
+    }
+    
+    this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+  }
+
+  updateTask(){
    
     if(this.taskForm.status == 'INVALID'){
       this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true});
@@ -290,24 +278,18 @@ export class TrelloComponent implements OnInit {
       this.modalService.dismissAll()
       let taskArray = this.tables[this.currentTable].tasks;
       let formData = this.taskForm.getRawValue();
+    
+      taskArray.splice(this.currentTask, 1, formData);
+      let task = taskArray[this.currentTask];
+      task.checksCompleted = 0;
 
-      if (this.isCreatingTask) {
-        taskArray.push(formData);
-      
-        this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
-      } else {
-        taskArray.splice(this.currentTask, 1, formData);
-        let task = taskArray[this.currentTask];
-        task.checksCompleted = 0;
+      for (let i = 0; i < task.checkList.length; i++) {
+        if (task.checkList[i].isChecked) {
+          task.checksCompleted += 1;
+        }
+      }   
 
-        for (let i = 0; i < task.checkList.length; i++) {
-          if (task.checkList[i].isChecked) {
-            task.checksCompleted += 1;
-          }
-        }   
-
-        this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
-      }  
+      this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
     }
   }
 

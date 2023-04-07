@@ -1,3 +1,11 @@
 .drag-active {
     z-index: 99;
 }
+
+.bckgr-transparent {
+    background: transparent;
+
+    &:hover{
+        background-color: rgba(110, 110, 110, 0.3);
+    }
+}
