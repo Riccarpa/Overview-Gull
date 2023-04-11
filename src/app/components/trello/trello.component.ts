@@ -24,17 +24,17 @@ export class TrelloComponent implements OnInit {
 
   id = this.route.snapshot.paramMap.get('id');
   user: any;
-  isCreatingTable = false;
+  isCreatingColumn = false;
   isEditingTitle = false;
   currentDraggingElmnt: string;
-  currentTable = 0;
+  currentColumn = 0;
   currentTask = 0;
   dragOverCard = 0;
-  dragOverTable = 0;
+  dragOverColumn = 0;
 
-  tables : any;
+  columns : any;
 
-  trelloTable = this.fb.array([]);
+  trelloColumn = this.fb.array([]);
   
   taskForm = this.fb.group({
     title: [null, Validators.required],
@@ -42,7 +42,10 @@ export class TrelloComponent implements OnInit {
     checkList: this.fb.array([])
   });
 
+  newColumnName = '';
   newTaskTitle = '';
+
+  @ViewChild("newTask") newTaskInput: ElementRef;
 
   get checkList(){
     return this.taskForm.controls["checkList"] as FormArray;
@@ -56,17 +59,17 @@ export class TrelloComponent implements OnInit {
       this.toastr.error(error.error.message);
     })
 
-    // this.trService.getUserTaskTables().subscribe((res: any) => {
-    //   this.tables = res.data;     
+    // this.trService.getUserTaskColumns().subscribe((res: any) => {
+    //   this.columns = res.data;     
     // }, (error) => {
     //   this.toastr.error(error.error.message);
     // })
 
-    this.tables = this.trService.getUserTaskTables()
+    this.columns = this.trService.getUserTaskColumns()
 
-    for (let i = 0; i < this.tables.length; i++) {
-      for (let n = 0; n < this.tables[i].tasks.length; n++) {
-        let task = this.tables[i].tasks[n];
+    for (let i = 0; i < this.columns.length; i++) {
+      for (let n = 0; n < this.columns[i].tasks.length; n++) {
+        let task = this.columns[i].tasks[n];
         task.checksCompleted = 0;
 
         for (let v = 0; v < task.checkList.length; v++) {
@@ -77,16 +80,16 @@ export class TrelloComponent implements OnInit {
       } 
     }
 
-    // for (let i = 0; i < this.tables.length; i++) {
+    // for (let i = 0; i < this.columns.length; i++) {
 
-    //   let tableForm = this.fb.group({
-    //     name: [this.tables[i].name],
-    //     color: [this.tables[i].color],
+    //   let columnForm = this.fb.group({
+    //     name: [this.columns[i].name],
+    //     color: [this.columns[i].color],
     //     tasks: this.fb.array([])
     //   })
 
-    //   for (let n = 0; n < this.tables[i].tasks.length; n++) {
-    //     let task = this.tables[i].tasks[n];
+    //   for (let n = 0; n < this.columns[i].tasks.length; n++) {
+    //     let task = this.columns[i].tasks[n];
 
     //     let taskForm = this.fb.group({
     //       title: [task.title, Validators.required],
@@ -95,7 +98,7 @@ export class TrelloComponent implements OnInit {
     //       checkList: this.fb.array([])
     //     });
 
-    //     let taskControl = tableForm.get("tasks") as FormArray;
+    //     let taskControl = columnForm.get("tasks") as FormArray;
 
     //     for (let v = 0; v < task.checkList.length; v++) {
     //       const checkForm = this.fb.group({
@@ -108,20 +111,20 @@ export class TrelloComponent implements OnInit {
     //     }
     //     taskControl.push(taskForm);
     //   }
-    //   this.trelloTable.push(tableForm);
+    //   this.trelloColumn.push(columnForm);
     // }
   }
 
-  onDrop({dropData}: any, droppedOnTable: number): void {
-    // let taskArray = this.trelloTable.at(tableId).get("tasks") as FormArray;
+  onDrop({dropData}: any, droppedOnColumn: number): void {
+    // let taskArray = this.trelloColumn.at(columnId).get("tasks") as FormArray;
     // let taskForm = taskArray.at(taskId)
 
     // taskArray.removeAt(taskId);
 
-    // //If card dropped on different table
-    // if(droppedTable != tableId){
+    // //If card dropped on different column
+    // if(droppedColumn != columnId){
 
-    //   let dropInArray = this.trelloTable.at(droppedTable).get("tasks") as FormArray;
+    //   let dropInArray = this.trelloColumn.at(droppedColumn).get("tasks") as FormArray;
     //   dropInArray.push(taskForm);
       
     // } else {
@@ -131,46 +134,49 @@ export class TrelloComponent implements OnInit {
     
 
     //If it's a task card
-    if (this.currentDraggingElmnt == "task" && droppedOnTable != null) {
+    if (this.currentDraggingElmnt == "task" && droppedOnColumn != null) {
       let data = dropData.split(',')
-      let tableId = data[0];
+      let columnId = data[0];
       let taskId = data[1];
 
-      //If card dropped on different table
-      if(droppedOnTable != tableId){
-        let task = this.tables[tableId].tasks.splice(taskId, 1);
-        this.tables[droppedOnTable].tasks.push(task[0]);
+      //If card dropped on different column
+      if(droppedOnColumn != columnId){
+        let task = this.columns[columnId].tasks.splice(taskId, 1);
+        this.columns[droppedOnColumn].tasks.push(task[0]);
 
       } else {
         //Swap card order
-        let array = this.tables[tableId].tasks;
+        let array = this.columns[columnId].tasks;
         array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
       }
-      //If its a table
-    } else if(this.currentDraggingElmnt == "table" && droppedOnTable == null) {
-      //Swap table order
-      let array = this.tables;
+      //If its a column
+    } else if(this.currentDraggingElmnt == "column" && droppedOnColumn == null) {
+      //Swap column order
+      let array = this.columns;
       let taskId = dropData;
-      array[this.dragOverTable] = array.splice(taskId, 1, array[this.dragOverTable])[0];
+      array[this.dragOverColumn] = array.splice(taskId, 1, array[this.dragOverColumn])[0];
     }
     
   }
 
   //Give high z-index to current dragging element
-  onDragging(tableId : any, taskId : any){
+  onDragging(columnId : any, taskId : any){
     if (taskId != null) {
       this.currentDraggingElmnt = "task";
-      this.tables[tableId].tasks[taskId].isDragging = !this.tables[tableId].tasks[taskId].isDragging; 
+      this.columns[columnId].tasks[taskId].isDragging = !this.columns[columnId].tasks[taskId].isDragging; 
     } else {
-      this.currentDraggingElmnt = "table";
-      this.tables[tableId].isDragging = !this.tables[tableId].isDragging; 
+      this.currentDraggingElmnt = "column";
+      this.columns[columnId].isDragging = !this.columns[columnId].isDragging; 
     }
   }
 
-  // modal and alerts
+  inputFocus(){
+    setTimeout(()=>this.newTaskInput.nativeElement.focus(), 10);  
+  }
 
+  // modal and alerts
   openEditTask(content, id : number, taskId : number){
-    // let taskArray = this.trelloTable.at(id).get("tasks") as FormArray;
+    // let taskArray = this.trelloColumn.at(id).get("tasks") as FormArray;
     // let checkArray = taskArray.at(taskId).get("checkList") as FormArray;
 
     // this.taskForm.setValue({
@@ -189,14 +195,14 @@ export class TrelloComponent implements OnInit {
 
     this.isEditingTitle = false;
 
-    this.currentTable = id;
+    this.currentColumn = id;
     this.currentTask = taskId;
 
-    let checkboxArray = this.tables[id].tasks[taskId].checkList;
+    let checkboxArray = this.columns[id].tasks[taskId].checkList;
 
     this.taskForm.setValue({
-      title: this.tables[id].tasks[taskId].title,
-      description: this.tables[id].tasks[taskId].description,
+      title: this.columns[id].tasks[taskId].title,
+      description: this.columns[id].tasks[taskId].description,
       checkList: []
     });
 
@@ -250,9 +256,27 @@ export class TrelloComponent implements OnInit {
     input.style.height = '40px';
   }
 
-  addTask(tableId : number){
-    let taskArray = this.tables[tableId].tasks;
-    this.tables[tableId].isCreatingTask = false;
+  addColumn(){
+    this.isCreatingColumn = false;
+    const colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
+
+    if (this.newColumnName != '') {
+      let column = {
+        name: this.newColumnName,
+        color: `background-color: ${ colors[Math.floor(Math.random() * 4)]}`,
+        tasks: []
+      }
+  
+      this.columns.push(column);
+      this.newColumnName = '';
+    }
+    
+    this.toastr.success(`Column added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+  }
+
+  addTask(columnId : number){
+    let taskArray = this.columns[columnId].tasks;
+    this.columns[columnId].isCreatingTask = false;
 
     if (this.newTaskTitle != '') {
       this.taskForm.setValue({
@@ -276,7 +300,7 @@ export class TrelloComponent implements OnInit {
      
     }else{
       this.modalService.dismissAll()
-      let taskArray = this.tables[this.currentTable].tasks;
+      let taskArray = this.columns[this.currentColumn].tasks;
       let formData = this.taskForm.getRawValue();
     
       taskArray.splice(this.currentTask, 1, formData);
@@ -295,7 +319,7 @@ export class TrelloComponent implements OnInit {
 
 
   saveBoard(){
-    // this.trService.saveTasks(this.tables,this.id).subscribe(res=>{
+    // this.trService.saveTasks(this.columns,this.id).subscribe(res=>{
     //   this.toastr.success('Tasks saved.', 'Success!', {progressBar: true});
       
     // },(error)=>{

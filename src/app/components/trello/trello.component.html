@@ -6,126 +6,127 @@
   mwlDroppable
   (drop)="onDrop($event, null)"
 >
-  <div *ngFor="let table of tables; let i = index" 
-    class="card p-0 mx-2 pointer" [class]="table.isDragging ? 'drag-active' : ''"
-    style="max-height:100%; min-width: 300px; max-width: 300px;" 
-    [style]="table.color" 
-    mwlDraggable
-    mwlDroppable 
-    (drop)="onDrop($event, i)" 
-    dragOverClass="drop-over-active"
-    
-    dropData="{{i}}"
-    (dragStart)="onDragging(i, null)"
-    (dragEnd)="onDragging(i, null)"
-    [touchStartLongPress]="{ delay: 300, delta: 30 }"
-    (dragOver)="dragOverTable = i"
-  >
-    <div class="card-header">{{table.name}}</div>
-    <div class="card-body" style="max-height: 100%; overflow-y: auto;">
+  <div *ngFor="let column of columns; let i = index" class="p-0 mx-2" style="min-width: 300px;">
+    <div  
+      class="card pointer" [class]="column.isDragging ? 'drag-active' : ''"
+      style="max-height:100%; width: 100%;" 
+      [style]="column.color" 
+      mwlDraggable
+      mwlDroppable 
+      (drop)="onDrop($event, i)" 
+      dragOverClass="drop-over-active"
+      dropData="{{i}}"
+      (dragStart)="onDragging(i, null)"
+      (dragEnd)="onDragging(i, null)"
+      [touchStartLongPress]="{ delay: 300, delta: 30 }"
+      (dragOver)="dragOverColumn = i"
+    >
+      <div class="card-header">{{column.name}}</div>
+      <div class="card-body" style="max-height: 100%; overflow-y: auto;">
 
-      <div *ngFor="let task of table.tasks; let taskId = index" 
-        class="card mb-3 pointer" [class]="task.isDragging ? 'drag-active' : ''"
-        style="max-width: 18rem;" 
-        mwlDraggable
-        mwlDroppable
-        (click)="openEditTask(modalTask, i, taskId)"
-        dropData="{{i}},{{taskId}}"
-        (dragStart)="onDragging(i, taskId)"
-        (dragEnd)="onDragging(i, taskId)"
-        [touchStartLongPress]="{ delay: 300, delta: 30 }"
-        (dragOver)="dragOverCard = taskId"
-      >
-        <div class="card-header">
-          <h5 class="m-0">{{task.title}}</h5>
+        <div *ngFor="let task of column.tasks; let taskId = index" 
+          class="card mb-3 pointer" [class]="task.isDragging ? 'drag-active' : ''"
+          style="max-width: 18rem;" 
+          mwlDraggable
+          mwlDroppable
+          (click)="openEditTask(modalTask, i, taskId)"
+          dropData="{{i}},{{taskId}}"
+          (dragStart)="onDragging(i, taskId)"
+          (dragEnd)="onDragging(i, taskId)"
+          [touchStartLongPress]="{ delay: 300, delta: 30 }"
+          (dragOver)="dragOverCard = taskId"
+        >
+          <div class="card-header">
+            <h5 class="m-0">{{task.title}}</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{task.description}}</p>
+          </div>
+          <div class="card-footer" *ngIf="task.checkList.length > 0">
+            <p class="m-0">
+              <i class="i-Check"></i>
+              {{task.checksCompleted}}/{{task.checkList.length}}
+            </p>
+          </div>
         </div>
-        <div class="card-body">
-          <p class="card-text">{{task.description}}</p>
-        </div>
-        <div class="card-footer" *ngIf="task.checkList.length > 0">
-          <p class="m-0">
-            <i class="i-Check"></i>
-            {{task.checksCompleted}}/{{task.checkList.length}}
-          </p>
-        </div>
-      </div>
 
-      <!-- Add Task -->
-      <div *ngIf="!table.isCreatingTask" 
-        class="card mb-3 pointer bckgr-transparent" 
-        style="max-width: 18rem;" 
-        (click)="table.isCreatingTask = true"
-      >
-        <div class="card-body py-2">
-          <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Task</p>  
+        <!-- Add Task -->
+        <div *ngIf="!column.isCreatingTask" 
+          class="card mb-3 pointer bckgr-transparent" 
+          style="max-width: 18rem;" 
+          (click)="column.isCreatingTask = true; inputFocus()"
+        >
+          <div class="card-body py-2">
+            <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Task</p>  
+          </div>
         </div>
+        <div *ngIf="column.isCreatingTask" class="card mb-3 pointer" style="max-width: 18rem;">
+          <div class="card-body py-2">
+            <input
+            #newTask
+            [(ngModel)]="newTaskTitle"
+            type="text"
+            class="form-control"
+            id="title"
+            placeholder="Task title"
+            (keydown.enter)="addTask(i)"
+            (focusout)="newTaskTitle == '' ? column.isCreatingTask = false : addTask(i)"
+          />
+          </div>
+          <div class="card-footer">
+            <button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="column.isCreatingTask = false; newTaskTitle = ''"
+            >
+              <span>&times;</span>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTaskTitle == ''">
+              Add Task
+            </button>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+
+  <!-- Add column -->
+  <div class="p-0 mx-2" style="min-width: 300px;">
+    <div *ngIf="!isCreatingColumn" 
+      class="card pointer bckgr-transparent" 
+      style="width: 100%;"
+      (click)="isCreatingColumn = true"
+    >
+      <div class="card-body py-2">
+        <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Column</p>  
       </div>
-      <div *ngIf="table.isCreatingTask" class="card mb-3 pointer" style="max-width: 18rem;">
-        <div class="card-body py-2">
-          <input
-          [(ngModel)]="newTaskTitle"
+    </div>
+    <div *ngIf="isCreatingColumn" class="card" style="width: 100%;">
+      <div class="card-body py-2">
+        <input
+          [(ngModel)]="newColumnName"
           type="text"
           class="form-control"
-          id="title"
-          placeholder="Task title"
-          (keydown.enter)="addTask(i)"
-          (focusout)="newTaskTitle == '' ? table.isCreatingTask = false : addTask(i)"
+          id="name"
+          placeholder="Column name"
+          (keydown.enter)="addColumn()"
+          (focusout)="newColumnName == '' ? isCreatingColumn = false : addColumn()"
         />
-        </div>
-        <div class="card-footer">
-          <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="table.isCreatingTask = false; newTaskTitle = ''"
-          >
-            <span>&times;</span>
-          </button>
-          <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTaskTitle == ''">
-            Add Task
-          </button>
-        </div>
       </div>
-    </div> 
-    <!-- <div class="card-footer">
-      <button class="btn btn-primary" (click)="openCreateTask(modalTask, i)">Add Task</button>
-    </div> -->
-  </div>
-
-  <!-- Add table -->
-  <div *ngIf="!isCreatingTable" 
-    class="card p-0 mx-2 pointer bckgr-transparent" 
-    style="max-height:100%; min-width: 300px; max-width: 300px;"
-    (click)="isCreatingTable = true"
-  >
-    <div class="card-body py-2">
-      <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Table</p>  
-    </div>
-  </div>
-  <div *ngIf="isCreatingTable" class="card mb-3 pointer" style="max-width: 18rem;">
-    <div class="card-body py-2">
-      <input
-      [(ngModel)]="newTableTitle"
-      type="text"
-      class="form-control"
-      id="title"
-      placeholder="Table title"
-      (keydown.enter)="addTask(i)"
-      (focusout)="newTableTitle == '' ? isCreatingTable = false : addTask(i)"
-    />
-    </div>
-    <div class="card-footer">
-      <button
-        type="button"
-        class="close"
-        aria-label="Close"
-        (click)="isCreatingTable = false; newTableTitle = ''"
-      >
-        <span>&times;</span>
-      </button>
-      <!-- <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTableTitle == ''">
-        Add Table
-      </button> -->
+      <div class="card-footer">
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="isCreatingColumn = false; newColumnName = ''"
+        >
+          <span>&times;</span>
+        </button>
+        <button type="button" class="btn btn-primary" (click)="addColumn()" [disabled]="newColumnName == ''">
+          Add Column
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -133,15 +134,15 @@
 <!-- new task card modal -->
 <ng-template #modalTask let-modal>
   <form [formGroup]="taskForm">
-    <div class="modal-header" style="padding-left: 2rem;">
-      <h4 *ngIf="!isEditingTitle" class="modal-title" (click)="isEditingTitle = true" id="modal-basic-title">{{taskForm.value.title}}</h4>
+    <div class="modal-header">
+      <!-- <h4 *ngIf="!isEditingTitle" class="modal-title" (click)="isEditingTitle = true" id="modal-basic-title">{{taskForm.value.title}}</h4> -->
       <input
-        *ngIf="isEditingTitle"
         formControlName="title"
         type="text"
-        class="form-control"
+        class="form-control bg-transparent"
         id="title"
         placeholder="Task title"
+        style="border: none; font-size: 18px;"
         (keydown.enter)="isEditingTitle = false"
       />
       <button
@@ -224,7 +225,7 @@
     </div>
   </form> 
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="updateTask()" [disabled]="!taskForm.valid">
+    <button type="button" class="btn btn-primary" (click)="updateTask()" [disabled]="!taskForm.valid" ngbAutofocus>
       Edit
     </button>
   </div>

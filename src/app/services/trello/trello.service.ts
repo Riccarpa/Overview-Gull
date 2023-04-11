@@ -12,7 +12,7 @@ export class TrelloService {
 
   constructor() { }
 
-  tables = [
+  columns = [
     {
       name: 'TO DO',
       color: 'background-color: gold',
@@ -56,12 +56,12 @@ export class TrelloService {
     }
   ];
 
-  // getUserTaskTables(id: any): Observable<any> {
+  // getUserTaskColumns(id: any): Observable<any> {
   //   return this.http.get(`${this.url}/trello/${id}`);
   // }
 
-  getUserTaskTables(){
-    return this.tables
+  getUserTaskColumns(){
+    return this.columns
   }
 
 }
