@@ -21,7 +21,17 @@
       [touchStartLongPress]="{ delay: 300, delta: 30 }"
       (dragOver)="dragOverColumn = i"
     >
-      <div class="card-header">{{column.name}}</div>
+      <div class="card-header">
+        {{column.name}}
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="confirm(modalConfirm, i); isEditingTask = false"
+        >
+          <span>&times;</span>
+        </button>
+      </div>
       <div class="card-body" style="max-height: 100%; overflow-y: auto;">
 
         <div *ngFor="let task of column.tasks; let taskId = index" 
@@ -131,11 +141,10 @@
   </div>
 </div>
 
-<!-- new task card modal -->
+<!-- task card modal -->
 <ng-template #modalTask let-modal>
   <form [formGroup]="taskForm">
     <div class="modal-header">
-      <!-- <h4 *ngIf="!isEditingTitle" class="modal-title" (click)="isEditingTitle = true" id="modal-basic-title">{{taskForm.value.title}}</h4> -->
       <input
         formControlName="title"
         type="text"
@@ -143,7 +152,6 @@
         id="title"
         placeholder="Task title"
         style="border: none; font-size: 18px;"
-        (keydown.enter)="isEditingTitle = false"
       />
       <button
         type="button"
@@ -158,75 +166,94 @@
       <div class="col-md-12">
         <div class="card-body p-0">
           
-            <div class="row">
-              <!-- <div class="col-md-12 form-group mb-3">
-                <label for="title">*Title</label>
-                <input
-                  formControlName="title"
-                  type="text"
-                  class="form-control form-control"
-                  id="title"
-                  placeholder="Task title"
-                />
-                <p *ngIf="taskForm.get('title').invalid && taskForm.get('title').touched" class="text-danger position-absolute">Title required</p>
-              </div> -->
-
-              <div class="col-md-12 form-group mb-3">
-                <label for="description">Description</label>
-                <textarea 
-                  class="form-control" 
-                  formControlName="description" 
-                  placeholder="Type a description" 
-                  id="description" 
-                  style="height: 100px"
-                ></textarea>
-              </div>
-
-              <div class="col-md-12 form-group m-0" *ngIf="!isCreatingTask">
-                <label for="">Checklist</label>
-                <p *ngIf="checkList.controls.length == 0" class="m-0">Non ci sono elementi</p>
-                <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
-                  <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow-x: hidden; text-overflow: ellipsis;">
-                    <input type="checkbox" formControlName="isChecked">
-                    <span>{{checkForm.value.name}}</span>
-                    <span class="checkmark" style="width: 15px; height: 15px; top: 2px"></span>
-                  </label>
-                </ng-container>
-
-                <textarea #checkboxInput class="form-control mt-2" 
-                  placeholder="Add element" 
-                  (keydown)="onKeydown($event, checkboxInput.value)"
-                  (keyup.enter)="addCheckbox(checkboxInput)"
-                  appTextareaAutoresize
-                ></textarea>
-                <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox(checkboxInput)">Add</button>
-            
-                
-                <!-- <label class="checkbox checkbox-outline-warning">
-                    <input type="checkbox" checked>
-                    <span>Warning</span>
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox checkbox-outline-danger">
-                    <input type="checkbox">
-                    <span>Danger</span>
-                    <span class="checkmark"></span>
-                </label>
-                <label class="checkbox checkbox-outline-info">
-                    <input type="checkbox">
-                    <span>Info</span>
-                    <span class="checkmark"></span>
-                </label> -->
-              </div>
+          <div class="row">
+            <div class="col-md-12 form-group mb-3">
+              <label for="description">Description</label>
+              <textarea 
+                class="form-control" 
+                formControlName="description" 
+                placeholder="Type a description" 
+                id="description" 
+                style="height: 100px"
+              ></textarea>
             </div>
+
+            <div class="col-md-12 form-group m-0" *ngIf="!isCreatingTask">
+              <label for="">Checklist</label>
+              <p *ngIf="checkList.controls.length == 0" class="m-0">Non ci sono elementi</p>
+              <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
+                <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow: hidden; text-overflow: ellipsis;">
+                  <input type="checkbox" formControlName="isChecked">
+                  <span>{{checkForm.value.name}}</span>
+                  <span class="checkmark" style="width: 15px; height: 15px; top: 2px"></span>
+                  <button
+                    type="button"
+                    class="close"
+                    aria-label="Close"
+                    (click)="removeCheckbox(n)"
+                    style="width: 15px; height: 15px;"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </label>
+              </ng-container>
+
+              <textarea #checkboxInput class="form-control mt-2" 
+                placeholder="Add element" 
+                (keydown)="onKeydown($event, checkboxInput.value)"
+                (keyup.enter)="addCheckbox(checkboxInput)"
+                appTextareaAutoresize
+              ></textarea>
+
+              <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox(checkboxInput)">Add</button>
           
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </form> 
   <div class="modal-footer">
+    <button class="btn btn-danger" (click)="confirm(modalConfirm, null)">
+      Delete
+    </button>
     <button type="button" class="btn btn-primary" (click)="updateTask()" [disabled]="!taskForm.valid" ngbAutofocus>
       Edit
+    </button>
+  </div>
+</ng-template>
+
+<!-- deleting confirmation modal -->
+<ng-template #modalConfirm let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      aria-label="Close button"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 class="text-center">Are you sure you want to delete this element?</h4>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss('cancel')"
+      ngbAutofocus
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="deleteElement()"
+    >
+      Ok
     </button>
   </div>
 </ng-template>

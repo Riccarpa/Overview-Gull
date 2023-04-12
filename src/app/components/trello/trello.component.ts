@@ -25,10 +25,10 @@ export class TrelloComponent implements OnInit {
   id = this.route.snapshot.paramMap.get('id');
   user: any;
   isCreatingColumn = false;
-  isEditingTitle = false;
+  isEditingTask = false;
   currentDraggingElmnt: string;
-  currentColumn = 0;
-  currentTask = 0;
+  currentColumn : any;
+  currentTask : any;
   dragOverCard = 0;
   dragOverColumn = 0;
 
@@ -116,23 +116,6 @@ export class TrelloComponent implements OnInit {
   }
 
   onDrop({dropData}: any, droppedOnColumn: number): void {
-    // let taskArray = this.trelloColumn.at(columnId).get("tasks") as FormArray;
-    // let taskForm = taskArray.at(taskId)
-
-    // taskArray.removeAt(taskId);
-
-    // //If card dropped on different column
-    // if(droppedColumn != columnId){
-
-    //   let dropInArray = this.trelloColumn.at(droppedColumn).get("tasks") as FormArray;
-    //   dropInArray.push(taskForm);
-      
-    // } else {
-    //   //Swap card order
-    //   taskArray.insert(this.dragOverCard, taskForm);
-    // }
-    
-
     //If it's a task card
     if (this.currentDraggingElmnt == "task" && droppedOnColumn != null) {
       let data = dropData.split(',')
@@ -149,14 +132,13 @@ export class TrelloComponent implements OnInit {
         let array = this.columns[columnId].tasks;
         array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
       }
-      //If its a column
+    //If its a column
     } else if(this.currentDraggingElmnt == "column" && droppedOnColumn == null) {
       //Swap column order
       let array = this.columns;
       let taskId = dropData;
       array[this.dragOverColumn] = array.splice(taskId, 1, array[this.dragOverColumn])[0];
     }
-    
   }
 
   //Give high z-index to current dragging element
@@ -193,7 +175,7 @@ export class TrelloComponent implements OnInit {
     this.checkList.clear();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
 
-    this.isEditingTitle = false;
+    this.isEditingTask = true;
 
     this.currentColumn = id;
     this.currentTask = taskId;
@@ -219,7 +201,6 @@ export class TrelloComponent implements OnInit {
   onKeydown(event, inputValue: any){
     if (event.code == 'Enter') {
       event.preventDefault();
-
     } else if(event.code == 'Space' && inputValue.length == 0){
       event.preventDefault();
     }
@@ -254,6 +235,11 @@ export class TrelloComponent implements OnInit {
     }
     input.value = '';
     input.style.height = '40px';
+  }
+
+  removeCheckbox(index : number){
+    let checkArray = this.taskForm.get("checkList") as FormArray;
+    checkArray.removeAt(index);
   }
 
   addColumn(){
@@ -294,12 +280,12 @@ export class TrelloComponent implements OnInit {
   }
 
   updateTask(){
-   
     if(this.taskForm.status == 'INVALID'){
       this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true});
      
     }else{
       this.modalService.dismissAll()
+      this.isEditingTask = false;
       let taskArray = this.columns[this.currentColumn].tasks;
       let formData = this.taskForm.getRawValue();
     
@@ -315,6 +301,43 @@ export class TrelloComponent implements OnInit {
 
       this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
     }
+  }
+
+  deleteElement(){
+    // this.uService.deleteUser(this.id).subscribe(res=>{
+    //   this.modalService.dismissAll()
+    //   this.toastr.success('Profile deleted', 'Success!', {progressBar: true});
+    // },(error)=>{
+    //   this.toastr.error(error.error.message);
+    // });
+    this.modalService.dismissAll()
+
+    if (!this.isEditingTask) {
+      this.columns.splice(this.currentColumn, 1);
+    } else {
+      this.columns[this.currentColumn].tasks.splice(this.currentTask, 1);
+    }
+  }
+
+  confirm(content, columnId : any) {
+    if (columnId !== null) {
+      this.currentColumn = columnId;
+    }
+    
+    let confirmResut;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', centered: true })
+    .result.then((result) => {
+      confirmResut = `Closed with: ${result}`;
+    }, (reason) => {
+      confirmResut = `Dismissed with: ${reason}`;
+    });
+  }
+
+  open(modal) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' })
+    .result.then((result) => {
+      
+    }, (reason) => { });
   }
 
 
