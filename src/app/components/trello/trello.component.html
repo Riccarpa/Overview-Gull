@@ -1,7 +1,7 @@
 <!-- <div>
   <button class="btn btn-primary" (click)="saveBoard()">Save</button>
 </div> -->
-<div class="p-3 d-flex" 
+<div class="pb-2 d-flex" 
   style="height: calc(100vh - 80px - (32px * 2) - 34px); width: 100%; overflow-x: auto;"
   mwlDroppable
   (drop)="onDrop($event, null)"
@@ -64,7 +64,7 @@
         <div *ngIf="!column.isCreatingTask" 
           class="card mb-3 pointer bckgr-transparent" 
           style="max-width: 18rem;" 
-          (click)="column.isCreatingTask = true; inputFocus()"
+          (click)="openCreateTask(i)"
         >
           <div class="card-body py-2">
             <p class="m-0"><span style="font-size: large; font-weight: bold;">&plus;</span> Add Task</p>  
@@ -73,14 +73,14 @@
         <div *ngIf="column.isCreatingTask" class="card mb-3 pointer" style="max-width: 18rem;">
           <div class="card-body py-2">
             <input
-            #newTask
+            #newElement
             [(ngModel)]="newTaskTitle"
             type="text"
             class="form-control"
             id="title"
             placeholder="Task title"
             (keydown.enter)="addTask(i)"
-            (focusout)="newTaskTitle == '' ? column.isCreatingTask = false : addTask(i)"
+            (focusout)="newTaskTitle == '' ? column.isCreatingTask = false : ''"
           />
           </div>
           <div class="card-footer">
@@ -88,7 +88,7 @@
               type="button"
               class="close"
               aria-label="Close"
-              (click)="column.isCreatingTask = false; newTaskTitle = ''"
+              (click)="column.isCreatingTask = false"
             >
               <span>&times;</span>
             </button>
@@ -115,6 +115,7 @@
     <div *ngIf="isCreatingColumn" class="card" style="width: 100%;">
       <div class="card-body py-2">
         <input
+          #newElement
           [(ngModel)]="newColumnName"
           type="text"
           class="form-control"

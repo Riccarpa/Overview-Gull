@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -27,7 +27,7 @@ export class TrelloComponent implements OnInit {
   isCreatingColumn = false;
   isEditingTask = false;
   currentDraggingElmnt: string;
-  currentColumn : any;
+  currentColumn = 0;
   currentTask : any;
   dragOverCard = 0;
   dragOverColumn = 0;
@@ -45,7 +45,9 @@ export class TrelloComponent implements OnInit {
   newColumnName = '';
   newTaskTitle = '';
 
-  @ViewChild("newTask") newTaskInput: ElementRef;
+  //@ViewChild("newTask") newElemInput: ElementRef;
+
+  @ViewChildren('newElement', {read: ElementRef}) newElemInput: QueryList<ElementRef>;
 
   get checkList(){
     return this.taskForm.controls["checkList"] as FormArray;
@@ -115,6 +117,17 @@ export class TrelloComponent implements OnInit {
     // }
   }
 
+  //New column-task input focus
+  ngAfterViewInit() {
+    this.newElemInput.changes.subscribe(
+      (next: QueryList<ElementRef>) => {
+        if (next.first) {
+          next.first.nativeElement.focus();
+        } 
+      }
+    );
+  }
+
   onDrop({dropData}: any, droppedOnColumn: number): void {
     //If it's a task card
     if (this.currentDraggingElmnt == "task" && droppedOnColumn != null) {
@@ -152,8 +165,11 @@ export class TrelloComponent implements OnInit {
     }
   }
 
-  inputFocus(){
-    setTimeout(()=>this.newTaskInput.nativeElement.focus(), 10);  
+  openCreateTask(columnId : number){
+    this.newTaskTitle = "";
+    this.columns[this.currentColumn].isCreatingTask = false;
+    this.columns[columnId].isCreatingTask = true;
+    this.currentColumn = columnId;
   }
 
   // modal and alerts
@@ -274,9 +290,9 @@ export class TrelloComponent implements OnInit {
       let formData = this.taskForm.getRawValue();
       taskArray.push(formData);
       this.newTaskTitle = '';
-    }
-    
-    this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+
+      this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+    } 
   }
 
   updateTask(){
