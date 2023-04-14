@@ -279,16 +279,20 @@ export class TrelloComponent implements OnInit {
   addTask(columnId : number){
     let taskArray = this.columns[columnId].tasks;
     this.columns[columnId].isCreatingTask = false;
+    console.log('Before if')
 
     if (this.newTaskTitle != '') {
-      this.taskForm.setValue({
-        title: [this.newTaskTitle],
-        description: [null],
-        checkList: []
-      });
+      // this.taskForm.setValue({
+      //   title: [this.newTaskTitle],
+      //   description: [null],
+      //   checkList: []
+      // });
+
+      this.taskForm.get('title').setValue(this.newTaskTitle);
   
       let formData = this.taskForm.getRawValue();
       taskArray.push(formData);
+      console.log(taskArray);
       this.newTaskTitle = '';
 
       this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })

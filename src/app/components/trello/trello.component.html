@@ -9,7 +9,7 @@
   <div *ngFor="let column of columns; let i = index" class="p-0 mx-2" style="min-width: 300px;">
     <div  
       class="card pointer" [class]="column.isDragging ? 'drag-active' : ''"
-      style="max-height:100%; width: 100%;" 
+      style="max-height:100%; max-width: 300px;" 
       [style]="column.color" 
       mwlDraggable
       mwlDroppable 
