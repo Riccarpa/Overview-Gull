@@ -25,6 +25,11 @@ export class UserService {
     return this.http.get(`${this.url2}/projects`)
   }
 
+  getUserProjectForFinancial(userId:any): Observable<any> {
+    return this.http.get(`${environment.apiURL}/projects?user_id=${userId}`)
+  }
+
+
   retrieveUser(id: any): Observable<any>{
     return this.http.get(`${this.url}/${id}`);
   }

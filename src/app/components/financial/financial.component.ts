@@ -72,10 +72,8 @@ export class FinancialComponent implements OnInit {
       this.toastr.error(error.error.message);
     })
 
-    this.uService.getUserProject().subscribe((res: any) => {
+    this.uService.getUserProjectForFinancial(this.id).subscribe((res: any) => {
       this.projects = res.data;
-      //this.projects = [{name: 'Ciaoo'}]
-      ///////////////////////////////
       console.log(this.projects)
 
     }, (error) => {
