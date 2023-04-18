@@ -16,7 +16,16 @@
     >
       <p class="m-0 mr-2 text-24">{{ currentUser.name }}</p>
       <img
+        *ngIf="currentUser.picture"
         src="{{ currentUser.picture }}"
+        id="userDropdown"
+        ngbDropdownToggle
+        class="pointer"
+        alt=""
+      />
+      <img
+        *ngIf="currentUser.picture == null"
+        src="/assets/images/download.png"
         id="userDropdown"
         ngbDropdownToggle
         class="pointer"
