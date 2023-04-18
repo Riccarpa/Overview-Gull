@@ -17,8 +17,8 @@
           <h3 class="m-1">{{ client.name }}</h3>
           <h5 class="mt-1 text-muted">Part. IVA: {{ client.vat_number }}</h5>
           <div class="avatar box-shadow-2 my-5">
-            <img [src]="client.logo ? url + '/' + client.logo : ''" alt="" />
-            <img src="/assets/images/download.png" alt="" />
+            <img *ngIf="client.logo" [src]="client.logo ? url + '/' + client.logo : ''" alt="" />
+            <img *ngIf="client.logo == null" src="/assets/images/stock.jpg" alt="" />
           </div>
         </div>
         <div
