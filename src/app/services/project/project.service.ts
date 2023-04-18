@@ -91,6 +91,15 @@ export class ProjectService {
 
   }
 
+  removeImg(projId: number): Observable<any> {
+
+    let body = {
+     "logo_path" : null
+    }
+    return this.http.patch(`${this.url}/${projId}`, body)
+  }
+
+
 
   // delete project
   deleteProject(id: number): Observable<any> {

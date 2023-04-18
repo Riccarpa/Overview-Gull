@@ -257,6 +257,9 @@
             <button type="button" class="btn btn-outline-dark" (click)="saveImg(); modal.close()">
               Save
             </button>
+            <button *ngIf="role === 1" class="btn btn-outline-secondary mr-3" (click)="deleteImg()">
+              Delete logo
+            </button>
           </div>
         </ng-template>
 

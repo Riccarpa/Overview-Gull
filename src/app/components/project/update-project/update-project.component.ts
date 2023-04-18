@@ -231,6 +231,19 @@ export class UpdateProjectComponent implements OnInit {
       })
   }
 
+  deleteImg() {
+    this.service.removeImg(this.project.id).subscribe(
+      (res) => {
+        this.toastr.success("Immagine rimossa con successo")
+        setTimeout(() => {
+          
+          window.location.reload()
+        }, 1500);
+      },(err)=>{
+        this.toastr.error(err.error)
+      })
+  }
+
   // cropper img
   openModalImg(modal) {
     if (this.role === 1 ){
