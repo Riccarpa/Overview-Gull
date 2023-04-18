@@ -1,20 +1,30 @@
 <div class="d-flex justify-content-between align-items-center mb-5">
   <h2 class="ml-2">Projects</h2>
-  
-  <button *ngIf="projects.length" class="btn  mr-2 mt-1" (click)="toggleTable()">{{isTableDisplayed.title}}</button>
+
+  <button *ngIf="projects.length" class="btn mr-2 mt-1" (click)="toggleTable()">
+    {{ isTableDisplayed.title }}
+  </button>
 
   <!-- se admin creazione progetto-->
   <div *appRole="role == 1">
-    <button class="btn btn-success mr-2 mt-1" (click)="openCreateModal(modalConfirm)">
+    <button
+      class="btn btn-success mr-2 mt-1"
+      (click)="openCreateModal(modalConfirm)"
+    >
       New project
     </button>
-    
+
     <!-- modale di creazione -->
     <ng-template class="m-0" id="modal" #modalConfirm let-modal>
       <div class="modal-header">
         <h4 class="modal-title" id="modal-title">Create new project</h4>
-        <button type="button" class="close" aria-label="Close button" aria-describedby="modal-title"
-          (click)="modal.dismiss('Cross click')">
+        <button
+          type="button"
+          class="close"
+          aria-label="Close button"
+          aria-describedby="modal-title"
+          (click)="modal.dismiss('Cross click')"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -27,7 +37,13 @@
                 <div class="row">
                   <div class="col-md-6 form-group mb-3">
                     <label for="name">*Project</label>
-                    <input maxlength="40" type="text" class="form-control" formControlName="name" placeholder="Project Name" />
+                    <input
+                      maxlength="40"
+                      type="text"
+                      class="form-control"
+                      formControlName="name"
+                      placeholder="Project Name"
+                    />
 
                     <!-- <div *ngIf="
                         projectForm.get('name').invalid &&
@@ -37,12 +53,24 @@
                       role="alert">
                       <div>Insert at leat 3 characters</div>
                     </div> -->
-                    <p *ngIf="projectForm.get('name').invalid && projectForm.get('name').touched" class="text-danger position-absolute">Insert at leat 3 characters</p>
+                    <p
+                      *ngIf="
+                        projectForm.get('name').invalid &&
+                        projectForm.get('name').touched
+                      "
+                      class="text-danger position-absolute"
+                    >
+                      Insert at leat 3 characters
+                    </p>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">client</label>
-                    <select class="form-control" formControlName="client_id" name="client_id" >
+                    <select
+                      class="form-control"
+                      formControlName="client_id"
+                      name="client_id"
+                    >
                       <option value="" selected disabled hidden>Clients</option>
                       <option *ngFor="let c of clients" [value]="c.id">
                         {{ c.name }}
@@ -52,13 +80,24 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="revenue">Revenue</label>
-                    <input min="0" class="form-control" type="number" name="revenue" formControlName="revenue"
-                      placeholder="revenue" />
+                    <input
+                      min="0"
+                      class="form-control"
+                      type="number"
+                      name="revenue"
+                      formControlName="revenue"
+                      placeholder="revenue"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="status">Status</label>
-                    <select class="form-control" name="status" formControlName="status" placeholder="status">
+                    <select
+                      class="form-control"
+                      name="status"
+                      formControlName="status"
+                      placeholder="status"
+                    >
                       <option selected disabled hidden [value]="null">
                         Status
                       </option>
@@ -70,22 +109,39 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">Start date</label>
-                    <input type="date" class="form-control" formControlName="start_date" />
+                    <input
+                      type="date"
+                      class="form-control"
+                      formControlName="start_date"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">End Date</label>
-                    <input type="date" class="form-control" formControlName="end_date" />
+                    <input
+                      type="date"
+                      class="form-control"
+                      formControlName="end_date"
+                    />
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label for="picker1">Progress</label>
-                    <input type="number" min="0" class="form-control" formControlName="progress" name="progress" />
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      formControlName="progress"
+                      name="progress"
+                    />
                   </div>
 
                   <div class="col-6 mb-3">
                     <label class="d-block mb-1">Project Logo</label>
-                    <button class="btn btn-outline-secondary w-50 btn-sm mt-1" (click)="openModalImg(modalCropper)">
+                    <button
+                      class="btn btn-outline-secondary w-50 btn-sm mt-1"
+                      (click)="openModalImg(modalCropper)"
+                    >
                       Upload logo
                     </button>
                   </div>
@@ -96,17 +152,30 @@
                       <h4 class="modal-title" id="modal-basic-title">
                         Image upload
                       </h4>
-                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+                      <button
+                        type="button"
+                        class="close"
+                        aria-label="Close"
+                        (click)="modal.dismiss('')"
+                      >
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      <img-cropper (change)="uploadImg($event)" [image]="data" [settings]="cropperSettings">
+                      <img-cropper
+                        (change)="uploadImg($event)"
+                        [image]="data"
+                        [settings]="cropperSettings"
+                      >
                       </img-cropper>
                       <br />
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-outline-dark" (click)="saveImg(); modal.close()">
+                      <button
+                        type="button"
+                        class="btn btn-outline-dark"
+                        (click)="saveImg(); modal.close()"
+                      >
                         Save
                       </button>
                     </div>
@@ -118,8 +187,15 @@
         </div>
       </div>
       <div class="modal-footer">
-        <btn-loading [loading]="loading" type="button" ngbAutofocus btnClass="btn btn-primary" [disabled]="!projectForm.valid || loading"
-          (click)="addProject(projectForm)">Create</btn-loading>
+        <btn-loading
+          [loading]="loading"
+          type="button"
+          ngbAutofocus
+          btnClass="btn btn-primary"
+          [disabled]="!projectForm.valid || loading"
+          (click)="addProject(projectForm)"
+          >Create</btn-loading
+        >
       </div>
     </ng-template>
   </div>
@@ -133,18 +209,31 @@
 </div>
 
 <!-- main container visualizzazione admin/PM-->
-<section *ngIf="!isTableDisplayed.status" class="d-flex align-items-stretch flex-wrap">
+<section
+  *ngIf="!isTableDisplayed.status"
+  class="d-flex align-items-stretch flex-wrap"
+>
   <!-- card project -->
-  <div *ngFor="let proj of projects | filterProject: idClient" class="col-lg-6 col-md-12 mb-4">
+  <div
+    *ngFor="let proj of projects | filterProject : idClient"
+    class="col-lg-6 col-md-12 mb-4"
+  >
     <div (click)="updateProject(proj.id)" class="card mb-4 h-100">
       <div class="card-body h-100 pointer">
         <!-- header card -->
         <div class="d-flex justify-content-start align-items-center mb-2">
-          <img *ngIf="proj.logo" src="{{ url }}{{ proj.logo }}"
-            class="proj-logo col-1 rounded-circle ng-star-inserted p-0 mr-2" alt="" />
-          <img *ngIf="proj.logo === null" src="assets/images/project.png"
-            class="proj-logo col-1 rounded-circle ng-star-inserted p-0 mr-2" alt="" />
-
+          <img
+            *ngIf="proj.logo"
+            src="{{ url }}{{ proj.logo }}"
+            class="proj-logo col-1 rounded-circle ng-star-inserted p-0 mr-2"
+            alt=""
+          />
+          <img
+            *ngIf="proj.logo === null"
+            src="assets/images/project.png"
+            class="proj-logo col-1 rounded-circle ng-star-inserted p-0 mr-2"
+            alt=""
+          />
           <div class="card-title m-0">{{ proj.name }}</div>
         </div>
 
@@ -160,12 +249,18 @@
                 </tr>
                 <tr>
                   <td>Client</td>
-                  <td class="font-weight-bold d-flex flex-nowrap align-items-center">
+                  <td
+                    class="font-weight-bold d-flex flex-nowrap align-items-center"
+                  >
                     <p class="m-0 d-inline mr-2">
                       {{ proj.client_details.name }}
                     </p>
-                    <img *ngIf="proj.client_details.logo" src="{{ url }}{{ proj.client_details.logo }}"
-                      class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="" />
+                    <img
+                      *ngIf="proj.client_details.logo"
+                      src="{{ url }}{{ proj.client_details.logo }}"
+                      class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                      alt=""
+                    />
                   </td>
                 </tr>
                 <tr [ngSwitch]="proj.status">
@@ -197,7 +292,12 @@
             </table>
           </div>
           <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
-            <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true" style="height: 200px"></div>
+            <div
+              echarts
+              [options]="getChartPercent(proj.progress)"
+              [autoResize]="true"
+              style="height: 200px"
+            ></div>
           </div>
         </div>
       </div>
@@ -206,11 +306,19 @@
 </section>
 
 <!-- visualizzazione collaboratore -->
-<section *appRole="role === 0" id="collab" class="d-flex align-items-stretch flex-wrap col-12">
+<section
+  *appRole="role === 0"
+  id="collab"
+  class="d-flex align-items-stretch flex-wrap col-12"
+>
   <div class="card user-profile mt-5 mb-4 col-12">
     <!-- immagine user -->
     <div *ngIf="userRetrive" class="user-info">
-      <img class="profile-picture avatar-lg mb-2" src="{{ url }}{{ userRetrive.picture }}" alt="" />
+      <img
+        class="profile-picture avatar-lg mb-2"
+        src="{{ url }}{{ userRetrive.picture }}"
+        alt=""
+      />
       <p class="m-0 text-24">
         {{ userRetrive.name }} {{ userRetrive.surname }}
       </p>
@@ -218,17 +326,35 @@
 
     <!-- body dei tab con i progetti -->
     <div class="card-body nav-center col-12">
-      <ul ngbNav #nav="ngbNav"
-        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-stretch justify-content-between border-bottom border-bottom-secondary">
-        <li class="col-lg-2 col-md-3 col-sm-6 mr-2" *ngFor="let proj of userProjects; let i = index" ngbNavItem
-          title="{{ proj.name }}">
+      <ul
+        ngbNav
+        #nav="ngbNav"
+        class="nav-tabs col-12 d-flex flex-row flex-wrap align-items-stretch justify-content-between border-bottom border-bottom-secondary"
+      >
+        <li
+          class="col-lg-2 col-md-3 col-sm-6 mr-2"
+          *ngFor="let proj of userProjects; let i = index"
+          ngbNavItem
+          title="{{ proj.name }}"
+        >
           <a ngbNavLink class="h-100 d-block _tabNav">
-            <div *ngIf="proj" class="d-flex align-items-center justify-content-start pr-4">
+            <div
+              *ngIf="proj"
+              class="d-flex align-items-center justify-content-start pr-4"
+            >
               <h3 class="m-0 mr-1">{{ proj.name }}</h3>
-              <img *ngIf="proj.logo" class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0"
-                src="{{ url }}{{ proj.logo }}" alt="" />
-              <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2" alt="" />
+              <img
+                *ngIf="proj.logo"
+                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0"
+                src="{{ url }}{{ proj.logo }}"
+                alt=""
+              />
+              <img
+                *ngIf="proj.logo === null"
+                src="assets/images/project.png"
+                class="col-sm-2 col-md-2 col-2 rounded-circle smallImg ng-star-inserted p-0 mr-2"
+                alt=""
+              />
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -236,11 +362,21 @@
               <div class="card mb-4 h-100">
                 <div class="card-body h-100" (click)="goToDetail(proj)">
                   <!-- header card -->
-                  <div class="d-flex justify-content-start align-items-center mb-2">
-                    <img *ngIf="proj.logo" src="{{ url }}{{ proj.logo }}"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="" />
-                    <img *ngIf="proj.logo === null" src="assets/images/project.png"
-                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2" alt="" />
+                  <div
+                    class="d-flex justify-content-start align-items-center mb-2"
+                  >
+                    <img
+                      *ngIf="proj.logo"
+                      src="{{ url }}{{ proj.logo }}"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2"
+                      alt=""
+                    />
+                    <img
+                      *ngIf="proj.logo === null"
+                      src="assets/images/project.png"
+                      class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted _projImg mr-2"
+                      alt=""
+                    />
                     <div class="card-title m-0 mr-5 text-24">
                       {{ proj.name }}
                     </div>
@@ -252,24 +388,38 @@
                         <tbody>
                           <tr>
                             <td>Client</td>
-                            <td class="font-weight-bold d-flex flex-nowrap align-items-center">
+                            <td
+                              class="font-weight-bold d-flex flex-nowrap align-items-center"
+                            >
                               <p class="m-0 d-inline mr-2">
                                 {{ proj.client_details.name }}
                               </p>
-                              <img *ngIf="proj.client_details.logo" src="{{ url }}{{ proj.client_details.logo }}"
+                              <img
+                                *ngIf="proj.client_details.logo"
+                                src="{{ url }}{{ proj.client_details.logo }}"
                                 class="col-sm-1 col-md-1 col-1 rounded-circle smallImg ng-star-inserted p-0 mr-2"
-                                alt="" />
+                                alt=""
+                              />
                             </td>
                           </tr>
                           <tr [ngSwitch]="proj.status">
                             <td>Status</td>
-                            <td *ngSwitchCase="0" class="text-danger font-weight-bold">
+                            <td
+                              *ngSwitchCase="0"
+                              class="text-danger font-weight-bold"
+                            >
                               pending
                             </td>
-                            <td *ngSwitchCase="1" class="text-danger font-weight-bold">
+                            <td
+                              *ngSwitchCase="1"
+                              class="text-danger font-weight-bold"
+                            >
                               open
                             </td>
-                            <td *ngSwitchCase="2" class="text-danger font-weight-bold">
+                            <td
+                              *ngSwitchCase="2"
+                              class="text-danger font-weight-bold"
+                            >
                               close
                             </td>
                           </tr>
@@ -277,7 +427,10 @@
                           <tr>
                             <td>collaborators</td>
                             <td class="text-warning font-weight-bold">
-                              <ul *ngIf="proj.user_details" class="overflow p-0">
+                              <ul
+                                *ngIf="proj.user_details"
+                                class="overflow p-0"
+                              >
                                 <li *ngFor="let user of proj.user_details">
                                   <p>{{ user.name }} {{ user.surname }}</p>
                                 </li>
@@ -287,9 +440,16 @@
                         </tbody>
                       </table>
                     </div>
-                    <div *ngIf="proj.progress || proj.progress === 0" class="col-md-6">
-                      <div echarts [options]="getChartPercent(proj.progress)" [autoResize]="true" style="height: 200px">
-                      </div>
+                    <div
+                      *ngIf="proj.progress || proj.progress === 0"
+                      class="col-md-6"
+                    >
+                      <div
+                        echarts
+                        [options]="getChartPercent(proj.progress)"
+                        [autoResize]="true"
+                        style="height: 200px"
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -321,7 +481,9 @@
         (select)="onSelect($event)"
       >
         <ngx-datatable-column [maxWidth]="120">
-          <ng-template ngx-datatable-header-template> Project Logo </ng-template>
+          <ng-template ngx-datatable-header-template>
+            Project Logo
+          </ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
             <img
               *ngIf="row.logo"
@@ -330,6 +492,14 @@
               style="border-radius: 4px"
               src="{{ url }}{{ row.logo }}"
               alt=""
+            />
+            <img
+              *ngIf="row.logo == null"
+              src="assets/images/project.png"
+              alt=""
+              height="32px"
+              width="32px"
+              style="border-radius: 4px"
             />
           </ng-template>
         </ngx-datatable-column>
@@ -345,28 +515,42 @@
           <ng-template ngx-datatable-cell-template let-row="row">
             <div>
               <img
-              *ngIf="row.client_details.logo"
+                *ngIf="row.client_details.logo"
                 height="32px"
                 width="32px"
                 style="border-radius: 4px"
                 src="{{ url }}{{ row.client_details.logo }}"
                 alt=""
               />
-              {{row.client_details.name}}
+              {{ row.client_details.name }}
             </div>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column>
-          <ng-template ngx-datatable-header-template> Collaborators </ng-template>
+          <ng-template ngx-datatable-header-template>
+            Collaborators
+          </ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
             <ul class="overflow">
               <span *ngIf="row.user_details.length <= 2">
-                <li *ngFor="let u of row.user_details; let i=index">
+                <li *ngFor="let u of row.user_details; let i = index">
                   <span>{{ u.name }} {{ u.surname }}</span>
                 </li>
               </span>
-              <span *ngIf="row.user_details.length > 2" placement="bottom" container="body" [ngbTooltip]="tooltipText(row.user_details)">
-                <button type="button" class="btn btn-secondary" style="--bs-btn-font-size: 16px; padding: 2px 4px 0" disabled>{{row.user_details.length}} Collaboratori</button>
+              <span
+                *ngIf="row.user_details.length > 2"
+                placement="bottom"
+                container="body"
+                [ngbTooltip]="tooltipText(row.user_details)"
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  style="--bs-btn-font-size: 16px; padding: 2px 4px 0"
+                  disabled
+                >
+                  {{ row.user_details.length }} Collaboratori
+                </button>
               </span>
             </ul>
           </ng-template>
@@ -374,7 +558,7 @@
         <ngx-datatable-column>
           <ng-template ngx-datatable-header-template> Progress </ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
-            <div>{{row.progress}}&percnt;</div>
+            <div>{{ row.progress }}&percnt;</div>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column [maxWidth]="200">
