@@ -39,11 +39,13 @@ export class TrelloComponent implements OnInit {
   taskForm = this.fb.group({
     title: [null, Validators.required],
     description: [null],
-    checkList: this.fb.array([])
+    checkList: this.fb.array([]),
+    files: this.fb.array([])
   });
 
   newColumnName = '';
   newTaskTitle = '';
+  fileName = '';
 
   //@ViewChild("newTask") newElemInput: ElementRef;
 
@@ -51,6 +53,10 @@ export class TrelloComponent implements OnInit {
 
   get checkList(){
     return this.taskForm.controls["checkList"] as FormArray;
+  }
+
+  get files(){
+    return this.taskForm.controls["files"] as FormArray;
   }
 
   ngOnInit(): void {
@@ -143,14 +149,20 @@ export class TrelloComponent implements OnInit {
       } else {
         //Swap card order
         let array = this.columns[columnId].tasks;
-        array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
+        let card = array.splice(taskId, 1)[0];
+
+        array.splice(this.dragOverCard, 0, card);
+        //array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
       }
     //If its a column
     } else if(this.currentDraggingElmnt == "column" && droppedOnColumn == null) {
       //Swap column order
       let array = this.columns;
-      let taskId = dropData;
-      array[this.dragOverColumn] = array.splice(taskId, 1, array[this.dragOverColumn])[0];
+      let columnId = dropData;
+      let column = array.splice(columnId, 1)[0];
+
+      array.splice(this.dragOverColumn, 0, column);
+      //array[this.dragOverColumn] = array.splice(columnId, 1, array[this.dragOverColumn])[0];
     }
   }
 
@@ -197,12 +209,16 @@ export class TrelloComponent implements OnInit {
     this.currentTask = taskId;
 
     let checkboxArray = this.columns[id].tasks[taskId].checkList;
+    let filesArray = this.columns[id].tasks[taskId].files;
 
-    this.taskForm.setValue({
-      title: this.columns[id].tasks[taskId].title,
-      description: this.columns[id].tasks[taskId].description,
-      checkList: []
-    });
+    // this.taskForm.setValue({
+    //   title: this.columns[id].tasks[taskId].title,
+    //   description: this.columns[id].tasks[taskId].description,
+    //   checkList: []
+    // });
+
+    this.taskForm.get('title').setValue(this.columns[id].tasks[taskId].title);
+    this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
 
     for (let i = 0; i < checkboxArray.length; i++) {
       const checkForm = this.fb.group({
@@ -210,6 +226,13 @@ export class TrelloComponent implements OnInit {
         isChecked: checkboxArray[i].isChecked
       })
       this.checkList.push(checkForm)
+    }
+
+    for (let i = 0; i < filesArray.length; i++) {
+      const filesForm = this.fb.group({
+        name: filesArray[i].name
+      })
+      this.files.push(filesForm)
     }
   }
 
@@ -226,7 +249,7 @@ export class TrelloComponent implements OnInit {
     let string = input.value
 
     if (string.length > 0) {
-      let checkArray = this.taskForm.get("checkList") as FormArray;
+      //let checkArray = this.taskForm.get("checkList") as FormArray;
       let checkForm;
       
       if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
@@ -238,7 +261,7 @@ export class TrelloComponent implements OnInit {
               name: [array[i]],
               isChecked: [false]
             })
-            checkArray.push(checkForm)  
+            this.checkList.push(checkForm)  
           }  
         }
       } else {
@@ -246,7 +269,7 @@ export class TrelloComponent implements OnInit {
           name: [string],
           isChecked: [false]
         })
-        checkArray.push(checkForm)
+        this.checkList.push(checkForm)
       }
     }
     input.value = '';
@@ -254,8 +277,19 @@ export class TrelloComponent implements OnInit {
   }
 
   removeCheckbox(index : number){
-    let checkArray = this.taskForm.get("checkList") as FormArray;
-    checkArray.removeAt(index);
+    //let checkArray = this.taskForm.get("checkList") as FormArray;
+    this.checkList.removeAt(index);
+  }
+
+  onFileSelected(event : any){
+    //console.log(event.target.files[0].name);
+
+    this.fileName = event.target.files[0].name;
+
+    let fileForm = this.fb.group({
+      name: this.fileName
+    })
+    this.files.push(fileForm);
   }
 
   addColumn(){

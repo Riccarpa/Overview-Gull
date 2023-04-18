@@ -168,7 +168,8 @@
         <div class="card-body p-0">
           
           <div class="row">
-            <div class="col-md-12 form-group mb-3">
+
+            <div class="col-md-12 form-group mb-4">
               <label for="description">Description</label>
               <textarea 
                 class="form-control" 
@@ -179,9 +180,9 @@
               ></textarea>
             </div>
 
-            <div class="col-md-12 form-group m-0" *ngIf="!isCreatingTask">
+            <div class="col-md-12 form-group mb-4">
               <label for="">Checklist</label>
-              <p *ngIf="checkList.controls.length == 0" class="m-0">Non ci sono elementi</p>
+              <p *ngIf="checkList.controls.length == 0" class="m-0">The checklist is empty</p>
               <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
                 <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow: hidden; text-overflow: ellipsis;">
                   <input type="checkbox" formControlName="isChecked">
@@ -209,6 +210,16 @@
               <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox(checkboxInput)">Add</button>
           
             </div>
+
+            <div class="col-md-12 form-group mb-4">
+              <label for="">Uploaded Files</label>
+              <p class="m-0">No file uploaded yet</p>
+              <input type="file" class="d-none" (change)="onFileSelected($event)" #fileUpload>
+           
+              
+              <button type="button" class="btn btn-primary mt-2" (click)="fileUpload.click()">Upload File</button>
+            </div>
+
           </div>
         </div>
       </div>

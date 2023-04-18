@@ -26,6 +26,7 @@ export class TrelloService {
             {name: 'burro', isChecked: false},
             {name: 'sedano', isChecked: false}
           ], 
+          files: []
         },
         {
           title: 'Task 1', 
@@ -63,5 +64,6 @@ export class TrelloService {
   getUserTaskColumns(){
     return this.columns
   }
+
 
 }
