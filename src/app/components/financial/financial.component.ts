@@ -72,19 +72,30 @@ export class FinancialComponent implements OnInit {
       this.toastr.error(error.error.message);
     })
 
-    this.uService.getUserProjectForFinancial(this.id).subscribe((res: any) => {
-      this.projects = res.data;
-      console.log(this.projects)
 
-    }, (error) => {
-      this.toastr.error(error.error.message);
-    })
+
+
+    
+    if (this.inter.takeRole().role == 1 || this.inter.takeRole().role == 2) {
+      this.uService.getUserProjectForFinancial(this.id).subscribe((res: any) => {
+        this.projects = res.data;
+  
+      }, (error) => {
+        this.toastr.error(error.error.message);
+      })
+    }else{
+      this.uService.getUserProject().subscribe((res: any) => {
+        this.projects = res.data;
+  
+      }, (error) => {
+        this.toastr.error(error.error.message);
+      })
+    }
 
     if (this.inter.takeRole().role !== 1) {
       this.isAdmin = false
       this.fService.getUserMonthlyLogs().subscribe((res) => {
         this.monthlyLogs = res.data;
-
         this.getCurrMonthLog();
       })
     } else {
