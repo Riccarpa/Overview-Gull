@@ -52,10 +52,14 @@
           <div class="card-body">
             <p class="card-text">{{task.description}}</p>
           </div>
-          <div class="card-footer" *ngIf="task.checkList.length > 0">
-            <p class="m-0">
+          <div class="card-footer d-flex" *ngIf="task.checkList.length > 0">
+            <p class="my-0 mr-2">
               <i class="i-Check"></i>
               {{task.checksCompleted}}/{{task.checkList.length}}
+            </p>
+            <p class="m-0">
+              <i class="i-Files"></i>
+              {{task.files.length}}
             </p>
           </div>
         </div>
@@ -213,9 +217,15 @@
 
             <div class="col-md-12 form-group mb-4">
               <label for="">Uploaded Files</label>
-              <p class="m-0">No file uploaded yet</p>
+              <p *ngIf="files.controls.length == 0" class="m-0">No file uploaded yet</p>
+              <div *ngFor="let fileForm of files.controls; let v = index" class="m-0">
+                <div class="d-flex justify-content-center align-items-center rounded" style="width: 100px; height: 100px; background-color: rgba(128, 128, 128, 0.493);">
+                  <img [src]="fileForm.value.url" alt="" style="max-width: 100%; max-height: 100%;">
+                </div>
+                
+                <p>{{fileForm.value.file.name}}</p>
+              </div>
               <input type="file" class="d-none" (change)="onFileSelected($event)" #fileUpload>
-           
               
               <button type="button" class="btn btn-primary mt-2" (click)="fileUpload.click()">Upload File</button>
             </div>

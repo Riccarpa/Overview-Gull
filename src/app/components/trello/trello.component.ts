@@ -201,6 +201,7 @@ export class TrelloComponent implements OnInit {
     // }
     this.taskForm.reset(); 
     this.checkList.clear();
+    this.files.clear();
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
 
     this.isEditingTask = true;
@@ -230,7 +231,9 @@ export class TrelloComponent implements OnInit {
 
     for (let i = 0; i < filesArray.length; i++) {
       const filesForm = this.fb.group({
-        name: filesArray[i].name
+        //name: filesArray[i].name
+        file: filesArray[i].file,
+        url: filesArray[i].url
       })
       this.files.push(filesForm)
     }
@@ -282,13 +285,23 @@ export class TrelloComponent implements OnInit {
   }
 
   onFileSelected(event : any){
-    //console.log(event.target.files[0].name);
-
-    this.fileName = event.target.files[0].name;
+    // this.fileName = event.target.files[0].name;
+    let fileType = event.target.files[0].type;
 
     let fileForm = this.fb.group({
-      name: this.fileName
+      //name: this.fileName
+      file: event.target.files[0],
+      url: null
     })
+
+    if (fileType.includes("image/")) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]); // read file as data url
+      reader.onload = (event) => { // called once readAsDataURL is completed
+        fileForm.get('url').setValue(event.target.result);
+      }
+    } 
+
     this.files.push(fileForm);
   }
 

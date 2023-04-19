@@ -32,11 +32,13 @@ export class TrelloService {
           title: 'Task 1', 
           description: 'Some quick example text',
           checkList: [], 
+          files: []
         },
         {
           title: 'Task 20', 
           description: 'Build on the card title and make up the bulk of the card\'s content', 
           checkList: [],
+          files: []
         }
       ]
     },
