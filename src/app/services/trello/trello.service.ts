@@ -10,7 +10,9 @@ import { Router } from '@angular/router';
 })
 export class TrelloService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
+  url = `${environment.apiURL}/users`  
 
   columns = [
     {
@@ -63,8 +65,32 @@ export class TrelloService {
   //   return this.http.get(`${this.url}/trello/${id}`);
   // }
 
-  getUserTaskColumns(){
+  /* getUserTaskColumns(){
     return this.columns
+  } */
+
+  getUserTaskColumns(): Observable<any> {
+    return this.http.get(`${this.url}/154/tasks`)
+  }
+
+  addColumn(column : any){
+    this.columns.push(column)
+  }
+
+  addTask(task : any, columnId : number){
+    this.columns[columnId].tasks.push(task);
+  }
+
+  updateColumn(){
+
+  }
+
+  updateTask(){
+
+  }
+
+  deleteElement(){
+
   }
 
 

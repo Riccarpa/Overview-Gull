@@ -22,7 +22,7 @@
       (dragOver)="dragOverColumn = i"
     >
       <div class="card-header">
-        {{column.name}}
+        {{column.sprint.name}}
         <button
           type="button"
           class="close"
@@ -47,7 +47,7 @@
           (dragOver)="dragOverCard = taskId"
         >
           <div class="card-header">
-            <h5 class="m-0">{{task.title}}</h5>
+            <h5 class="m-0">{{task.name}}</h5>
           </div>
           <div class="card-body">
             <p class="card-text">{{task.description}}</p>
@@ -151,10 +151,10 @@
   <form [formGroup]="taskForm">
     <div class="modal-header">
       <input
-        formControlName="title"
+        formControlName="name"
         type="text"
         class="form-control bg-transparent"
-        id="title"
+        id="name"
         placeholder="Task title"
         style="border: none; font-size: 18px;"
       />

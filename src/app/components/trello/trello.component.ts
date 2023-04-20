@@ -22,6 +22,8 @@ export class TrelloComponent implements OnInit {
     private trService: TrelloService
   ) { }
 
+  colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
+
   id = this.route.snapshot.paramMap.get('id');
   user: any;
   isCreatingColumn = false;
@@ -37,7 +39,7 @@ export class TrelloComponent implements OnInit {
   trelloColumn = this.fb.array([]);
   
   taskForm = this.fb.group({
-    title: [null, Validators.required],
+    name: [null, Validators.required],
     description: [null],
     checkList: this.fb.array([]),
     files: this.fb.array([])
@@ -62,31 +64,46 @@ export class TrelloComponent implements OnInit {
   ngOnInit(): void {
     this.uService.retrieveUser(this.id).subscribe((res: any) => {
       this.user = res.data;
-
     }, (error) => {
       this.toastr.error(error.error.message);
     })
 
-    // this.trService.getUserTaskColumns().subscribe((res: any) => {
-    //   this.columns = res.data;     
-    // }, (error) => {
-    //   this.toastr.error(error.error.message);
-    // })
+    this.trService.getUserTaskColumns().subscribe((res: any) => {
+      console.log(res.data)
 
-    this.columns = this.trService.getUserTaskColumns()
+      this.columns = res.data[0].sprints;
+      for (let i = 0; i < this.columns.length; i++) {
+        this.columns[i].color = 'background-color: gold';  
+        this.columns[i].tasks[0].description = ''; 
+        this.columns[i].tasks[0].checkList = [
+          {name: 'uova', isChecked: true}, 
+          {name: 'farina', isChecked: false},
+          {name: 'burro', isChecked: false},
+          {name: 'sedano', isChecked: false}
+        ];
+        this.columns[i].tasks[0].files = [];
+      }
+      
 
-    for (let i = 0; i < this.columns.length; i++) {
-      for (let n = 0; n < this.columns[i].tasks.length; n++) {
-        let task = this.columns[i].tasks[n];
-        task.checksCompleted = 0;
+      for (let i = 0; i < this.columns.length; i++) {
+        for (let n = 0; n < this.columns[i].tasks.length; n++) {
+          let task = this.columns[i].tasks[n];
+          task.checksCompleted = 0;
+  
+          for (let v = 0; v < task.checkList.length; v++) {
+            if (task.checkList[v].isChecked) {
+              task.checksCompleted += 1;
+            }
+          }   
+        } 
+      }
 
-        for (let v = 0; v < task.checkList.length; v++) {
-          if (task.checkList[v].isChecked) {
-            task.checksCompleted += 1;
-          }
-        }   
-      } 
-    }
+      console.log(this.columns)  
+    }, (error) => {
+      this.toastr.error(error.error.message);
+    })
+
+
 
     // for (let i = 0; i < this.columns.length; i++) {
 
@@ -218,7 +235,7 @@ export class TrelloComponent implements OnInit {
     //   checkList: []
     // });
 
-    this.taskForm.get('title').setValue(this.columns[id].tasks[taskId].title);
+    this.taskForm.get('name').setValue(this.columns[id].tasks[taskId].name);
     this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
 
     for (let i = 0; i < checkboxArray.length; i++) {
@@ -307,15 +324,17 @@ export class TrelloComponent implements OnInit {
 
   addColumn(){
     this.isCreatingColumn = false;
-    const colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
 
     if (this.newColumnName != '') {
       let column = {
-        name: this.newColumnName,
-        color: `background-color: ${ colors[Math.floor(Math.random() * 4)]}`,
+        color: `background-color: ${ this.colors[Math.floor(Math.random() * 4)]}`,
+        sprint: {
+          name: this.newColumnName
+        },
         tasks: []
       }
-  
+      
+      //this.trService.addColumn(column);
       this.columns.push(column);
       this.newColumnName = '';
     }
@@ -335,12 +354,13 @@ export class TrelloComponent implements OnInit {
       //   checkList: []
       // });
 
-      this.taskForm.get('title').setValue(this.newTaskTitle);
+      this.taskForm.get('name').setValue(this.newTaskTitle);
   
       let formData = this.taskForm.getRawValue();
+      //this.trService.addTask(formData, columnId);
       taskArray.push(formData);
-      console.log(taskArray);
       this.newTaskTitle = '';
+      console.log(taskArray)
 
       this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
     } 
