@@ -1,0 +1,113 @@
+<!-- task card modal -->
+<form [formGroup]="taskForm">
+    <div class="modal-header">
+    <input
+        formControlName="name"
+        type="text"
+        class="form-control bg-transparent"
+        id="name"
+        placeholder="Task title"
+        style="border: none; font-size: 18px;"
+    />
+    <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        
+    >
+    <!-- (click)="modal.dismiss()" -->
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <div class="col-md-12">
+        <div class="card-body p-0">
+        
+        <div class="row">
+
+            <!-- Description -->
+            <div class="col-md-12 form-group mb-4">
+            <label for="description">Description</label>
+            <textarea 
+                class="form-control" 
+                formControlName="description" 
+                placeholder="Type a description" 
+                id="description" 
+                style="height: 100px"
+            ></textarea>
+            </div>
+
+            <!-- Checklist -->
+            <div class="col-md-12 form-group mb-4">
+            <label for="">Checklist</label>
+            <p *ngIf="checkList.controls.length == 0" class="m-0">The checklist is empty</p>
+            <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
+                <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow: hidden; text-overflow: ellipsis;">
+                <input type="checkbox" formControlName="isChecked">
+                <span>{{checkForm.value.name}}</span>
+                <span class="checkmark" style="width: 15px; height: 15px; top: 2px"></span>
+                <button
+                    type="button"
+                    class="close"
+                    aria-label="Close"
+                    (click)="removeCheckbox(n)"
+                    style="width: 15px; height: 15px;"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </label>
+            </ng-container>
+
+            <textarea #checkboxInput class="form-control mt-2" 
+                placeholder="Add element" 
+                (keydown)="onKeydown($event, checkboxInput.value)"
+                (keyup.enter)="addCheckbox(checkboxInput)"
+                appTextareaAutoresize
+            ></textarea>
+
+            <button type="button" class="btn btn-primary mt-2" (click)="addCheckbox(checkboxInput)">Add</button>
+            </div>
+
+            <!-- Upload Files -->
+            <div class="col-md-12 form-group mb-4">
+            <label for="">Uploaded Files</label>
+            <p *ngIf="files.controls.length == 0" class="m-0">No file uploaded yet</p>
+            <div *ngFor="let fileForm of files.controls; let v = index" class="m-0">
+                <div class="d-flex justify-content-center align-items-center rounded" style="width: 100px; height: 100px; background-color: rgba(128, 128, 128, 0.493);">
+                <img [src]="fileForm.value.url" alt="" style="max-width: 100%; max-height: 100%;">
+                </div>
+                
+                <p>{{fileForm.value.file.name}}</p>
+            </div>
+            <input type="file" class="d-none" (change)="onFileSelected($event)" #fileUpload>
+            
+            <button type="button" class="btn btn-primary mt-2" (click)="fileUpload.click()">Upload File</button>
+            </div>
+
+            <!-- Comments -->
+            <div class="col-md-12 form-group mb-4">
+            <label for="">Comments</label>
+            <p *ngIf="comments.controls.length == 0" class="m-0">There are no comments</p>
+            <div *ngFor="let commentForm of comments.controls; let j = index" class="m-0">
+                
+                <p>{{commentForm.value.message}}</p>
+            </div>
+            
+            <button type="button" class="btn btn-primary mt-2">Add comment</button>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    </div>
+</form> 
+<!-- <div class="modal-footer">
+    <button class="btn btn-danger" (click)="confirm(modalConfirm, null)">
+    Delete
+    </button>
+    <button type="button" class="btn btn-primary" (click)="updateTask()" [disabled]="!taskForm.valid" ngbAutofocus>
+    Edit
+    </button>
+</div> -->
+
+

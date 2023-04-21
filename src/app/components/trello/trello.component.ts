@@ -41,8 +41,10 @@ export class TrelloComponent implements OnInit {
   taskForm = this.fb.group({
     name: [null, Validators.required],
     description: [null],
+    status: [null],
     checkList: this.fb.array([]),
-    files: this.fb.array([])
+    files: this.fb.array([]),
+    comments: this.fb.array([])
   });
 
   newColumnName = '';
@@ -61,6 +63,10 @@ export class TrelloComponent implements OnInit {
     return this.taskForm.controls["files"] as FormArray;
   }
 
+  get comments(){
+    return this.taskForm.controls["comments"] as FormArray;
+  }
+
   ngOnInit(): void {
     this.uService.retrieveUser(this.id).subscribe((res: any) => {
       this.user = res.data;
@@ -73,18 +79,19 @@ export class TrelloComponent implements OnInit {
 
       this.columns = res.data[0].sprints;
       for (let i = 0; i < this.columns.length; i++) {
-        this.columns[i].color = 'background-color: gold';  
+        this.columns[i].color = `background-color: ${this.colors[i]}`;  
         this.columns[i].tasks[0].description = ''; 
-        this.columns[i].tasks[0].checkList = [
-          {name: 'uova', isChecked: true}, 
-          {name: 'farina', isChecked: false},
-          {name: 'burro', isChecked: false},
-          {name: 'sedano', isChecked: false}
-        ];
+        this.columns[i].tasks[0].checkList = [];
         this.columns[i].tasks[0].files = [];
       }
-      
 
+      this.columns[0].tasks[0].checkList = [
+        {name: 'uova', isChecked: true}, 
+        {name: 'farina', isChecked: false},
+        {name: 'burro', isChecked: false},
+        {name: 'sedano', isChecked: false}
+      ];
+      
       for (let i = 0; i < this.columns.length; i++) {
         for (let n = 0; n < this.columns[i].tasks.length; n++) {
           let task = this.columns[i].tasks[n];
@@ -97,12 +104,9 @@ export class TrelloComponent implements OnInit {
           }   
         } 
       }
-
-      console.log(this.columns)  
     }, (error) => {
       this.toastr.error(error.error.message);
     })
-
 
 
     // for (let i = 0; i < this.columns.length; i++) {
@@ -203,41 +207,27 @@ export class TrelloComponent implements OnInit {
 
   // modal and alerts
   openEditTask(content, id : number, taskId : number){
-    // let taskArray = this.trelloColumn.at(id).get("tasks") as FormArray;
-    // let checkArray = taskArray.at(taskId).get("checkList") as FormArray;
-
-    // this.taskForm.setValue({
-    //   title: taskArray.at(taskId).value.title,
-    //   description: taskArray.at(taskId).value.description,
-    //   isDragging: taskArray.at(taskId).value.isDragging,
-    //   checkList: []
-    // });
-
-    // for (let i = 0; i < checkArray.length; i++) {
-    //   this.taskForm.controls.checkList.push(checkArray.at(i))
-    // }
     this.taskForm.reset(); 
     this.checkList.clear();
     this.files.clear();
+    this.comments.clear();
+
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
 
     this.isEditingTask = true;
-
     this.currentColumn = id;
     this.currentTask = taskId;
 
     let checkboxArray = this.columns[id].tasks[taskId].checkList;
     let filesArray = this.columns[id].tasks[taskId].files;
+    let commentsArray = this.columns[id].tasks[taskId].comments;
 
-    // this.taskForm.setValue({
-    //   title: this.columns[id].tasks[taskId].title,
-    //   description: this.columns[id].tasks[taskId].description,
-    //   checkList: []
-    // });
-
+    // Set taskForm values
     this.taskForm.get('name').setValue(this.columns[id].tasks[taskId].name);
     this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
-
+    this.taskForm.get('status').setValue(this.columns[id].tasks[taskId].status);
+    //taskForm Arrays
+    //Checklist
     for (let i = 0; i < checkboxArray.length; i++) {
       const checkForm = this.fb.group({
         name: checkboxArray[i].name,
@@ -245,15 +235,22 @@ export class TrelloComponent implements OnInit {
       })
       this.checkList.push(checkForm)
     }
-
+    //Files
     for (let i = 0; i < filesArray.length; i++) {
       const filesForm = this.fb.group({
-        //name: filesArray[i].name
         file: filesArray[i].file,
         url: filesArray[i].url
       })
       this.files.push(filesForm)
     }
+    //Comments
+    for (let i = 0; i < commentsArray.length; i++) {
+      const commentsForm = this.fb.group({
+        message: commentsArray[i].text
+      })
+      this.comments.push(commentsForm)
+    }
+    console.log(commentsArray)
   }
 
   //Prevent press enter from creating new line and creating an empty checkbox with spacebar
@@ -320,6 +317,11 @@ export class TrelloComponent implements OnInit {
     } 
 
     this.files.push(fileForm);
+  }
+
+  addComment(input: any){
+    console.log(input.value)
+    //Get user (userID)
   }
 
   addColumn(){
