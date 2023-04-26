@@ -36,6 +36,12 @@ export class TrelloComponent implements OnInit {
 
   columns : any;
 
+  btnGroupModel = {
+    left: true,
+    middle: false,
+    right: false
+  };
+
   trelloColumn = this.fb.array([]);
   
   taskForm = this.fb.group({
@@ -83,6 +89,22 @@ export class TrelloComponent implements OnInit {
         this.columns[i].tasks[0].description = ''; 
         this.columns[i].tasks[0].checkList = [];
         this.columns[i].tasks[0].files = [];
+
+        let statusBtn;
+
+        switch (this.columns[i].tasks[0].status){
+          case 0:
+            statusBtn = [true, false, false];
+            break;
+          case 1:
+            statusBtn = [false, true, false];
+            break;
+          case 2:
+            statusBtn = [false, false, true];
+            break;
+        }
+
+        this.columns[i].tasks[0].statusBtn = statusBtn;
       }
 
       this.columns[0].tasks[0].checkList = [
@@ -104,6 +126,8 @@ export class TrelloComponent implements OnInit {
           }   
         } 
       }
+
+      console.log(this.columns)
     }, (error) => {
       this.toastr.error(error.error.message);
     })
@@ -199,6 +223,7 @@ export class TrelloComponent implements OnInit {
   }
 
   openCreateTask(columnId : number){
+    this.clearForm();
     this.newTaskTitle = "";
     this.columns[this.currentColumn].isCreatingTask = false;
     this.columns[columnId].isCreatingTask = true;
@@ -207,10 +232,7 @@ export class TrelloComponent implements OnInit {
 
   // modal and alerts
   openEditTask(content, id : number, taskId : number){
-    this.taskForm.reset(); 
-    this.checkList.clear();
-    this.files.clear();
-    this.comments.clear();
+    this.clearForm();
 
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
 
@@ -246,11 +268,10 @@ export class TrelloComponent implements OnInit {
     //Comments
     for (let i = 0; i < commentsArray.length; i++) {
       const commentsForm = this.fb.group({
-        message: commentsArray[i].text
+        text: commentsArray[i].text
       })
       this.comments.push(commentsForm)
     }
-    console.log(commentsArray)
   }
 
   //Prevent press enter from creating new line and creating an empty checkbox with spacebar
@@ -266,7 +287,6 @@ export class TrelloComponent implements OnInit {
     let string = input.value
 
     if (string.length > 0) {
-      //let checkArray = this.taskForm.get("checkList") as FormArray;
       let checkForm;
       
       if (string.includes("\n")) {//If string has more lines, create a checkbox for each line
@@ -320,8 +340,16 @@ export class TrelloComponent implements OnInit {
   }
 
   addComment(input: any){
-    console.log(input.value)
     //Get user (userID)
+    if(input.value.length > 0){
+      const commentsForm = this.fb.group({
+        text: input.value
+      })
+      this.comments.push(commentsForm);
+    }
+
+    input.value = '';
+    input.style.height = '40px';
   }
 
   addColumn(){
@@ -350,12 +378,6 @@ export class TrelloComponent implements OnInit {
     console.log('Before if')
 
     if (this.newTaskTitle != '') {
-      // this.taskForm.setValue({
-      //   title: [this.newTaskTitle],
-      //   description: [null],
-      //   checkList: []
-      // });
-
       this.taskForm.get('name').setValue(this.newTaskTitle);
   
       let formData = this.taskForm.getRawValue();
@@ -377,6 +399,7 @@ export class TrelloComponent implements OnInit {
       this.isEditingTask = false;
       let taskArray = this.columns[this.currentColumn].tasks;
       let formData = this.taskForm.getRawValue();
+      console.log(formData)
     
       taskArray.splice(this.currentTask, 1, formData);
       let task = taskArray[this.currentTask];
@@ -427,6 +450,13 @@ export class TrelloComponent implements OnInit {
     .result.then((result) => {
       
     }, (reason) => { });
+  }
+
+  clearForm(){
+    this.taskForm.reset(); 
+    this.checkList.clear();
+    this.files.clear();
+    this.comments.clear();
   }
 
 

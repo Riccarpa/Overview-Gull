@@ -57,14 +57,18 @@
               <i class="i-Check"></i>
               {{task.checksCompleted}}/{{task.checkList.length}}
             </p>
-            <p *ngIf="task.files.length" class="m-0">
+            <p *ngIf="task.files.length" class="my-0 mr-2">
               <i class="i-Files"></i>
               {{task.files.length}}
             </p>
+            <p *ngIf="task.comments.length" class="my-0 mr-2">
+              <i class="i-Speach-Bubble-3"></i>
+              {{task.comments.length}}
+            </p>
             <p class="my-0 mx-2">
-              <span *ngIf="task.status == 0">Aperto</span>
-              <span *ngIf="task.status == 1">In Corso</span>
-              <span *ngIf="task.status == 2">Completato</span>
+              <span class="badge badge-success mr-1" *ngIf="task.status == 0">Open</span>
+              <span class="badge badge-warning mr-1" *ngIf="task.status == 1">Ongoing</span>
+              <span class="badge badge-secondary mr-1" *ngIf="task.status == 2">Completed</span>
             </p>
           </div>
         </div>
@@ -198,7 +202,7 @@
               <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
                 <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow: hidden; text-overflow: ellipsis;">
                 <input type="checkbox" formControlName="isChecked">
-                <span>{{checkForm.value.name}}</span>
+                <span [class]="checkForm.value.isChecked ? 'text-decoration-line-through' : ''">{{checkForm.value.name}}</span>
                 <span class="checkmark" style="width: 15px; height: 15px; top: 2px"></span>
                 <button
                   type="button"
@@ -245,7 +249,7 @@
               <div *ngFor="let commentForm of comments.controls; let j = index" class="m-0">
                 <div class="card mb-2">
                   <div class="card-body">
-                    <p class="m-0">{{commentForm.value.message}}</p>
+                    <p class="m-0">{{commentForm.value.text}}</p>
                   </div>
                 </div>   
               </div>
@@ -258,12 +262,29 @@
               ></textarea>
               <button type="button" class="btn btn-primary mt-2" (click)="addComment(commentInput)">Add comment</button>
             </div>
+        
           </div>
         </div>
       </div>
     </div>
   </form> 
   <div class="modal-footer">
+
+    <!-- Status -->
+    <div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
+      <div class="btn-group btn-group-toggle">
+        <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[0]"> Open
+        </label>
+        <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[1]"> Ongoing
+        </label>
+        <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[2]"> Completed
+        </label>
+      </div>
+    </div>
+    
     <button class="btn btn-danger" (click)="confirm(modalConfirm, null)">
       Delete
     </button>

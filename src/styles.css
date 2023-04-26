@@ -71,10 +71,16 @@
     cursor: pointer;
 }
 
+.text-decoration-line-through{
+    text-decoration: line-through;
+}
+
 .tooltip-inner {
     white-space: pre-wrap;
 }
 /* .tooltip {
     z-index: 99;
 } */
+
+
 
