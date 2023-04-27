@@ -87,12 +87,11 @@
           <div class="card-body py-2">
             <input
             #newElement
-            [(ngModel)]="newTaskTitle"
             type="text"
             class="form-control"
             id="title"
             placeholder="Task title"
-            (keydown.enter)="addTask(i)"
+            (keydown.enter)="addTask(column.sprint.id, newElement)"
             (focusout)="newTaskTitle == '' ? column.isCreatingTask = false : ''"
           />
           </div>
@@ -105,7 +104,7 @@
             >
               <span>&times;</span>
             </button>
-            <button type="button" class="btn btn-primary" (click)="addTask(i)" [disabled]="newTaskTitle == ''">
+            <button type="button" class="btn btn-primary" (click)="addTask(column.sprint.id, newElement)" [disabled]="newTaskTitle == ''">
               Add Task
             </button>
           </div>
@@ -249,6 +248,7 @@
               <div *ngFor="let commentForm of comments.controls; let j = index" class="m-0">
                 <div class="card mb-2">
                   <div class="card-body">
+                    <p>{{commentForm.value.user.name}} {{commentForm.value.user.surname}}</p>
                     <p class="m-0">{{commentForm.value.text}}</p>
                   </div>
                 </div>   
@@ -272,17 +272,7 @@
 
     <!-- Status -->
     <div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
-      <div class="btn-group btn-group-toggle">
-        <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[0]"> Open
-        </label>
-        <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[1]"> Ongoing
-        </label>
-        <label class="btn-primary" ngbButtonLabel>
-            <input type="checkbox" ngbButton [(ngModel)]="columns[currentColumn].tasks[currentTask].statusBtn[2]"> Completed
-        </label>
-      </div>
+      
     </div>
     
     <button class="btn btn-danger" (click)="confirm(modalConfirm, null)">

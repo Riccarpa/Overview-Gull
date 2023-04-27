@@ -12,7 +12,8 @@ export class TrelloService {
 
   constructor(private http: HttpClient) { }
 
-  url = `${environment.apiURL}/users`  
+  url = `${environment.apiURL}/users` 
+  url2 = environment.apiURL
 
   columns = [
     {
