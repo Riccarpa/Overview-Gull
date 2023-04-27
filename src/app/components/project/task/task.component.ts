@@ -188,14 +188,7 @@ export class TaskComponent implements OnInit {
       this.taskService.addTask(newTask.name, newTask.assignee_id, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, this.sprint.id)
         .subscribe(() => {
           this.modalService.dismissAll();
-          this.taskForm.setValue({
-            name: '',
-            assignee_id: '',
-            status: '',
-            start_date: '',
-            end_date: '',
-            effort: '',
-          });
+          this.taskForm.reset();
           this.projectService.successBar('Task added successfully');
           this.sprintComponent.ngOnInit()
         });

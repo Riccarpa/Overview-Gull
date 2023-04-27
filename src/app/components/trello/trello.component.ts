@@ -408,7 +408,8 @@ export class TrelloComponent implements OnInit {
     this.taskService.addTask(input.value, 154, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, columnId)
         .subscribe(() => {
 
-          this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+          this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true });
+          this.ngOnInit();
         });
   }
 
