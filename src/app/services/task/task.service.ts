@@ -11,7 +11,6 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-
   url = environment.apiURL + '/tasks';
   url2 = environment.apiURL + '/task';
   currentTask: any;
@@ -44,7 +43,7 @@ export class TaskService {
   }
 
   // modifica task
-  updateTask(name: string, assignee_id: number, status: number, start_date: Date, end_date: Date, effort: number): Observable<any> {
+  updateTask(name: string, assignee_id: number, status: number, start_date: Date, end_date: Date, effort: number, checklist: string): Observable<any> {
     const url = `${this.url}/${this.currentTask}`;
 
     let body = {
@@ -54,6 +53,7 @@ export class TaskService {
       "start_date": start_date,
       "end_date": end_date,
       "effort": effort,
+      "checklist": checklist
     };
     return this.http.patch(url, body);
   }

@@ -250,7 +250,7 @@ export class TaskComponent implements OnInit {
     } else {
       const task = this.taskForm.value;
       let assignee_id = task.assignee_id != 'null' ? task.assignee_id : null;
-      this.taskService.updateTask(task.name, assignee_id, task.status, task.start_date, task.end_date, task.effort)
+      this.taskService.updateTask(task.name, assignee_id, task.status, task.start_date, task.end_date, task.effort, null)
         .subscribe(() => {
           this.modalService.dismissAll();
           this.projectService.successBar('Task edited successfully');

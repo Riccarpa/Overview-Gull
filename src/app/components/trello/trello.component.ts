@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { TrelloService } from 'src/app/services/trello/trello.service';
 import { TaskService } from 'src/app/services/task/task.service';
+import { ProjectService } from 'src/app/services/project/project.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-trello',
@@ -21,7 +23,8 @@ export class TrelloComponent implements OnInit {
     private route: ActivatedRoute,
     private uService: UserService,
     private trService: TrelloService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private projectService: ProjectService
   ) { }
 
   colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
@@ -32,7 +35,7 @@ export class TrelloComponent implements OnInit {
   isEditingTask = false;
   currentDraggingElmnt: string;
   currentColumn = 0;
-  //currentTask : any;
+  currentTask : any;
   dragOverCard = 0;
   dragOverColumn = 0;
 
@@ -50,7 +53,7 @@ export class TrelloComponent implements OnInit {
     name: [null, Validators.required],
     description: [null],
     status: [null],
-    checkList: this.fb.array([]),
+    checklist: this.fb.array([]),
     files: this.fb.array([]),
     comments: this.fb.array([]),
     assignee_id: [null],
@@ -68,8 +71,8 @@ export class TrelloComponent implements OnInit {
 
   @ViewChildren('newElement', {read: ElementRef}) newElemInput: QueryList<ElementRef>;
 
-  get checkList(){
-    return this.taskForm.controls["checkList"] as FormArray;
+  get checklist(){
+    return this.taskForm.controls["checklist"] as FormArray;
   }
 
   get files(){
@@ -88,81 +91,42 @@ export class TrelloComponent implements OnInit {
     })
 
     this.trService.getUserTaskColumns().subscribe((res: any) => {
-      console.log(res.data)
 
       this.columns = res.data[0].sprints;
       for (let i = 0; i < this.columns.length; i++) {
         this.columns[i].color = `background-color: ${this.colors[i]}`;  
-        this.columns[i].tasks[0].description = ''; 
-        this.columns[i].tasks[0].checkList = [];
-        this.columns[i].tasks[0].files = [];
 
         for (let n = 0; n < this.columns[i].tasks.length; n++) {
           this.columns[i].tasks[n].description = ''; 
-          this.columns[i].tasks[n].checkList = [];
           this.columns[i].tasks[n].files = [];
+
+          if(this.columns[i].tasks[n].checklist == null ){
+            this.columns[i].tasks[n].checklist = [];
+          } else {
+            let checklist = JSON.parse(this.columns[i].tasks[n].checklist);
+            this.columns[i].tasks[n].checklist = checklist;
+          }
+          
+          
         }    
       }
-
-      this.columns[0].tasks[0].checkList = [
-        {name: 'uova', isChecked: true}, 
-        {name: 'farina', isChecked: false},
-        {name: 'burro', isChecked: false},
-        {name: 'sedano', isChecked: false}
-      ];
       
       for (let i = 0; i < this.columns.length; i++) {
         for (let n = 0; n < this.columns[i].tasks.length; n++) {
           let task = this.columns[i].tasks[n];
           task.checksCompleted = 0;
   
-          for (let v = 0; v < task.checkList.length; v++) {
-            if (task.checkList[v].isChecked) {
+          for (let v = 0; v < task.checklist.length; v++) {
+            if (task.checklist[v].isChecked) {
               task.checksCompleted += 1;
             }
           }   
         } 
       }
-
-      console.log(this.columns)
     }, (error) => {
       this.toastr.error(error.error.message);
     })
 
-
-    // for (let i = 0; i < this.columns.length; i++) {
-
-    //   let columnForm = this.fb.group({
-    //     name: [this.columns[i].name],
-    //     color: [this.columns[i].color],
-    //     tasks: this.fb.array([])
-    //   })
-
-    //   for (let n = 0; n < this.columns[i].tasks.length; n++) {
-    //     let task = this.columns[i].tasks[n];
-
-    //     let taskForm = this.fb.group({
-    //       title: [task.title, Validators.required],
-    //       description: [task.description],
-    //       isDragging: [false],
-    //       checkList: this.fb.array([])
-    //     });
-
-    //     let taskControl = columnForm.get("tasks") as FormArray;
-
-    //     for (let v = 0; v < task.checkList.length; v++) {
-    //       const checkForm = this.fb.group({
-    //         name: task.checkList[v].name,
-    //         isChecked: task.checkList[v].isChecked
-    //       })
-
-    //       let checkControl = taskForm.get("checkList") as FormArray;
-    //       checkControl.push(checkForm) 
-    //     }
-    //     taskControl.push(taskForm);
-    //   }
-    //   this.trelloColumn.push(columnForm);
-    // }
   }
 
   //New column-task input focus
@@ -235,24 +199,40 @@ export class TrelloComponent implements OnInit {
 
     this.isEditingTask = true;
     this.currentColumn = id;
-    this.taskService.currentTask = taskId;
+    this.currentTask = taskId;
+    this.taskService.currentTask = this.columns[id].tasks[taskId].id;
 
-    let checkboxArray = this.columns[id].tasks[taskId].checkList;
+    let checkboxArray = this.columns[id].tasks[taskId].checklist;
     let filesArray = this.columns[id].tasks[taskId].files;
     let commentsArray = this.columns[id].tasks[taskId].comments;
 
     // Set taskForm values
-    this.taskForm.get('name').setValue(this.columns[id].tasks[taskId].name);
-    this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
-    this.taskForm.get('status').setValue(this.columns[id].tasks[taskId].status);
+    // this.taskForm.get('name').setValue(this.columns[id].tasks[taskId].name);
+    // this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
+    // this.taskForm.get('status').setValue(this.columns[id].tasks[taskId].status);
+
+    this.taskForm.setValue({
+      name: this.columns[id].tasks[taskId].name,
+      description: this.columns[id].tasks[taskId].description,
+      status: this.columns[id].tasks[taskId].status,
+      checklist: [],
+      files: [],
+      comments: [],
+      assignee_id: this.columns[id].tasks[taskId].assignee_id,
+      start_date: this.columns[id].tasks[taskId].start_date,
+      end_date: this.columns[id].tasks[taskId].end_date,
+      effort: this.columns[id].tasks[taskId].effort,
+      sprint_id: this.columns[id].tasks[taskId].sprint_id
+    })
+
     //taskForm Arrays
-    //Checklist
+    //checklist
     for (let i = 0; i < checkboxArray.length; i++) {
       const checkForm = this.fb.group({
         name: checkboxArray[i].name,
         isChecked: checkboxArray[i].isChecked
       })
-      this.checkList.push(checkForm)
+      this.checklist.push(checkForm)
     }
     //Files
     for (let i = 0; i < filesArray.length; i++) {
@@ -300,7 +280,7 @@ export class TrelloComponent implements OnInit {
               name: [array[i]],
               isChecked: [false]
             })
-            this.checkList.push(checkForm)  
+            this.checklist.push(checkForm)  
           }  
         }
       } else {
@@ -308,7 +288,7 @@ export class TrelloComponent implements OnInit {
           name: [string],
           isChecked: [false]
         })
-        this.checkList.push(checkForm)
+        this.checklist.push(checkForm)
       }
     }
     input.value = '';
@@ -316,8 +296,8 @@ export class TrelloComponent implements OnInit {
   }
 
   removeCheckbox(index : number){
-    //let checkArray = this.taskForm.get("checkList") as FormArray;
-    this.checkList.removeAt(index);
+    //let checkArray = this.taskForm.get("checklist") as FormArray;
+    this.checklist.removeAt(index);
   }
 
   onFileSelected(event : any){
@@ -344,18 +324,30 @@ export class TrelloComponent implements OnInit {
   addComment(input: any){
     //Get user (userID)
 
-    let commentsArray = this.columns[this.currentColumn].tasks[this.taskService.currentTask].comments;
+    let commentsArray = this.columns[this.currentColumn].tasks[this.currentTask].comments;
 
     if(input.value.length > 0){
-      const commentsForm = this.fb.group({
-        text: input.value,
-        id: null,
-        user_id: null,
-        created_at: null,
-        updated_at: null,
-        user: commentsArray[0].user
-      })
-      this.comments.push(commentsForm);
+
+      const content = input.value;
+      this.taskService.postComment(this.taskService.currentTask, content).subscribe((res) => {
+        this.projectService.successBar('Comment sent')
+
+        const commentsForm = this.fb.group({
+          id: res.data?.id,
+          task_id: res.data?.task_id,
+          user_id: res.data?.user_id,
+          text: content,
+          created_at: res.data?.created_at,
+          user: {
+            id: res.data?.user.id,
+            name: res.data?.user.name,
+            picture: res.data?.user.picture ? `${environment.apiURL2}/images/users/${res.data?.user.id}.png?r=${this.projectService.randomNumber()}` : `${environment.apiURL2}/images/users/${res.data?.user.id}.jpg?r=${this.projectService.randomNumber()}`,
+          }
+        })
+        this.comments.push(commentsForm);
+
+        this.ngOnInit()
+      });
     }
 
     input.value = '';
@@ -363,7 +355,6 @@ export class TrelloComponent implements OnInit {
   }
 
   changeStatus(status : any){
-    console.log(status);
     this.taskForm.get('status').setValue(status);
   }
 
@@ -388,24 +379,8 @@ export class TrelloComponent implements OnInit {
   }
 
   addTask(columnId : number, input : any){
-    /* let taskArray = this.columns[columnId].tasks;
-    this.columns[columnId].isCreatingTask = false;
-    console.log('Before if')
-
-    if (this.newTaskTitle != '') {
-      this.taskForm.get('name').setValue(this.newTaskTitle);
-  
-      let formData = this.taskForm.getRawValue();
-      //this.trService.addTask(formData, columnId);
-      taskArray.push(formData);
-      this.newTaskTitle = '';
-      console.log(taskArray)
-
-      this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
-    }  */
-
     const newTask = this.taskForm.value;
-    this.taskService.addTask(input.value, 154, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, columnId)
+    this.taskService.addTask(input.value, newTask.assignee_id, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, columnId)
         .subscribe(() => {
 
           this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true });
@@ -418,39 +393,31 @@ export class TrelloComponent implements OnInit {
       this.toastr.warning('All fields are required', 'Warning', { timeOut: 3000, closeButton: true});
      
     }else{
-      this.modalService.dismissAll()
-      this.isEditingTask = false;
-      let taskArray = this.columns[this.currentColumn].tasks;
-      let formData = this.taskForm.getRawValue();
-      console.log(formData)
-    
-      taskArray.splice(this.taskService.currentTask, 1, formData);
-      let task = taskArray[this.taskService.currentTask];
-      task.checksCompleted = 0;
-
-      for (let i = 0; i < task.checkList.length; i++) {
-        if (task.checkList[i].isChecked) {
-          task.checksCompleted += 1;
-        }
-      }   
-
-      this.toastr.success(`Task updated successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
+      const uTask = this.taskForm.value;
+      const checklist = this.checklist.getRawValue();
+      const json = JSON.stringify(checklist);
+      this.taskService.updateTask(uTask.name, uTask.assignee_id, uTask.status, uTask.start_date, uTask.end_date, uTask.effort, json)
+        .subscribe(() => {
+          this.isEditingTask = false;
+          this.modalService.dismissAll();
+          this.projectService.successBar('Task edited successfully');
+          this.ngOnInit()
+        });
     }
   }
 
   deleteElement(){
-    // this.uService.deleteUser(this.id).subscribe(res=>{
-    //   this.modalService.dismissAll()
-    //   this.toastr.success('Profile deleted', 'Success!', {progressBar: true});
-    // },(error)=>{
-    //   this.toastr.error(error.error.message);
-    // });
     this.modalService.dismissAll()
 
     if (!this.isEditingTask) {
       this.columns.splice(this.currentColumn, 1);
     } else {
-      this.columns[this.currentColumn].tasks.splice(this.taskService.currentTask, 1);
+      this.taskService.deleteTask(this.taskService.currentTask).subscribe(() => {
+        this.projectService.successBar('Task deleted');
+  
+        this.ngOnInit()
+        this.modalService.dismissAll();
+      });
     }
   }
 
@@ -477,7 +444,7 @@ export class TrelloComponent implements OnInit {
 
   clearForm(){
     this.taskForm.reset(); 
-    this.checkList.clear();
+    this.checklist.clear();
     this.files.clear();
     this.comments.clear();
   }

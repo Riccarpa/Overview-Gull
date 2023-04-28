@@ -53,9 +53,9 @@
             <p class="card-text">{{task.description}}</p>
           </div>
           <div class="card-footer d-flex">
-            <p *ngIf="task.checkList.length" class="my-0 mr-2">
+            <p *ngIf="task.checklist.length" class="my-0 mr-2">
               <i class="i-Check"></i>
-              {{task.checksCompleted}}/{{task.checkList.length}}
+              {{task.checksCompleted}}/{{task.checklist.length}}
             </p>
             <p *ngIf="task.files.length" class="my-0 mr-2">
               <i class="i-Files"></i>
@@ -92,8 +92,8 @@
             id="title"
             placeholder="Task title"
             (keydown.enter)="addTask(column.sprint.id, newElement)"
-            (focusout)="newTaskTitle == '' ? column.isCreatingTask = false : ''"
           />
+          <!-- (focusout)="newElement.value == '' ? column.isCreatingTask = false : ''" -->
           </div>
           <div class="card-footer">
             <button
@@ -104,7 +104,7 @@
             >
               <span>&times;</span>
             </button>
-            <button type="button" class="btn btn-primary" (click)="addTask(column.sprint.id, newElement)" [disabled]="newTaskTitle == ''">
+            <button type="button" class="btn btn-primary" (click)="addTask(column.sprint.id, newElement)">
               Add Task
             </button>
           </div>
@@ -194,11 +194,11 @@
               ></textarea>
             </div>
 
-            <!-- Checklist -->
+            <!-- checklist -->
             <div class="col-md-12 form-group mb-4">
-              <label for="">Checklist</label>
-              <p *ngIf="checkList.controls.length == 0" class="m-0">The checklist is empty</p>
-              <ng-container *ngFor="let checkForm of checkList.controls; let n = index">
+              <label for="">checklist</label>
+              <p *ngIf="checklist.controls.length == 0" class="m-0">The checklist is empty</p>
+              <ng-container *ngFor="let checkForm of checklist.controls; let n = index">
                 <label class="checkbox checkbox-success" [formGroup]="checkForm" style="overflow: hidden; text-overflow: ellipsis;">
                 <input type="checkbox" formControlName="isChecked">
                 <span [class]="checkForm.value.isChecked ? 'text-decoration-line-through' : ''">{{checkForm.value.name}}</span>
@@ -262,19 +262,49 @@
               ></textarea>
               <button type="button" class="btn btn-primary mt-2" (click)="addComment(commentInput)">Add comment</button>
             </div>
-        
+
+            <!-- Status -->
+            <div class="col-md-12 form-group mb-4">
+              <label for="status">Status</label>
+              <select
+                class="form-control"
+                type="number"
+                name="status"
+                formControlName="status"
+              >
+                <option [value]="0">Open</option>
+                <option [value]="1">In progress</option>
+                <option [value]="2">Completed</option>
+              </select>
+            </div>
+
+            <!-- Start and End Date -->
+            <div class="col-md-12 form-group mb-3">
+              <label for="start_date">Start date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="start_date"
+                name="start_date"
+                formControlName="start_date"
+              />
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label for="end_date">End date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="end_date"
+                name="end_date"
+                formControlName="end_date"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
   </form> 
   <div class="modal-footer">
-
-    <!-- Status -->
-    <div class="form-group btn-group btn-group-toggle" data-toggle="buttons">
-      
-    </div>
-    
     <button class="btn btn-danger" (click)="confirm(modalConfirm, null)">
       Delete
     </button>
