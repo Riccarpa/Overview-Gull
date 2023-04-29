@@ -233,13 +233,32 @@
             <div class="col-md-12 form-group mb-4">
               <label for="">Comments</label>
               <p *ngIf="comments.controls.length == 0" class="m-0">There are no comments</p>
+              
               <div *ngFor="let commentForm of comments.controls; let j = index" class="m-0">
+
                 <div class="card mb-2">
                   <div class="card-body">
-                    <p>{{commentForm.value.user.name}} {{commentForm.value.user.surname}}</p>
-                    <p class="m-0">{{commentForm.value.text}}</p>
+                    <img
+                      src="{{ commentForm.value.user.picture }}"
+                      [alt]="commentForm.value.user.name"
+                      class="avatar-sm rounded-circle ml-3"
+                    />
+                    <div class="message userMessage flex-grow-1">
+                      <div class="d-flex align-items-center">
+                        <p class="del mb-1 text-title text-16 flex-grow-1">
+                          {{commentForm.value.user.name}}
+                          <!-- <a class="ml-4 upd" (click)="updateComment(chat, chat?.text, i)"
+                            >modifica</a
+                          >
+                          |
+                          <a class="" (click)="deleteComment(chat.id, i)">elimina</a> -->
+                        </p>
+                        <span class="text-small text-muted">{{commentForm.value.created_at | date}}</span>
+                      </div>
+                      <p class="m-0">{{ commentForm.value.text }}</p>
+                    </div>
                   </div>
-                </div>   
+                </div> 
               </div>
 
               <textarea #commentInput class="form-control mt-2" 

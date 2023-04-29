@@ -1,9 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
+import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from 'src/app/services/user/user.service';
 import { TrelloService } from 'src/app/services/trello/trello.service';
 import { TaskService } from 'src/app/services/task/task.service';
 import { ProjectService } from 'src/app/services/project/project.service';
@@ -21,7 +20,6 @@ export class TrelloComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private route: ActivatedRoute,
-    private uService: UserService,
     private trService: TrelloService,
     private taskService: TaskService,
     private projectService: ProjectService
@@ -61,11 +59,9 @@ export class TrelloComponent implements OnInit {
   get checklist(){
     return this.taskForm.controls["checklist"] as FormArray;
   }
-
   get files(){
     return this.taskForm.controls["files"] as FormArray;
   }
-
   get comments(){
     return this.taskForm.controls["comments"] as FormArray;
   }
@@ -100,8 +96,19 @@ export class TrelloComponent implements OnInit {
             let checklist = JSON.parse(this.columns[i].tasks[n].checklist);
             this.columns[i].tasks[n].checklist = checklist;
           } 
+
+          //User comment picture
+          for (let index = 0; index < this.columns[i].tasks[n].comments.length; index++) {
+            let user = this.columns[i].tasks[n].comments[index].user;
+            if (user.picture && user.picture.includes('.png')) {
+              user.picture = `${environment.apiURL2}/images/users/${this.columns[i].tasks[n].comments[index].user.id}.png?r=${this.projectService.randomNumber()}`
+            } else {
+              user.picture = `${environment.apiURL2}/images/users/${this.columns[i].tasks[n].comments[index].user.id}.jpg?r=${this.projectService.randomNumber()}`
+            } 
+          }
         }    
       }
+      console.log(this.columns)
       
       //Checks completed
       for (let i = 0; i < this.columns.length; i++) {
@@ -119,7 +126,6 @@ export class TrelloComponent implements OnInit {
     }, (error) => {
       this.toastr.error(error.error.message);
     })
-
   }
 
   //New column-task input focus
