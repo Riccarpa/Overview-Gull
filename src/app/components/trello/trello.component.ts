@@ -29,25 +29,15 @@ export class TrelloComponent implements OnInit {
 
   colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
 
-  id = this.route.snapshot.paramMap.get('id');
-  user: any;
+  userId = parseInt(this.route.snapshot.paramMap.get('id'));
   isCreatingColumn = false;
   isEditingTask = false;
   currentDraggingElmnt: string;
   currentColumn = 0;
-  currentTask : any;
   dragOverCard = 0;
   dragOverColumn = 0;
 
   columns : any;
-
-  btnGroupModel = {
-    left: true,
-    middle: false,
-    right: false
-  };
-
-  trelloColumn = this.fb.array([]);
   
   taskForm = this.fb.group({
     name: [null, Validators.required],
@@ -64,10 +54,7 @@ export class TrelloComponent implements OnInit {
   });
 
   newColumnName = '';
-  newTaskTitle = '';
   fileName = '';
-
-  //@ViewChild("newTask") newElemInput: ElementRef;
 
   @ViewChildren('newElement', {read: ElementRef}) newElemInput: QueryList<ElementRef>;
 
@@ -84,15 +71,22 @@ export class TrelloComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.uService.retrieveUser(this.id).subscribe((res: any) => {
-      this.user = res.data;
-    }, (error) => {
-      this.toastr.error(error.error.message);
-    })
+    this.trService.getUserTaskColumns(this.userId).subscribe((res: any) => {
+      let data = res.data;
+      let columnArray = [];
 
-    this.trService.getUserTaskColumns().subscribe((res: any) => {
+      for (let index = 0; index < data.length; index++) {
+        let sprints = data[index].sprints;
+        for (let i = 0; i < sprints.length; i++) {
+          let sprint = sprints[i];
+          sprint.projName = data[index].project.name;
+          
+          columnArray.push(sprint);
+        } 
+      }
 
-      this.columns = res.data[0].sprints;
+      this.columns = columnArray;
+
       for (let i = 0; i < this.columns.length; i++) {
         this.columns[i].color = `background-color: ${this.colors[i]}`;  
 
@@ -105,12 +99,11 @@ export class TrelloComponent implements OnInit {
           } else {
             let checklist = JSON.parse(this.columns[i].tasks[n].checklist);
             this.columns[i].tasks[n].checklist = checklist;
-          }
-          
-          
+          } 
         }    
       }
       
+      //Checks completed
       for (let i = 0; i < this.columns.length; i++) {
         for (let n = 0; n < this.columns[i].tasks.length; n++) {
           let task = this.columns[i].tasks[n];
@@ -158,7 +151,6 @@ export class TrelloComponent implements OnInit {
         let card = array.splice(taskId, 1)[0];
 
         array.splice(this.dragOverCard, 0, card);
-        //array[this.dragOverCard] = array.splice(taskId, 1, array[this.dragOverCard])[0];
       }
     //If its a column
     } else if(this.currentDraggingElmnt == "column" && droppedOnColumn == null) {
@@ -168,7 +160,6 @@ export class TrelloComponent implements OnInit {
       let column = array.splice(columnId, 1)[0];
 
       array.splice(this.dragOverColumn, 0, column);
-      //array[this.dragOverColumn] = array.splice(columnId, 1, array[this.dragOverColumn])[0];
     }
   }
 
@@ -185,7 +176,6 @@ export class TrelloComponent implements OnInit {
 
   openCreateTask(columnId : number){
     this.clearForm();
-    this.newTaskTitle = "";
     this.columns[this.currentColumn].isCreatingTask = false;
     this.columns[columnId].isCreatingTask = true;
     this.currentColumn = columnId;
@@ -199,7 +189,6 @@ export class TrelloComponent implements OnInit {
 
     this.isEditingTask = true;
     this.currentColumn = id;
-    this.currentTask = taskId;
     this.taskService.currentTask = this.columns[id].tasks[taskId].id;
 
     let checkboxArray = this.columns[id].tasks[taskId].checklist;
@@ -207,10 +196,6 @@ export class TrelloComponent implements OnInit {
     let commentsArray = this.columns[id].tasks[taskId].comments;
 
     // Set taskForm values
-    // this.taskForm.get('name').setValue(this.columns[id].tasks[taskId].name);
-    // this.taskForm.get('description').setValue(this.columns[id].tasks[taskId].description);
-    // this.taskForm.get('status').setValue(this.columns[id].tasks[taskId].status);
-
     this.taskForm.setValue({
       name: this.columns[id].tasks[taskId].name,
       description: this.columns[id].tasks[taskId].description,
@@ -324,8 +309,6 @@ export class TrelloComponent implements OnInit {
   addComment(input: any){
     //Get user (userID)
 
-    let commentsArray = this.columns[this.currentColumn].tasks[this.currentTask].comments;
-
     if(input.value.length > 0){
 
       const content = input.value;
@@ -369,8 +352,6 @@ export class TrelloComponent implements OnInit {
         },
         tasks: []
       }
-      
-      //this.trService.addColumn(column);
       this.columns.push(column);
       this.newColumnName = '';
     }
@@ -380,7 +361,7 @@ export class TrelloComponent implements OnInit {
 
   addTask(columnId : number, input : any){
     const newTask = this.taskForm.value;
-    this.taskService.addTask(input.value, newTask.assignee_id, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, columnId)
+    this.taskService.addTask(input.value, this.userId, newTask.status, newTask.start_date, newTask.end_date, newTask.effort, columnId)
         .subscribe(() => {
 
           this.toastr.success(`Task added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true });
@@ -401,7 +382,7 @@ export class TrelloComponent implements OnInit {
           this.isEditingTask = false;
           this.modalService.dismissAll();
           this.projectService.successBar('Task edited successfully');
-          this.ngOnInit()
+          this.ngOnInit();
         });
     }
   }
@@ -447,15 +428,6 @@ export class TrelloComponent implements OnInit {
     this.checklist.clear();
     this.files.clear();
     this.comments.clear();
-  }
-
-  saveBoard(){
-    // this.trService.saveTasks(this.columns,this.id).subscribe(res=>{
-    //   this.toastr.success('Tasks saved.', 'Success!', {progressBar: true});
-      
-    // },(error)=>{
-    //   this.toastr.error(error.error.message);
-    // });
   }
 
 }

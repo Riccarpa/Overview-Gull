@@ -40,8 +40,6 @@ import { IssueComponent } from './components/project/issues/issue/issue.componen
 import { IssueDetailComponent } from './components/project/issues/issue-detail/issue-detail.component';
 import { TrelloComponent } from './components/trello/trello.component';
 import { TextareaAutoresizeDirective } from './directives/textarea-autoresize.directive';
-import { TrelloSprintComponent } from './components/trello/trello-sprint/trello-sprint.component';
-import { TrelloTaskComponent } from './components/trello/trello-task/trello-task.component';
 
 
 
@@ -68,10 +66,7 @@ import { TrelloTaskComponent } from './components/trello/trello-task/trello-task
     IssueComponent,
     IssueDetailComponent,
     TrelloComponent,
-    TextareaAutoresizeDirective,
-    TrelloSprintComponent,
-    TrelloTaskComponent
-   
+    TextareaAutoresizeDirective
   ],
   imports: [
     BrowserModule,

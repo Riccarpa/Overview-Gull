@@ -1,6 +1,3 @@
-<!-- <div>
-  <button class="btn btn-primary" (click)="saveBoard()">Save</button>
-</div> -->
 <div class="pb-2 d-flex" 
   style="height: calc(100vh - 80px - (32px * 2) - 34px); width: 100%; overflow-x: auto;"
   mwlDroppable
@@ -22,15 +19,8 @@
       (dragOver)="dragOverColumn = i"
     >
       <div class="card-header">
+        <h5>{{column.projName}}</h5>
         {{column.sprint.name}}
-        <button
-          type="button"
-          class="close"
-          aria-label="Close"
-          (click)="confirm(modalConfirm, i); isEditingTask = false"
-        >
-          <span>&times;</span>
-        </button>
       </div>
       <div class="card-body" style="max-height: 100%; overflow-y: auto;">
 
@@ -156,8 +146,6 @@
 
 <!-- task card modal -->
 <ng-template #modalTask let-modal>
-  <!-- <app-trello-task></app-trello-task> -->
-  <!-- task card modal -->
   <form [formGroup]="taskForm">
     <div class="modal-header">
       <input
