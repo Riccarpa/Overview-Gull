@@ -25,7 +25,8 @@ export class TrelloComponent implements OnInit {
     private projectService: ProjectService
   ) { }
 
-  colors = ['gold', 'yellowgreen', 'tomato', 'deepskyblue'];
+  colors = ['#fff4b3', '#d6ebad', '#ffd4cc', '#ccf2ff', '#ffefd5', '#ffccff', '#ffffb3', '#dbe7cb', '#ccccff', '#f4d7d7'];
+  colorId = 0;
 
   userId = parseInt(this.route.snapshot.paramMap.get('id'));
   isCreatingColumn = false;
@@ -84,7 +85,12 @@ export class TrelloComponent implements OnInit {
       this.columns = columnArray;
 
       for (let i = 0; i < this.columns.length; i++) {
-        this.columns[i].color = `background-color: ${this.colors[i]}`;  
+        this.columns[i].color = `background-color: ${this.colors[this.colorId]}`; 
+        if (this.colorId == 9) {
+          this.colorId = 0;
+        } else {
+          this.colorId += 1;
+        }
 
         for (let n = 0; n < this.columns[i].tasks.length; n++) {
           this.columns[i].tasks[n].description = ''; 
@@ -352,7 +358,7 @@ export class TrelloComponent implements OnInit {
 
     if (this.newColumnName != '') {
       let column = {
-        color: `background-color: ${ this.colors[Math.floor(Math.random() * 4)]}`,
+        color: `background-color: ${ this.colors[this.colorId]}`,
         sprint: {
           name: this.newColumnName
         },
@@ -360,6 +366,12 @@ export class TrelloComponent implements OnInit {
       }
       this.columns.push(column);
       this.newColumnName = '';
+
+      if (this.colorId == 9) {
+        this.colorId = 0;
+      } else {
+        this.colorId += 1;
+      }
     }
     
     this.toastr.success(`Column added successfully`,'Success', { timeOut: 3000, closeButton: true, progressBar: true })
