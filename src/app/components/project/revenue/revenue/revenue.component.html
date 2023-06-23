@@ -13,23 +13,22 @@
               <table>
                 <thead>
                   <tr>
-                    <th >Name</th>
-                    <th >Costo</th>
+                    <th >Nome</th>
                     <th >Ore</th>
+                    <th >Totale</th>
                     <!-- (click)="sortTable('name')" -->
                   </tr>
                 </thead>
                 <tbody id="items">
-                  <tr >
-                    <!-- *ngFor="let user of project.users_costs" -->
+                  <tr *ngFor="let rev of revenueArr">
                     <td >
-                      <span>user</span>
+                      <span>{{rev.name}}</span>
                     </td>
                     <td >
-                        <span>160</span>
+                        <span>{{rev.total_hours}}</span>
                     </td>
                     <td >
-                        <span>40</span>
+                        <span>{{rev.total}}</span>
                     </td>
                   </tr>
                 </tbody>
