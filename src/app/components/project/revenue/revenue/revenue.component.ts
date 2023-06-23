@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-revenue',
@@ -7,9 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RevenueComponent implements OnInit {
 
+  @Input() project: any;
+  revenueArr:any;
+
   constructor() { }
 
+  
+
   ngOnInit(): void {
+    this.createRevenueArr()
+  }
+
+  createRevenueArr(){
+    console.log(this.project.users_costs)
+    console.log(this.project.user_details)
+
   }
 
 }

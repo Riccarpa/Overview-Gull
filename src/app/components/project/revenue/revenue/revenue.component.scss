@@ -1,0 +1,123 @@
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.h_link_chat {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    max-width: 80%;
+    width: 80%;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px ;
+    span{
+        min-width: 20%;
+    }
+}
+
+.message{
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    &::before {
+        
+        content: "";
+        position: absolute;
+        top: 40%;
+        right: -5px;
+        background: transparent;
+        border-style: solid;
+        border-width: 0 10px 10px 0px;
+        border-color: transparent transparent #f8f9fa transparent;
+        transform: rotate(-135deg);
+        
+    }
+}
+
+.modal-xl .modal-dialog{
+    min-width: 90vw !important;
+}
+
+
+.userMessage{
+
+    &::before{
+
+        left: -5px;
+        right: auto;
+        transform: rotate(45deg);
+    }
+}
+
+a{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vh{
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.del a{
+    font-size: 12px;
+    color: grey;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  tr{
+    cursor: pointer;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+    cursor: auto;
+  }
+  
+  th:hover:not(:last-child) {
+    background-color: #e0e0e0;
+    cursor: pointer;
+  }
+  
+  .sort-asc::after {
+    content: " ▲";
+  }
+  
+  .sort-desc::after {
+    content: " ▼";
+  }
+  
+  .no-data {
+    text-align: center;
+    margin-top: 20px;
+    color: #999;
+  }
+  
