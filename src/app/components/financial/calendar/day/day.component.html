@@ -1,4 +1,4 @@
-<div class="row flex-nowrap align-items-center py-4" [ngClass]="{'bg-holiday' :  isWeekendDirective(day.date) == true}">
+<div class="row flex-nowrap align-items-center py-4" [ngClass]="isWeekendDirective(day.date)">
   <div class="col-md-4 col-3 d-flex align-items-center ">
     <span>
       <div class="mb-3 justify-content-center d-flex">
@@ -14,7 +14,7 @@
       </div>
     </span>
     <span
-      [ngClass]="{ 'text-danger': isWeekendDirective(day.date) == true }"
+      [ngClass]="isWeekendDirective(day.date)"
       >
       <strong class="d-block d-sm-none">{{ day.date | date : "d " }}</strong>
       <strong class="d-none d-md-block ">{{ day.date | date : "d EEEE " }}</strong>
@@ -33,7 +33,6 @@
         <select
           (change)="onSelectChange($event.target.value, j, $event)"
           class="form-control mb-2"
-          [ngClass]="{'border-info': activity.activity_id == '13', 'border-danger': activity.activity_id == '14'}"
         >
           <option   selected>{{ activity.activity_name }}</option>
           <option *ngFor="let activity of activities" [value]="activity.id" [type]="'generic'">

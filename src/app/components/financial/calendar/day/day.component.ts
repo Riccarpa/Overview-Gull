@@ -210,11 +210,21 @@ deleteOldActivity(j) {
 }
 
 isWeekendDirective(day: any) {
+  for (let index = 0; index < this.day.activity_days_array.length; index++) {
+    const element = this.day.activity_days_array[index];
+    console.log(element)
+    if(element.activity_id == 14){
+      return "bg-malattia"
+    }
+    if(element.activity_id == 15){
+      return "bg-ferie"
+    }
+  }
   day = new Date(day)
   if (day.getDay() == 0 || day.getDay() == 6) {
-    return true
+    return 'bg-holiday text-red'
   } else {
-    return false
+    return ''
   }
 }
 }
