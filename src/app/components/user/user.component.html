@@ -209,21 +209,13 @@
           <ng-template ngx-datatable-header-template> Picture </ng-template>
           <ng-template ngx-datatable-cell-template let-row="row">
             <img
-              *ngIf="row.picture"
               height="32px"
               width="32px"
               style="border-radius: 4px"
-              src="{{ row.picture }}"
+              [src]="row.picture != null ? row.picture : '/assets/images/download.png'"
               alt=""
             />
-              <img
-              *ngIf="row.picture == null"
-              height="32px"
-              width="32px"
-              style="border-radius: 4px"
-              src="/assets/images/download.png"
-              alt=""
-            />
+
           </ng-template>
         </ngx-datatable-column>
 

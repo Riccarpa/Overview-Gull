@@ -87,7 +87,7 @@ export class UserComponent implements OnInit {
         
         if(this.users[i].picture && this.users[i].picture.includes('.png') ){
           this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.png?r=${this.pService.randomNumber()}`
-        }else{
+        }else if(this.users[i].picture && this.users[i].picture.includes('.jpg') ){
           this.users[i].picture = `${environment.apiURL2}/images/users/${this.users[i].id}.jpg?r=${this.pService.randomNumber()}`
         }
       }
