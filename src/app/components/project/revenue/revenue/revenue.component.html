@@ -17,6 +17,7 @@
                     <th *ngFor="let item of revenueArr">
                         <span>{{printKey(item)}}</span>
                     </th>
+                    <th>Costo totale</th>
                     <!-- (click)="sortTable('name')" -->
                   </tr>
                 </thead>
@@ -27,6 +28,17 @@
                     </td>
                     <td *ngFor="let item of revenueArr" >
                       <span>{{printRevenue(user.id,item,printKey(item))}}</span>
+                    </td>
+                    <td>
+                      <span>{{printMonthTotalCostforUser(user.id)}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Costo totale</td>
+                    <td *ngFor="let item of revenueArr" >
+                    </td>
+                    <td>
+                      {{printTotCost()}}
                     </td>
                   </tr>
                 </tbody>

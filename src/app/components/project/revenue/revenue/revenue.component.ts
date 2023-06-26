@@ -59,7 +59,6 @@ export class RevenueComponent implements OnInit {
 
         this.revenueArr.push({[key]: newElCosts})
 
-
       }
     }
 
@@ -77,6 +76,21 @@ export class RevenueComponent implements OnInit {
         return element.total_cost.toFixed(0) + " € (" + element.hours + ")"  
       }
     }
+  }
+
+  printMonthTotalCostforUser(id:any){
+    for (const key in this.project.users_costs.total_cost_by_user) {
+      if (Object.prototype.hasOwnProperty.call(this.project.users_costs.total_cost_by_user, key)) {
+        const element = this.project.users_costs.total_cost_by_user[key];
+        if(key == id){
+          return  element.total.toFixed(0) + " € (" + element.total_hours + ")"  
+        }
+      }
+    }
+  }
+
+  printTotCost(){
+    return this.project.users_costs['total_cost'].toFixed(0) + " € (" + this.project.users_costs['hours'] + ")"
   }
 
 
