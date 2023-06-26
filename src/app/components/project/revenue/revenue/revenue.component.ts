@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UserService } from 'src/app/services/user/user.service';
+  
 
 @Component({
   selector: 'app-revenue',
@@ -8,31 +10,75 @@ import { Component, OnInit, Input } from '@angular/core';
 export class RevenueComponent implements OnInit {
 
   @Input() project: any;
-  revenueArr:any;
 
-  constructor() { }
+  revenueArr:any;
+  users:any;
+  userPayed;
+
+  constructor(private userService: UserService) { }
+  
 
   ngOnInit(): void {
-    this.createRevenueArr()
+   this.getUsers()
+  }
+
+  getUsers(){
+    this.userService.getUsers().subscribe((res) => {
+      this.users = res.data
+      this.createRevenueArr()
+    },)
   }
 
   createRevenueArr(){
     this.revenueArr = []
-    for (const key in this.project.users_costs["total_cost_by_user"]) {
-      if (Object.prototype.hasOwnProperty.call(this.project.users_costs["total_cost_by_user"], key)) {
-        const element = this.project.users_costs["total_cost_by_user"][key];
-        for (let j = 0; j < this.project.user_details.length; j++) {
-          const user = this.project.user_details[j];
-          if(key == user.id){
-            const newCostEl = {"name":user.name,"surname":user.surname,"picture":user.picture,"total_hours":element.total_hours,"total":element.total}
-            this.revenueArr.push(newCostEl)
+    this.userPayed = []
+    for (const key in this.project.users_costs["costs"]) {
+      if (Object.prototype.hasOwnProperty.call(this.project.users_costs["costs"], key)) {
+        const element = this.project.users_costs["costs"][key];
+       
+        //assegna info utente
+        let newElCosts = []
+        for (const key2 in element['costs']) {
+          if (Object.prototype.hasOwnProperty.call(element['costs'], key2)) {
+            const elementCosts = element['costs'][key2];
+            for (let j = 0; j < this.users.length; j++) {
+              const user = this.users[j];
+              if(key2 == user.id){
+                if (!this.userPayed.includes(user)) {
+                  this.userPayed.push(user);
+                }
+               elementCosts['name'] = user.name
+               elementCosts['surname'] = user.surname
+               elementCosts['picture'] = user.picture
+               elementCosts['user_id'] = user.id
+              }
+            }
+            newElCosts.push(elementCosts);
           }
         }
+
+        this.revenueArr.push({[key]: newElCosts})
+
+
+      }
+    }
+
+
+  }
+
+  printKey(key:any){
+    return Object.keys(key)[0];
+  }
+
+  printRevenue(id:any,item:any,month:any){
+    for (let i = 0; i < item[month].length; i++) {
+      const element = item[month][i];
+      if(element.user_id == id){
+        return element.total_cost.toFixed(0) + " € (" + element.hours + ")"  
       }
     }
   }
 
-   
 
 
 }

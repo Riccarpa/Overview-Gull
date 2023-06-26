@@ -14,21 +14,19 @@
                 <thead>
                   <tr>
                     <th >Nome</th>
-                    <th >Ore</th>
-                    <th >Totale</th>
+                    <th *ngFor="let item of revenueArr">
+                        <span>{{printKey(item)}}</span>
+                    </th>
                     <!-- (click)="sortTable('name')" -->
                   </tr>
                 </thead>
                 <tbody id="items">
-                  <tr *ngFor="let rev of revenueArr">
-                    <td >
-                      <span>{{rev.name}}</span>
+                  <tr *ngFor="let user of userPayed">
+                    <td>
+                      {{user.name }} {{user.surname }}
                     </td>
-                    <td >
-                        <span>{{rev.total_hours}}</span>
-                    </td>
-                    <td >
-                        <span>{{rev.total}}</span>
+                    <td *ngFor="let item of revenueArr" >
+                      <span>{{printRevenue(user.id,item,printKey(item))}}</span>
                     </td>
                   </tr>
                 </tbody>
