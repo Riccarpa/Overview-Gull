@@ -29,16 +29,16 @@
                     <td *ngFor="let item of revenueArr" >
                       <span>{{printRevenue(user.id,item,printKey(item))}}</span>
                     </td>
-                    <td>
+                    <td style="font-weight: bold;">
                       <span>{{printMonthTotalCostforUser(user.id)}}</span>
                     </td>
                   </tr>
                   <tr>
-                    <td>Costo totale</td>
+                    <td style="font-weight: bold;">Costo totale</td>
                     <td *ngFor="let item of monthlyCost" >
-                      <span>{{item}}</span>
+                      <span style="font-weight: bold;">{{item}}</span>
                     </td>
-                    <td>
+                    <td style="font-weight: bold;">
                       {{printTotCost()}}
                     </td>
                   </tr>
