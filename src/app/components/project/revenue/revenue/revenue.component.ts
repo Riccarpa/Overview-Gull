@@ -14,6 +14,7 @@ export class RevenueComponent implements OnInit {
   revenueArr:any;
   users:any;
   userPayed;
+  monthlyCost;
 
   constructor(private userService: UserService) { }
   
@@ -32,10 +33,12 @@ export class RevenueComponent implements OnInit {
   createRevenueArr(){
     this.revenueArr = []
     this.userPayed = []
+    this.monthlyCost = []
     for (const key in this.project.users_costs["costs"]) {
       if (Object.prototype.hasOwnProperty.call(this.project.users_costs["costs"], key)) {
         const element = this.project.users_costs["costs"][key];
-       
+        let monthCost = this.project.users_costs["costs"][key].total_cost.toFixed(0) +" € (" + this.project.users_costs["costs"][key].hours + ")"
+        this.monthlyCost.push(monthCost)    
         //assegna info utente
         let newElCosts = []
         for (const key2 in element['costs']) {
@@ -87,6 +90,10 @@ export class RevenueComponent implements OnInit {
         }
       }
     }
+  }
+
+  printMonthTotCost(item){
+   return item['total_cost']
   }
 
   printTotCost(){

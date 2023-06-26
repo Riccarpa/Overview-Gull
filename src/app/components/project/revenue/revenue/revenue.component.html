@@ -35,7 +35,8 @@
                   </tr>
                   <tr>
                     <td>Costo totale</td>
-                    <td *ngFor="let item of revenueArr" >
+                    <td *ngFor="let item of monthlyCost" >
+                      <span>{{item}}</span>
                     </td>
                     <td>
                       {{printTotCost()}}
