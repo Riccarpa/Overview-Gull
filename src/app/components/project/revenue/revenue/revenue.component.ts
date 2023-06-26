@@ -37,7 +37,7 @@ export class RevenueComponent implements OnInit {
     for (const key in this.project.users_costs["costs"]) {
       if (Object.prototype.hasOwnProperty.call(this.project.users_costs["costs"], key)) {
         const element = this.project.users_costs["costs"][key];
-        let monthCost = this.project.users_costs["costs"][key].total_cost.toFixed(0) +" € (" + this.project.users_costs["costs"][key].hours + ")"
+        let monthCost = this.project.users_costs["costs"][key].total_cost.toFixed(0) +"€ (" + this.project.users_costs["costs"][key].hours + ")"
         this.monthlyCost.push(monthCost)    
         //assegna info utente
         let newElCosts = []
@@ -76,7 +76,7 @@ export class RevenueComponent implements OnInit {
     for (let i = 0; i < item[month].length; i++) {
       const element = item[month][i];
       if(element.user_id == id){
-        return element.total_cost.toFixed(0) + " € (" + element.hours + ")"  
+        return element.total_cost.toFixed(0) + "€  (" + element.hours + ")"  
       }
     }
   }
@@ -86,7 +86,7 @@ export class RevenueComponent implements OnInit {
       if (Object.prototype.hasOwnProperty.call(this.project.users_costs.total_cost_by_user, key)) {
         const element = this.project.users_costs.total_cost_by_user[key];
         if(key == id){
-          return  element.total.toFixed(0) + " € (" + element.total_hours + ")"  
+          return  element.total.toFixed(0) + "€ (" + element.total_hours + ")"  
         }
       }
     }
@@ -97,7 +97,7 @@ export class RevenueComponent implements OnInit {
   }
 
   printTotCost(){
-    return this.project.users_costs['total_cost'].toFixed(0) + " € (" + this.project.users_costs['hours'] + ")"
+    return this.project.users_costs['total_cost'].toFixed(0) + "€ (" + this.project.users_costs['hours'] + ")"
   }
 
 

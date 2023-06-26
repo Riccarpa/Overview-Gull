@@ -92,9 +92,7 @@ a{
     padding: 8px;
     border-bottom: 1px solid #ddd;
   }
-  tr{
-    cursor: pointer;
-  }
+
   
   th {
     background-color: #f2f2f2;
@@ -104,7 +102,6 @@ a{
   
   th:hover:not(:last-child) {
     background-color: #e0e0e0;
-    cursor: pointer;
   }
   
   .sort-asc::after {
